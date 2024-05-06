@@ -1,0 +1,15 @@
+# ML
+scikit-learn
+numpy
+pandas
+
+# backend
+django
+ 
+# db
+# mysql
+mysql-connector-python
+mysql-connector
+
+# file
+joblib

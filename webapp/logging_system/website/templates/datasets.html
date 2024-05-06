@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="col-md-8 offset-md-2" style="font-size: 1.2em;">
+    {% if datasets %}
+        <br/>
+        <a class="btn btn-primary" href="{% url 'add_dataset' %}"> 
+            <strong>Create new dataset</strong> 
+        </a>
+        <br/>
+        <table class="table table-striped table-hover">
+            <thead>
+              <tr>
+                <th scope="col">ID</th>
+                <th scope="col">Name</th>
+                <th scope="col">Log count</th>
+                <th scope="col">Clusters</th>
+              </tr>
+            </thead>
+            <tbody>
+                {% for dataset in datasets %}
+                <tr>
+                    <td><strong><a href='{% url 'dataset' dataset.id %}'>{{ dataset.id }}</a></strong></td>
+                    <td><strong>{{ dataset.name }}</strong></td>
+                    <td>{{ dataset.count }}</td>
+                    <td>{{ dataset.clusters }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+    <br/>
+    <br/>
+    <br/>
+        <h1>
+            No Datasets yet, 
+            <a href="{% url 'add_dataset' %}"> 
+                <strong>create one now!</strong> 
+            </a>
+        </h1> 
+    {% endif %}
+
+</div>
+{% endblock %}

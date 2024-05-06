@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="col-md-8 offset-md-2">
+
+    {% if models %}
+    {% comment %} {% for log in logs %}
+    {{ log.message }}
+    {% endfor %} {% endcomment %}
+        <table class="table table-striped table-hover">
+            <thead>
+              <tr>
+                <th scope="col">id</th>
+                <th scope="col">Name</th>
+                <th scope="col">Type</th>
+                <th scope="col">Accuracy</th>
+              </tr>
+            </thead>
+            <tbody>
+                {% for model in models %}
+                <tr>
+                    <td>{{ model.id }}</td>
+                    <td>{{ model.name }}</td>
+                    <td>{{ model.model_type }}</td>
+                    <td>{{ model.args }}</td>
+                    <td>{{ model.accuracy }}</td>
+                    {% comment %} <td>{{ length(dataset.train_set)/dataset.count*100 }}</td>
+                    <td>{{ length(dataset.test_set)/dataset.count*100 }}</td> {% endcomment %}
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+    <br/>
+    <br/>
+    <br/>
+        <h1>
+            No Models yet, 
+            <a href="{% url 'add_model' %}"> 
+                <strong>create one now!</strong> 
+            </a>
+        </h1> 
+    {% endif %}
+
+</div>
+{% endblock %}
