@@ -2,9 +2,8 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 
-from .models import Log, Dataset
-from .forms import SignUpForm, AddDatasetForm, AddModelForm
-from .ml_models import create_model
+from .models import Log
+from .forms import SignUpForm, AddModelForm
 
 # Create your views here.
 
@@ -52,72 +51,6 @@ def register_user(request):
         return render(request, 'register.html', {'form': form})
         
     return render(request, 'register.html', {'form': form})
-
-
-# datasets
-
-def view_datasets(request):
-    if request.user.is_authenticated:
-        datasets = Dataset.objects.all()
-        return render(request, 'datasets.html', {'datasets': datasets})
-    else:
-        return redirect('home')
-
-
-def add_dataset(request):
-    if request.user.is_authenticated:
-        form = AddDatasetForm(request.POST or None)
-        if request.method == 'POST':
-            if form.is_valid():
-                add_record = form.save()
-                messages.success(request, "Dataset added successfully")
-                return redirect('datasets')
-        else:
-            return render(request, 'add_dataset.html', {'form':form})
-    else:
-        return redirect('home')
-
-
-def delete_dataset(request, pk):
-    if request.user.is_authenticated:
-        delete_it = Dataset.objects.get(id=pk)
-        delete_it.delete()
-        messages.success(request, "Dataset deleted successfully!")
-        return redirect('datasets')
-    else:
-        return redirect('home')
-
-
-def update_dataset(request, pk):
-    if request.user.is_authenticated:
-        update_it = Dataset.objects.get(id=pk)
-        form = AddDatasetForm(request.POST or None, instance=update_it)
-        if form.is_valid():
-            form.save()
-            messages.success(request, "Dataset updated successfully")
-            return redirect('datasets')
-        else:
-            return render(request, 'update_dataset.html', {'form':form})
-    else:
-        return redirect('home')
-
-
-def view_dataset(request, pk):
-    if request.user.is_authenticated:
-        dataset = Dataset.objects.get(id=pk)
-        dataset_data = dataset.get_dataset()
-        data = dataset_data['data']
-        target = dataset_data['target']
-
-        data_with_target = []
-        for log, label in zip(data, target):
-            log_with_label = {'label': label, 'log': log}
-            data_with_target.append(log_with_label)
-
-        return render(request, 'dataset.html', {'dataset': dataset, 'data': data_with_target})
-        pass
-    else:
-        return redirect('home')
 
 
 # models

@@ -16,23 +16,7 @@ class Log(models.Model):
         db_table = 'logs'
 
 
-class Dataset(models.Model):
-    name                = models.TextField(max_length=50)
-    count               = models.TextField(max_length=20)
-    clusters            = models.TextField(max_length=5)
-    data                = models.TextField()
-
-    def save_dataset(self, dataset):
-        self.data = json.dumps(dataset)
-        self.save()
-
-    def get_dataset(self):
-        return list_to_numpy_array(json.loads(self.data))
-
 class MlModel(models.Model):
     name                = models.TextField(max_length=50)
     model_type          = models.TextField(max_length=50)
     args                = models.TextField(max_length=200)
-    accuracy            = models.TextField(max_length=10)
-    dataset_id          = models.TextField(max_length=20)
-    file                = models.BinaryField()

@@ -1,7 +1,27 @@
 {% extends 'base.html' %}
 {% block content %}
 <div class="col-md-8 offset-md-2">
-
+    <br/>
+    <tr>
+        <td>
+            <strong>Add new model: </strong>
+        </td>
+        <td>
+            <a class="btn btn-outline-light" href="#"> K-Means </a>
+        </td>
+        <td>
+            <a class="btn btn-outline-light" href="#"> Bissecting K-Means </a>
+        </td>
+        <td>
+            <a class="btn btn-outline-light" href="#">  AgglomerativeClustering </a>
+        </td>
+        <td>
+            <a class="btn btn-outline-light" href="#"> Mean-Shift </a>
+        </td>
+        <td>
+            <a class="btn btn-outline-light" href="{#"> Ward hierarchical clustering </a>
+        </td>
+    </tr>
     {% if models %}
     {% comment %} {% for log in logs %}
     {{ log.message }}
@@ -34,10 +54,7 @@
     <br/>
     <br/>
         <h1>
-            No Models yet, 
-            <a href="{% url 'add_model' %}"> 
-                <strong>create one now!</strong> 
-            </a>
+            No Models yet!
         </h1> 
     {% endif %}
 
