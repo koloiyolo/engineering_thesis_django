@@ -2,24 +2,25 @@
 {% block content %}
 <div class="col-md-8 offset-md-2">
     <br/>
+    <h3 class="text-center">
+        Add new model:
+    </h3>
+    <br/>
     <tr>
         <td>
-            <strong>Add new model: </strong>
+            <a class="btn btn-outline-dark" href="#"> K-Means </a>
         </td>
         <td>
-            <a class="btn btn-outline-light" href="#"> K-Means </a>
+            <a class="btn btn-outline-dark" href="{% url 'add_model' %}"> Bissecting K-Means </a>
         </td>
         <td>
-            <a class="btn btn-outline-light" href="#"> Bissecting K-Means </a>
+            <a class="btn btn-outline-dark" href="#">  AgglomerativeClustering </a>
         </td>
         <td>
-            <a class="btn btn-outline-light" href="#">  AgglomerativeClustering </a>
+            <a class="btn btn-outline-dark" href="#"> Mean-Shift </a>
         </td>
         <td>
-            <a class="btn btn-outline-light" href="#"> Mean-Shift </a>
-        </td>
-        <td>
-            <a class="btn btn-outline-light" href="{#"> Ward hierarchical clustering </a>
+            <a class="btn btn-outline-dark" href="{#"> Ward hierarchical clustering </a>
         </td>
     </tr>
     {% if models %}
@@ -32,7 +33,7 @@
                 <th scope="col">id</th>
                 <th scope="col">Name</th>
                 <th scope="col">Type</th>
-                <th scope="col">Accuracy</th>
+                <th scope="col">Args</th>
               </tr>
             </thead>
             <tbody>
@@ -42,7 +43,6 @@
                     <td>{{ model.name }}</td>
                     <td>{{ model.model_type }}</td>
                     <td>{{ model.args }}</td>
-                    <td>{{ model.accuracy }}</td>
                     {% comment %} <td>{{ length(dataset.train_set)/dataset.count*100 }}</td>
                     <td>{{ length(dataset.test_set)/dataset.count*100 }}</td> {% endcomment %}
                 </tr>
@@ -53,9 +53,9 @@
     <br/>
     <br/>
     <br/>
-        <h1>
+        <h3 class="text-center">
             No Models yet!
-        </h1> 
+        </h3> 
     {% endif %}
 
 </div>

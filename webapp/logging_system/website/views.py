@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 
-from .models import Log
+from .models import Log, MlModel
 from .forms import SignUpForm, AddModelForm
 
 # Create your views here.
@@ -57,7 +57,8 @@ def register_user(request):
 
 def view_models(request):
     if request.user.is_authenticated:
-        return render(request, 'models.html')
+        models = MlModel.objects.all()
+        return render(request, 'models.html', {'models': models})
     else:
         return redirect('home')
 
