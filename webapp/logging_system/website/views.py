@@ -2,8 +2,8 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 
-from .models import Log, MlModel
-from .forms import SignUpForm, AddModelForm
+from .models import Log, ClassifiedData
+from .forms import SignUpForm, ClassifyForm
 
 # Create your views here.
 
@@ -53,7 +53,7 @@ def register_user(request):
     return render(request, 'register.html', {'form': form})
 
 
-# models
+# ML Models
 
 def view_models(request):
     if request.user.is_authenticated:
@@ -62,27 +62,48 @@ def view_models(request):
     else:
         return redirect('home')
 
-def add_model(request):
+def classify(request):
     if request.user.is_authenticated:
-        form = AddModelForm(request.POST or None)
+        form = ClassifyForm(request.POST or None)
         if request.method == 'POST':
             if form.is_valid():
                 add_record = form.save()
-                messages.success(request, "Model added successfully")
-                return redirect('models')
+                messages.success(request, "Classification completed successfully")
+                pk = ClassifiedData.objects.order_by('-id').first().id
+                return redirect('classified_data', pk = pk)
         else:
-            return render(request, 'add_model.html', {'form':form})
-        return render(request, 'add_model.html', {'dataset': dataset})
+            return render(request, 'classify.html', {'form': form})
+        return render(request, 'classify.html', {'form': form})
+    else:
+        return redirect('home')
+
+def classified_data(request, pk):
+    if request.user.is_authenticated:
+        classified_data = ClassifiedData.objects.get(id=pk)
+
+        data = classified_data.get_data()
+        target = data['target']
+        data = data['data']
+
+        data_with_target = []
+        for log, label in zip(data, target):
+            log_with_label = {'label': label, 'log': log}
+            data_with_target.append(log_with_label)
+        data_with_target = sorted(data_with_target, key=lambda x: x['label'])
+        return render(request, 'classified_data.html', {'classified_data': classified_data, 'data': data_with_target})
+    else:
+        return redirect('home')
+
+def ml_archive(request):
+    if request.user.is_authenticated:
+        classified_data = ClassifiedData.objects.all()
+        return render(request, 'ml_archive.html', {'classified_data': classified_data})
     else:
         return redirect('home')
 
 
-
-
-
-
-
 # validated function
+
 # def function(request):
 #     if request.user.is_authenticated:
 #         pass

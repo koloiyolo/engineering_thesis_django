@@ -4,16 +4,16 @@
 
 
 <div class="col-md-6 offset-md-3">
-    <h1>Add Model</h1>
+    <h1>Classify Data</h1>
     <br/>
-    <form method="POST" action="{% url 'add_model' %}">
+    <form method="POST" action="{% url 'classify' %}">
         {% csrf_token %}
     
         {{ form.as_p }}
     
         
         <button type="submit" class="btn btn-primary">Submit</button>
-        <a href="{% url 'models' %}" class="btn btn-secondary">Back</a>
+        <a href="{% url 'home' %}" class="btn btn-secondary">Back</a>
     </form>
     </div>
     
