@@ -94,12 +94,24 @@ def classified_data(request, pk):
     else:
         return redirect('home')
 
+def delete_classified_data(request, pk):
+    if request.user.is_authenticated:
+        delete_it = ClassifiedData.objects.get(id=pk)
+        delete_it.delete()
+        messages.success(request, "Record deleted successfully!")
+        return redirect('ml_archive')
+    else:
+        messages.success(request, "Operation failed!")
+        return redirect('ml_archive')
+
 def ml_archive(request):
     if request.user.is_authenticated:
         classified_data = ClassifiedData.objects.all()
         return render(request, 'ml_archive.html', {'classified_data': classified_data})
     else:
         return redirect('home')
+
+
 
 
 # validated function

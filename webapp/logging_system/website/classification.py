@@ -1,7 +1,8 @@
 from django.shortcuts import render
 
 from sklearn.cluster import KMeans, AgglomerativeClustering, MeanShift, BisectingKMeans
-from sklearn.preprocessing import OneHotEncoder
+# from sklearn.preprocessing import OneHotEncoder
+from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
 from sklearn.utils import Bunch
 
 import numpy as np
@@ -14,9 +15,15 @@ def classify(model_type='kmeans', size=10000, offset=0):
 
     data = Log.objects.all()[offset:offset + size]
 
-    features = [[obj.message, obj.tags] for obj in data]
-    encoder = OneHotEncoder()
-    encoded_features = encoder.fit_transform(np.array(features).reshape(-1, 1))
+    features = [obj.get_features() for obj in data]
+
+    # OneHotEncoder
+    # encoder = OneHotEncoder()
+    # encoded_features = encoder.fit_transform(np.array(features).reshape(-1, 1))
+    # encoded_features = encoded_features.toarray()
+
+    encoder = TfidfVectorizer()
+    encoded_features = encoder.fit_transform(features)
     encoded_features = encoded_features.toarray()
     X = np.array(encoded_features)
 

@@ -27,8 +27,7 @@
                     <td>{{ obj.model_type }}</td>
                     <td>{{ obj.date }}</td>
                     <td>{{ obj.size }}</td>
-                    {% comment %} <td>{{ length(dataset.train_set)/dataset.count*100 }}</td>
-                    <td>{{ length(dataset.test_set)/dataset.count*100 }}</td> {% endcomment %}
+                    <td><a href="{% url 'classified_data' obj.id %}" class="btn btn-dark">View</a></td>
                 </tr>
                 {% endfor %}
             </tbody>

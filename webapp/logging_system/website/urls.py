@@ -10,5 +10,6 @@ urlpatterns = [
     # path('add_model/', views.add_model, name='add_model'),
     path('classify/', views.classify, name='classify'),
     path('classified_data/<int:pk>', views.classified_data, name='classified_data'),
+    path('delete_classified_data/<int:pk>', views.delete_classified_data, name='delete_classified_data'),
     path('ml_archive', views.ml_archive, name='ml_archive'),
 ]
