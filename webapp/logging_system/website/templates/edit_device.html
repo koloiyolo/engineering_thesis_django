@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h1>
+    Update device form
+</h1>
+
+<br/>
+<div class="col-md-6 offset-md-3">
+    <form method="POST">
+        {% csrf_token %}
+
+        {% if form.errors %}
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <strong>Your form has Errors</strong> 
+                {% for field in form %}
+                    {% if field.errors %}
+                        {{ field.errors }}
+                    {% endif %}
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        {{ form.as_p }}
+
+        <button type="submit" class="btn btn-dark">Update</button>
+        <a class="btn btn-secondary" href="{% url 'devices' %}" >Back</a>
+    </form>
+</div>
+
+{% endblock %}

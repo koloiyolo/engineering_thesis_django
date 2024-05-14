@@ -11,5 +11,10 @@ urlpatterns = [
     path('classify/', views.classify, name='classify'),
     path('classified_data/<int:pk>', views.classified_data, name='classified_data'),
     path('delete_classified_data/<int:pk>', views.delete_classified_data, name='delete_classified_data'),
-    path('ml_archive', views.ml_archive, name='ml_archive'),
+    path('ml_archive/', views.ml_archive, name='ml_archive'),
+    path('devices/', views.devices, name='devices'),
+    path('add_device/', views.add_device, name='add_device'),
+    path('edit_device/<int:pk>', views.edit_device, name='edit_device'),
+    path('remove_device/<int:pk>', views.remove_device, name='remove_device'),
+    path('device_logs/<int:pk>', views.device_logs, name='device_logs'),
 ]

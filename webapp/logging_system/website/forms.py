@@ -5,7 +5,7 @@ import json
 import numpy as np
 from datetime import datetime
 
-from .models import Log, ClassifiedData
+from .models import Log, ClassifiedData, Device
 
 from .dataset import create_dataset
 from .functions import numpy_array_to_list
@@ -143,3 +143,18 @@ class ClassifyForm(forms.ModelForm):
 #         if commit:
 #             mlmodel.save()
 #         return mlmodel
+
+class DeviceForm(forms.ModelForm):
+
+    name        = forms.CharField(label="Device name", max_length="32", widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':'Device name'}))
+    ip          = forms.CharField(label="IP address", max_length="32", widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':'Device IP'}))
+    model       = forms.CharField(label="Device model", max_length="32", widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':'Device model'}))
+    location    = forms.CharField(label="Location", max_length="32", widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':'Device location'}))
+
+    class Meta:
+        model = Device
+        fields = (
+            "name",
+            "ip",
+            "model",
+            "location")

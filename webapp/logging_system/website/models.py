@@ -6,10 +6,10 @@ from .functions import numpy_array_to_list, list_to_numpy_array
 
 # Create your models here.
 class Log(models.Model):
-    datetime        = models.TextField(blank=True, null=True)
-    host            = models.TextField(blank=True, null=True)
-    tags            = models.TextField(blank=True, null=True)
-    message         = models.TextField(blank=True, null=True)
+    datetime            = models.TextField(blank=True, null=True)
+    host                = models.TextField(blank=True, null=True)
+    tags                = models.TextField(blank=True, null=True)
+    message             = models.TextField(blank=True, null=True)
 
     class Meta:
         managed = False
@@ -44,3 +44,4 @@ class Device(models.Model):
     model               = models.TextField(max_length=50)
     location            = models.TextField(max_length=50)
     last_log            = models.TextField(max_length=50)
+    

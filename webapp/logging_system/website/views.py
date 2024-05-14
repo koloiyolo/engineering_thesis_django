@@ -3,8 +3,8 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 
-from .models import Log, ClassifiedData
-from .forms import SignUpForm, ClassifyForm
+from .models import Log, ClassifiedData, Device
+from .forms import SignUpForm, ClassifyForm, DeviceForm
 
 # Create your views here.
 
@@ -18,7 +18,7 @@ def home(request):
     else:
         logs = Log.objects.all()
 
-    paginator = Paginator(logs, 20)
+    paginator = Paginator(logs, 19)
     page_number = request.GET.get("page")
     page_logs = paginator.get_page(page_number)
 
@@ -126,7 +126,76 @@ def ml_archive(request):
         return redirect('home')
 
 
+# devices
 
+def devices(request):
+    if request.user.is_authenticated:
+        devices = Device.objects.all()
+
+        # update device last_log
+        for device in devices:
+            last_log = Log.objects.filter(host= device.ip).last()
+            if last_log is not None:
+                device.last_log = last_log.datetime
+                device.save()
+
+        paginator = Paginator(devices, 12)
+        page_number = request.GET.get("page")
+        page_devices = paginator.get_page(page_number)
+        
+        return render(request, 'devices.html', {'devices': page_devices})
+    else:
+        return redirect('home')
+
+def device_logs(request, pk):
+    if request.user.is_authenticated:
+        host = Device.objects.get(id=pk)
+        logs= Log.objects.filter(host= host.ip)
+
+        paginator = Paginator(logs, 16)
+        page_number = request.GET.get("page")
+        page_logs = paginator.get_page(page_number)
+
+        return render(request, 'device_logs.html', {'host': host, 'logs': page_logs})
+        pass
+    else:
+        return redirect('home')
+
+def add_device(request):
+    if request.user.is_authenticated:
+        form = DeviceForm(request.POST or None)
+        if request.method == 'POST':
+            if form.is_valid():
+                add_record = form.save()
+                messages.success(request, "Device added successfully")
+                return redirect('devices')
+        else:
+            return render(request, 'add_device.html', {'form': form})
+        return render(request, 'add_device.html', {'form': form})
+    else:
+        return redirect('home')
+
+def edit_device(request, pk):
+    if request.user.is_authenticated:
+        update_it = Device.objects.get(id=pk)
+        form = DeviceForm(request.POST or None, instance=update_it)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Device updated successfully")
+            return redirect('devices')
+        else:
+            return render(request, 'edit_device.html', {'form': form})
+    else:
+        return redirect('home')
+
+def remove_device(request, pk):
+    if request.user.is_authenticated:
+        delete_it = Device.objects.get(id=pk)
+        delete_it.delete()
+        messages.success(request, "Device removed successfully")
+        return redirect('devices')
+    else:
+        return redirect('home')
 
 # validated function
 
