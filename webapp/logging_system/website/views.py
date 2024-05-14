@@ -1,3 +1,4 @@
+from django.core.paginator import Paginator
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
@@ -9,7 +10,17 @@ from .forms import SignUpForm, ClassifyForm
 
 def home(request):
     
-    logs = Log.objects.all()[:5000]
+    logs = None
+
+    sort_by = request.GET.get('sort')
+    if sort_by in ['datetime', 'host', 'tags', 'message']:
+        logs = Log.objects.all().order_by(sort_by)
+    else:
+        logs = Log.objects.all()
+
+    paginator = Paginator(logs, 20)
+    page_number = request.GET.get("page")
+    page_logs = paginator.get_page(page_number)
 
     if request.method == 'POST':
         username = request.POST['username']
@@ -24,8 +35,8 @@ def home(request):
             return redirect('home')
 
     else:
-        return render(request, 'home.html', {'logs':logs})
-    return render(request, 'home.html', {'logs':logs})
+        return render(request, 'home.html', {'logs': page_logs})
+    return render(request, 'home.html', {'logs': page_logs})
 
 
 def logout_user(request):
@@ -107,7 +118,10 @@ def delete_classified_data(request, pk):
 def ml_archive(request):
     if request.user.is_authenticated:
         classified_data = ClassifiedData.objects.all()
-        return render(request, 'ml_archive.html', {'classified_data': classified_data})
+        paginator = Paginator(classified_data, 12)
+        page_number = request.GET.get("page")
+        page_data = paginator.get_page(page_number)
+        return render(request, 'ml_archive.html', {'classified_data': page_data})
     else:
         return redirect('home')
 

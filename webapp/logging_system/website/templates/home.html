@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% block content %}
-<div class="col-md-8 offset-md-2">
+<div class="col-md-12 offset-md-0">
 
     {% if user.is_authenticated %}
         {% if logs %}
@@ -10,10 +10,10 @@
             <table class="table table-striped table-hover">
                 <thead>
                   <tr>
-                    <th scope="col">Datetime</th>
-                    <th scope="col">Host</th>
-                    <th scope="col">Tags</th>
-                    <th scope="col">Message</th>
+                    <th scope="col"><a href="?sort=datetime" style="text-decoration: none;">Datetime</a></th>
+                    <th scope="col"><a href="?sort=host" style="text-decoration: none;">Host</a></th>
+                    <th scope="col"><a href="?sort=tags" style="text-decoration: none;">Tags</a></th>
+                    <th scope="col"><a href="?sort=message" style="text-decoration: none;">Message</a></th>
                   </tr>
                 </thead>
                 <tbody>
@@ -27,6 +27,23 @@
                     {% endfor %}
                 </tbody>
             </table>
+            <div class="pagination">
+              <span class="step-links">
+                  {% if logs.has_previous %}
+                      <a href="?page=1">&laquo; first</a>
+                      <a href="?page={{ logs.previous_page_number }}">previous</a>
+                  {% endif %}
+          
+                  <span class="current">
+                      Page {{ logs.number }} of {{ logs.paginator.num_pages }}.
+                  </span>
+          
+                  {% if logs.has_next %}
+                      <a href="?page={{ logs.next_page_number }}">next</a>
+                      <a href="?page={{ logs.paginator.num_pages }}">last &raquo;</a>
+                  {% endif %}
+              </span>
+          </div>
         {% else %}
         <br/>
         <br/>

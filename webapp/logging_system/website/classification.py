@@ -46,6 +46,14 @@ def classify(model_type='kmeans', size=10000, offset=0):
     print(f"{model_type} Execution time: {format(execution_time)} seconds")
     labels = clf.labels_
     data = np.array(features)
-    dataset = Bunch(data = data, target=np.array(labels))
-    return dataset
+
+    classification = Bunch(data = data, target=np.array(labels))
+
+    # classification = [[] for _ in range(len(np.unique(labels)))]
+    # for obj, label in zip(data, np.array(labels)):
+    #     classification[label].append(obj)
+
+    # print(classification)
+
+    return classification
 

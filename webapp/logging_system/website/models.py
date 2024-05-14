@@ -37,3 +37,10 @@ class ClassifiedData(models.Model):
 
     def get_data(self):
         return list_to_numpy_array(json.loads(self.data))
+
+class Device(models.Model):
+    name                = models.TextField(max_length=50)
+    ip                  = models.TextField(max_length=50)
+    model               = models.TextField(max_length=50)
+    location            = models.TextField(max_length=50)
+    last_log            = models.TextField(max_length=50)
