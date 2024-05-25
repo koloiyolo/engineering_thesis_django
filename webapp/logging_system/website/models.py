@@ -10,6 +10,7 @@ class Log(models.Model):
     host                = models.TextField(blank=True, null=True)
     tags                = models.TextField(blank=True, null=True)
     message             = models.TextField(blank=True, null=True)
+    label               = models.IntegerField(blank=True, null=True)
 
     class Meta:
         managed = False

@@ -26,6 +26,10 @@
                       href="?sort=message">
                        Message
                       </a></th>
+                    <th scope="col"><a class="text-dark"style="text-decoration: none;"
+                      href="?sort=message">
+                       Label
+                      </a></th>
                   </tr>
                 </thead>
                 <tbody>
@@ -35,6 +39,7 @@
                         <td>{{ log.host }}</td>
                         <td>{{ log.tags }}</td>
                         <td>{{ log.message }}</td>
+                        <td>{{ log.label }}</td>
                     </tr>
                     {% endfor %}
                 </tbody>

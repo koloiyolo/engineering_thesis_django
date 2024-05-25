@@ -13,7 +13,7 @@ from .models import Log
 
 def classify(model_type='kmeans', size=10000, offset=0):
 
-    data = Log.objects.all()[offset:offset + size]
+    data = Log.objects.all().filter(label=None)[:size]
 
     features = [obj.get_features() for obj in data]
 
@@ -29,7 +29,7 @@ def classify(model_type='kmeans', size=10000, offset=0):
 
     clf = None
     if model_type == 'kmeans':
-        clf = KMeans()
+        clf = KMeans(10)
     elif model_type == 'bkmeans':
         classifier = BisectingKMeans()
     elif model_type == 'ahc':
@@ -45,9 +45,12 @@ def classify(model_type='kmeans', size=10000, offset=0):
     execution_time = end_time - start_time
     print(f"{model_type} Execution time: {format(execution_time)} seconds")
     labels = clf.labels_
-    data = np.array(features)
 
-    classification = Bunch(data = data, target=np.array(labels))
+    for obj, label in zip(data, labels):
+        obj.label = label
+        obj.save()
+
+    classification = Bunch(data = np.array(features), target=np.array(labels))
 
     # classification = [[] for _ in range(len(np.unique(labels)))]
     # for obj, label in zip(data, np.array(labels)):
