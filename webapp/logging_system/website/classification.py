@@ -10,9 +10,10 @@ import random
 import time
 
 from .models import Log
+from .ml import train
 
 def classify(model_type='kmeans', size=10000, offset=0):
-
+    train()
     data = Log.objects.all().filter(label=None)[:size]
 
     features = [obj.get_features() for obj in data]

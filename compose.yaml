@@ -28,3 +28,13 @@ services:
       - 6001:601
     volumes:
       - ./logs:/var/log
+
+  redis:
+    container_name: redis_logging
+    image: redis:7.2.5
+    restart: always
+    ports:
+      - "6379:6379"
+    environment:
+      - REDIS_PORT=6379
+      - REDIS_DATABASES=16

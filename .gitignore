@@ -4,3 +4,6 @@ webapp/logging_system/website/__pycache__/
 webapp/logging_system/logging_system/__pycache__/
 webapp/logging_system/website/__pycache__/
 webapp/logging_system/website/migrations/__pycache__/
+webapp/logging_system/encoder.joblib
+webapp/logging_system/kmeans.joblib
+webapp/logging_system/celerybeat-schedule

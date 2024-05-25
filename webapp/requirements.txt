@@ -5,11 +5,16 @@ pandas
 
 # backend
 django
+celery
+django-celery-beat
  
 # db
 # mysql
 mysql-connector-python
 mysql-connector
+redis
 
 # file
 joblib
+
+

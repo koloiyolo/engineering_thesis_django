@@ -17,7 +17,7 @@ class Log(models.Model):
         db_table = 'logs'
 
     def get_features(self):
-        return f"{self.message} {self.tags} {self.datetime}"
+        return f"{self.message} {self.tags}"
 
 class MlModel(models.Model):
     name                = models.TextField(max_length=50)
