@@ -18,9 +18,20 @@ from .models import Log
 def train():
     count = Log.objects.count()
     if count > 20000:
-        offset = random.randint(0, (count - 21000))
+        data = None
+        offset = None
+        if count > 100000:
+            offset = random.randint(0, (count - 100000))
+            data = Log.objects.all()[offset:offset + 100000]
 
-        data = Log.objects.all()[offset:offset + 20000]
+        elif count > 50000:
+            offset = random.randint(0, (count - 50000))
+            data = Log.objects.all()[offset:offset + 50000]
+            
+        else:
+            offset = random.randint(0, (count - 20000))
+            data = Log.objects.all()[offset:offset + 20000]
+        
         features = [obj.get_features() for obj in data]
         encoder = TfidfVectorizer()
         encoder.fit(features)
@@ -28,7 +39,7 @@ def train():
         encoded_features = encoded_features.toarray()
 
 
-        clf = KMeans(10)
+        clf = KMeans(10, random_state=42)
         X = np.array(encoded_features)
         clf.fit(X)
 
@@ -74,7 +85,7 @@ def classify():
 
                 # )
 
-                print(f'{log.datetime} {log.tags} {log.message}')
+                print(f'{log.datetime} {log.host} {log.tags} {log.message}')
 
         return True
     else:

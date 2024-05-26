@@ -17,6 +17,7 @@
                 <th scope="col">Model</th>
                 <th scope="col">Location</th>
                 <th scope="col">Last log</th>
+                <th scope="col">Status</th>
               </tr>
             </thead>
             <tbody>
@@ -28,6 +29,7 @@
                     <td>{{ obj.model }}</td>
                     <td>{{ obj.location }}</td>
                     <td>{{ obj.last_log }}</td>
+                    <td>{{ obj.ping }}</td>
                     <td>
                         <a href="{% url 'device_logs' obj.id %}" class="btn btn-dark"> Logs </a>
                         <span> </span>

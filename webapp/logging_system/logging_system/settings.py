@@ -143,13 +143,19 @@ from celery.schedules import crontab
 CELERY_BEAT_SCHEDULE = {
     'classify-every-minute': {
         'task': 'website.tasks.ml_classify',
-        'schedule': 60.0,
+        'schedule': 120.0,
         'args': (),
     },
     'train-every-week': {
         'task': 'website.tasks.ml_train',
-        'schedule': crontab(hour=0, minute=0, day_of_week='sunday'),
+        # 'schedule': crontab(hour=0, minute=0, day_of_week='sunday'),
+        'schedule': 300.0,
         'args':()
+    },
+    'ping-every-5-minutes': {
+        'task': 'website.tasks.ping_devices',
+        'schedule': 60.0,
+        'args':(),
     }
 
 }

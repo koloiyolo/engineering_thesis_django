@@ -45,4 +45,5 @@ class Device(models.Model):
     model               = models.TextField(max_length=50)
     location            = models.TextField(max_length=50)
     last_log            = models.TextField(max_length=50)
+    ping                = models.TextField(max_length=50, null=True)
     

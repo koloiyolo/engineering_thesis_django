@@ -17,4 +17,6 @@ redis
 # file
 joblib
 
+#utils
+ping3
 
