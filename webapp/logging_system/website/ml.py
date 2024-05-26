@@ -57,14 +57,17 @@ def classify():
     if os.path.exists("kmeans.joblib") and os.path.exists("encoder.joblib"):
         data = Log.objects.all().filter(label=None)[:2500]
 
+        if data.count() == 0:
+            print("No data to classify")
+            return True
+
         features = [obj.get_features() for obj in data]
 
         encoder = joblib.load("encoder.joblib")
-
         encoded_features = encoder.fit_transform(features)
         encoded_features = encoded_features.toarray()
-
         X = np.array(encoded_features)
+
         clf = joblib.load("kmeans.joblib")
         clf.fit(X)
         labels = clf.labels_

@@ -10,17 +10,6 @@ from .forms import SignUpForm, DeviceForm
 
 def home(request):
     
-    logs = None
-
-    sort_by = request.GET.get('sort')
-    if sort_by in ['datetime', 'host', 'tags', 'message']:
-        logs = Log.objects.all().order_by(sort_by)
-    else:
-        logs = Log.objects.all()
-
-    paginator = Paginator(logs, 19)
-    page_number = request.GET.get("page")
-    page_logs = paginator.get_page(page_number)
 
     if request.method == 'POST':
         username = request.POST['username']
@@ -35,8 +24,8 @@ def home(request):
             return redirect('home')
 
     else:
-        return render(request, 'home.html', {'logs': page_logs})
-    return render(request, 'home.html', {'logs': page_logs})
+        return render(request, 'home.html')
+    return render(request, 'home.html')
 
 
 def logout_user(request):
@@ -88,13 +77,24 @@ def devices(request):
 def device_logs(request, pk):
     if request.user.is_authenticated:
         host = Device.objects.get(id=pk)
-        logs= Log.objects.filter(host= host.ip).order_by('-id')
+
+        label = request.GET.get('label')
+        if label is not None:
+            logs = Log.objects.filter(host= host.ip, label=label)
+        else:
+            logs = Log.objects.filter(host= host.ip)
+   
+        sort_by = request.GET.get('sort')
+        if sort_by in ['datetime', 'host', 'tags', 'message']:
+            logs = logs.order_by(sort_by)
+        else:
+            logs = logs.order_by('-id')
 
         paginator = Paginator(logs, 16)
         page_number = request.GET.get("page")
         page_logs = paginator.get_page(page_number)
 
-        return render(request, 'device_logs.html', {'host': host, 'logs': page_logs})
+        return render(request, 'device_logs.html', {'host': host, 'logs': page_logs, 'label': label, 'sort': sort_by,})
         pass
     else:
         return redirect('home')

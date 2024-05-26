@@ -143,7 +143,7 @@ from celery.schedules import crontab
 CELERY_BEAT_SCHEDULE = {
     'classify-every-minute': {
         'task': 'website.tasks.ml_classify',
-        'schedule': 120.0,
+        'schedule': 60.0,
         'args': (),
     },
     'train-every-week': {
@@ -152,9 +152,9 @@ CELERY_BEAT_SCHEDULE = {
         'schedule': 300.0,
         'args':()
     },
-    'ping-every-5-minutes': {
+    'ping-every-2-minutes': {
         'task': 'website.tasks.ping_devices',
-        'schedule': 60.0,
+        'schedule': 120.0,
         'args':(),
     }
 
