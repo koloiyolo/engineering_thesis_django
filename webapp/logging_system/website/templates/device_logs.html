@@ -3,9 +3,9 @@
 {% block content %}
 <div class="col-md-12">
     <br/>
-        <h1>
-            {{ host.name }}
-        </h1>
+        <h4>
+            {{ host.name }}'s logs
+        </h4>
     <br/>
     {% if logs %}
     {% comment %} {% for log in logs %}
@@ -25,8 +25,12 @@
                 <th scope="col"><a class="text-dark"style="text-decoration: none;"
                   href="?sort=message">
                    Message
-                  </a></th>
-              </tr>
+                </a></th>
+                <th scope="col"><a class="text-dark"style="text-decoration: none;"
+                    href="?sort=label">
+                    Label
+                </a></th>
+            </tr>
             </thead>
             <tbody>
                 {% for log in logs %}
@@ -34,30 +38,34 @@
                     <td>{{ log.datetime }}</td>
                     <td>{{ log.tags }}</td>
                     <td>{{ log.message }}</td>
+                    <td>{{ log.label }}</td>
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
-        <div class="pagination">
-            <span class="step-links">
+        <nav>
+            <ul class="pagination">
                 {% if logs.has_previous %}
-                    <strong>
-                        <a class="text-dark" href="?page=1">&laquo; first</a>
-                        <a class="text-dark" href="?page={{ logs.previous_page_number }}">previous</a>
-                    </strong>
+                <li class="page-item">
+                    <a class="page-link" href="?page=1" aria-label="Previous">
+                      <span aria-hidden="true">&laquo;</span>
+                    </a>
+                  </li>
+                    <li class="page-item"><a class="page-link" href="?page={{ logs.previous_page_number }}">Previous</a></li>
                 {% endif %}
-                <span class="current">
-                    Page {{ logs.number }} of {{ logs.paginator.num_pages }}.
-                </span>
-            
+
+                <li class="page-item disabled"><a class="page-link" href="#">{{ logs.number }} of {{ logs.paginator.num_pages }}</a></li>
+
                 {% if logs.has_next %}
-                    <strong>
-                        <a class="text-dark" href="?page={{ logs.next_page_number }}">next</a>
-                        <a class="text-dark" href="?page={{ logs.paginator.num_pages }}">last &raquo;</a>
-                    </strong>
+                    <li class="page-item"><a class="page-link" href="?page={{ logs.next_page_number }}">Next</a></li>
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ logs.paginator.num_pages }}" aria-label="Next">
+                          <span aria-hidden="true">&raquo;</span>
+                        </a>
+                      </li>
                 {% endif %}
-            </span>
-        </div>
+            </ul>
+        </nav>
     {% else %}
         <br/>
             <h1>

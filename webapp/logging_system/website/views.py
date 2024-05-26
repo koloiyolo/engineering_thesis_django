@@ -3,8 +3,8 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 
-from .models import Log, ClassifiedData, Device
-from .forms import SignUpForm, ClassifyForm, DeviceForm
+from .models import Log, Device
+from .forms import SignUpForm, DeviceForm
 
 # Create your views here.
 
@@ -64,68 +64,6 @@ def register_user(request):
     return render(request, 'register.html', {'form': form})
 
 
-# ML Models
-
-def view_models(request):
-    if request.user.is_authenticated:
-        models = MlModel.objects.all()
-        return render(request, 'models.html', {'models': models})
-    else:
-        return redirect('home')
-
-def classify(request):
-    if request.user.is_authenticated:
-        form = ClassifyForm(request.POST or None)
-        if request.method == 'POST':
-            if form.is_valid():
-                add_record = form.save()
-                messages.success(request, "Classification completed successfully")
-                pk = ClassifiedData.objects.order_by('-id').first().id
-                return redirect('classified_data', pk = pk)
-        else:
-            return render(request, 'classify.html', {'form': form})
-        return render(request, 'classify.html', {'form': form})
-    else:
-        return redirect('home')
-
-def classified_data(request, pk):
-    if request.user.is_authenticated:
-        classified_data = ClassifiedData.objects.get(id=pk)
-
-        data = classified_data.get_data()
-        target = data['target']
-        data = data['data']
-
-        data_with_target = []
-        for log, label in zip(data, target):
-            log_with_label = {'label': label, 'log': log}
-            data_with_target.append(log_with_label)
-        data_with_target = sorted(data_with_target, key=lambda x: x['label'])
-        return render(request, 'classified_data.html', {'classified_data': classified_data, 'data': data_with_target})
-    else:
-        return redirect('home')
-
-def delete_classified_data(request, pk):
-    if request.user.is_authenticated:
-        delete_it = ClassifiedData.objects.get(id=pk)
-        delete_it.delete()
-        messages.success(request, "Record deleted successfully!")
-        return redirect('ml_archive')
-    else:
-        messages.success(request, "Operation failed!")
-        return redirect('ml_archive')
-
-def ml_archive(request):
-    if request.user.is_authenticated:
-        classified_data = ClassifiedData.objects.all()
-        paginator = Paginator(classified_data, 12)
-        page_number = request.GET.get("page")
-        page_data = paginator.get_page(page_number)
-        return render(request, 'ml_archive.html', {'classified_data': page_data})
-    else:
-        return redirect('home')
-
-
 # devices
 
 def devices(request):
@@ -150,7 +88,7 @@ def devices(request):
 def device_logs(request, pk):
     if request.user.is_authenticated:
         host = Device.objects.get(id=pk)
-        logs= Log.objects.filter(host= host.ip)
+        logs= Log.objects.filter(host= host.ip).order_by('-id')
 
         paginator = Paginator(logs, 16)
         page_number = request.GET.get("page")

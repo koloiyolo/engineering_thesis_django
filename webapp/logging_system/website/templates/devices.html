@@ -31,33 +31,41 @@
                     <td>{{ obj.last_log }}</td>
                     <td>{{ obj.ping }}</td>
                     <td>
+                        <div class="btn-group" role="group">
                         <a href="{% url 'device_logs' obj.id %}" class="btn btn-dark"> Logs </a>
                         <span> </span>
                         <a href="{% url 'edit_device' obj.id %}" class="btn btn-secondary"> Edit </a>
                         <span> </span>
                         <a href="{% url 'remove_device' obj.id %}" class="btn btn-danger">Remove</a>
+                        </div>
                     </td>
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
-        <div class="pagination">
-            <span class="step-links">
+        <nav>
+            <ul class="pagination">
                 {% if devices.has_previous %}
-                    <a href="?page=1">&laquo; first</a>
-                    <a href="?page={{ devices.previous_page_number }}">previous</a>
+                <li class="page-item">
+                    <a class="page-link" href="?page=1" aria-label="Previous">
+                      <span aria-hidden="true">&laquo;</span>
+                    </a>
+                  </li>
+                    <li class="page-item"><a class="page-link" href="?page={{ devices.previous_page_number }}">Previous</a></li>
                 {% endif %}
-        
-                <span class="current">
-                    Page {{ devices.number }} of {{ devices.paginator.num_pages }}.
-                </span>
-        
+
+                <li class="page-item disabled"><a class="page-link" href="#">{{ devices.number }} of {{ devices.paginator.num_pages }}</a></li>
+
                 {% if devices.has_next %}
-                    <a href="?page={{ devices.next_page_number }}">next</a>
-                    <a href="?page={{ devices.paginator.num_pages }}">last &raquo;</a>
+                    <li class="page-item"><a class="page-link" href="?page={{ devices.next_page_number }}">Next</a></li>
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ devices.paginator.num_pages }}" aria-label="Next">
+                          <span aria-hidden="true">&raquo;</span>
+                        </a>
+                      </li>
                 {% endif %}
-            </span>
-        </div>
+            </ul>
+        </nav>
     {% else %}
         <br/>
             <h1>
