@@ -8,8 +8,7 @@
     {% csrf_token %} {% if form.errors %}
     <div class="alert alert-danger alert-dismissible fade show" role="alert">
       <strong>Your form has Errors</strong>
-      {% for field in form %} {% if field.errors %} {{ field.errors }} {% endif
-      %} {% endfor %}
+      {% for field in form %} {% if field.errors %} {{ field.errors }} {% endif %} {% endfor %}
       <button
         type="button"
         class="btn-close"

@@ -160,6 +160,7 @@ def services(request):
 
         # update service last_log
         for service in services:
+            service.graph = get_graph(service.ip)
             last_log = Log.objects.filter(host= service.ip).last()
             if last_log is not None:
                 service.last_log = last_log.datetime
