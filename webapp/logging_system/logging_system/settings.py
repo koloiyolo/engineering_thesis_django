@@ -129,7 +129,7 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Celery Configuration Options
-CELERY_TIMEZONE = "UTC"
+CELERY_TIMEZONE = "Europe/Warsaw"
 CELERY_TASK_TRACK_STARTED = True
 CELERY_TASK_TIME_LIMIT = 30 * 60
 CELERY_BROKER_URL = 'redis://0.0.0.0:6379/0'
@@ -149,12 +149,12 @@ CELERY_BEAT_SCHEDULE = {
     'train-every-week': {
         'task': 'website.tasks.ml_train',
         # 'schedule': crontab(hour=0, minute=0, day_of_week='sunday'),
-        'schedule': 300.0,
+        'schedule': 3600.0,
         'args':()
     },
     'ping-every-2-minutes': {
         'task': 'website.tasks.ping_devices',
-        'schedule': 120.0,
+        'schedule': 30.0,
         'args':(),
     }
 

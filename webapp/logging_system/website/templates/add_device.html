@@ -1,32 +1,26 @@
-{% extends 'base.html' %}
-
-{% block content %}
+{% extends 'base.html' %} {% block content %}
 <div class="col-md-6 offset-md-3">
-    <br/>
-    <h1>
-        Add device
-    </h1>
-    <br/>
-    <form method="POST" action="{% url 'add_device' %}">
-        {% csrf_token %}
+  <br />
+  <h1>Add device</h1>
+  <br />
+  <form method="POST" action="{% url 'add_device' %}">
+    {% csrf_token %} {% if form.errors %}
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+      <strong>Your form has Errors</strong>
+      {% for field in form %} {% if field.errors %} {{ field.errors }} {% endif
+      %} {% endfor %}
+      <button
+        type="button"
+        class="btn-close"
+        data-bs-dismiss="alert"
+        aria-label="Close"
+      ></button>
+    </div>
+    {% endif %} {{ form.as_p }}
 
-        {% if form.errors %}
-            <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                <strong>Your form has Errors</strong> 
-                {% for field in form %}
-                    {% if field.errors %}
-                        {{ field.errors }}
-                    {% endif %}
-                {% endfor %}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-        {% endif %}
-
-        {{ form.as_p }}
-
-        <button type="submit" class="btn btn-dark">Add</button>
-        <a href="{% url 'devices' %}" class="btn btn-secondary">Back</a>
-    </form>
+    <button type="submit" class="btn btn-dark">Add</button>
+    <a href="{% url 'devices' %}" class="btn btn-secondary">Back</a>
+  </form>
 </div>
 
 {% endblock %}

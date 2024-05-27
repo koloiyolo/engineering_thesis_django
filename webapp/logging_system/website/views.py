@@ -2,14 +2,29 @@ from django.core.paginator import Paginator
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
+from ping3 import ping
 
-from .models import Log, Device
-from .forms import SignUpForm, DeviceForm
+from .models import Log, Device, Service
+from .forms import SignUpForm, DeviceForm, ServiceForm
+from .functions import get_graph
 
 # Create your views here.
 
 def home(request):
     
+    response = None
+    try:
+        pass
+        response = f"{ping('8.8.8.8', unit='ms'):.3} ms"
+    except:
+        response = None
+        
+
+    devices_d = Device.objects.filter(ping=None)
+
+
+    
+
 
     if request.method == 'POST':
         username = request.POST['username']
@@ -24,8 +39,8 @@ def home(request):
             return redirect('home')
 
     else:
-        return render(request, 'home.html')
-    return render(request, 'home.html')
+        return render(request, 'home.html', {'ping': response, 'devices_d': devices_d})
+    return render(request, 'home.html', {'data': data})
 
 
 def logout_user(request):
@@ -57,16 +72,17 @@ def register_user(request):
 
 def devices(request):
     if request.user.is_authenticated:
-        devices = Device.objects.all()
+        devices = Device.objects.all().order_by("id")
 
         # update device last_log
         for device in devices:
+            device.graph = get_graph(device.ip)
             last_log = Log.objects.filter(host= device.ip).last()
             if last_log is not None:
                 device.last_log = last_log.datetime
                 device.save()
 
-        paginator = Paginator(devices, 12)
+        paginator = Paginator(devices, 7)
         page_number = request.GET.get("page")
         page_devices = paginator.get_page(page_number)
         
@@ -134,6 +150,90 @@ def remove_device(request, pk):
         return redirect('devices')
     else:
         return redirect('home')
+
+
+# services
+
+def services(request):
+    if request.user.is_authenticated:
+        services = Service.objects.all()
+
+        # update service last_log
+        for service in services:
+            last_log = Log.objects.filter(host= service.ip).last()
+            if last_log is not None:
+                service.last_log = last_log.datetime
+                service.save()
+
+        paginator = Paginator(services, 12)
+        page_number = request.GET.get("page")
+        page_services = paginator.get_page(page_number)
+        
+        return render(request, 'services.html', {'services': page_services})
+    else:
+        return redirect('home')
+
+def service_logs(request, pk):
+    if request.user.is_authenticated:
+        host = Service.objects.get(id=pk)
+
+        label = request.GET.get('label')
+        if label is not None:
+            logs = Log.objects.filter(host= host.ip, label=label)
+        else:
+            logs = Log.objects.filter(host= host.ip)
+   
+        sort_by = request.GET.get('sort')
+        if sort_by in ['datetime', 'host', 'tags', 'message']:
+            logs = logs.order_by(sort_by)
+        else:
+            logs = logs.order_by('-id')
+
+        paginator = Paginator(logs, 16)
+        page_number = request.GET.get("page")
+        page_logs = paginator.get_page(page_number)
+
+        return render(request, 'service_logs.html', {'host': host, 'logs': page_logs, 'label': label, 'sort': sort_by,})
+        pass
+    else:
+        return redirect('home')
+
+def add_service(request):
+    if request.user.is_authenticated:
+        form = ServiceForm(request.POST or None)
+        if request.method == 'POST':
+            if form.is_valid():
+                add_record = form.save()
+                messages.success(request, "Service added successfully")
+                return redirect('services')
+        else:
+            return render(request, 'add_service.html', {'form': form})
+        return render(request, 'add_service.html', {'form': form})
+    else:
+        return redirect('home')
+
+def edit_service(request, pk):
+    if request.user.is_authenticated:
+        update_it = Service.objects.get(id=pk)
+        form = ServiceForm(request.POST or None, instance=update_it)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Service updated successfully")
+            return redirect('services')
+        else:
+            return render(request, 'edit_service.html', {'form': form})
+    else:
+        return redirect('home')
+
+def remove_service(request, pk):
+    if request.user.is_authenticated:
+        delete_it = Service.objects.get(id=pk)
+        delete_it.delete()
+        messages.success(request, "Service removed successfully")
+        return redirect('services')
+    else:
+        return redirect('home')
+
 
 # validated function
 

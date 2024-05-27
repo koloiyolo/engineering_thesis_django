@@ -5,7 +5,7 @@ import json
 import numpy as np
 from datetime import datetime
 
-from .models import Log, Device
+from .models import Log, Device, Service
 
 from .functions import numpy_array_to_list
 
@@ -49,6 +49,7 @@ class DeviceForm(forms.ModelForm):
 
     name        = forms.CharField(label="Device name", max_length="32", widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':'Device name'}))
     ip          = forms.CharField(label="IP address", max_length="32", widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':'Device IP'}))
+    port          = forms.CharField(label="Http port", max_length="32", widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':'Device HTTP Port'}))
     model       = forms.CharField(label="Device model", max_length="32", widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':'Device model'}))
     location    = forms.CharField(label="Location", max_length="32", widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':'Device location'}))
 
@@ -57,5 +58,24 @@ class DeviceForm(forms.ModelForm):
         fields = (
             "name",
             "ip",
+            "port",
             "model",
             "location")
+
+
+
+class ServiceForm(forms.ModelForm):
+
+    name            = forms.CharField(label="Device name", max_length="32", widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':'Device name'}))
+    ip              = forms.CharField(label="IP address", max_length="32", widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':'Device IP'}))
+    port            = forms.CharField(label="Http port", max_length="32", widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':'Device HTTP Port'}))
+    service_type    = forms.CharField(label="Service type", max_length="32", widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':'Service type'}))
+
+
+    class Meta:
+        model = Device
+        fields = (
+            "name",
+            "ip",
+            "port",
+            "service_type")

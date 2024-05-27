@@ -1,7 +1,7 @@
 {% extends 'base.html' %} {% block content %}
 <div class="col-md-12">
-  {% if devices %}
-  <a class="btn btn-dark" href="{% url 'add_device' %}"> Add Device </a>
+  {% if services %}
+  <a class="btn btn-dark" href="{% url 'add_service' %}"> Add Device </a>
   <br />
   <br />
 
@@ -14,7 +14,7 @@
               <div class="col">ID</div>
               <div class="col">Name:</div>
               <div class="col">IP Address:</div>
-              <div class="col">Model:</div>
+              <div class="col">Type:</div>
               <div class="col">Status:</div>
               <div class="col">Last log:</div>
             </div>
@@ -22,7 +22,7 @@
         </button>
       </h2>
     </div>
-    {% for obj in devices %}
+    {% for obj in services %}
     <div class="accordion-item">
       <h2 class="accordion-header" id="heading{{ obj.id }}">
         <button
@@ -37,11 +37,11 @@
               <div class="col">{{ obj.id }}</div>
               <div class="col">{{ obj.name }}</div>
               <div class="col">{{ obj.ip }}</div>
-              <div class="col">{{ obj.model }}</div>
+              <div class="col">{{ obj.type }}</div>
               {% if obj.ping %}
               <div class="col text-success">{{ obj.ping }}</div>
               {% else %}
-              <div class="col text-danger">Device down</div>
+              <div class="col text-danger">Service down</div>
               {% endif %}
               <div class="col">{{ obj.last_log }}</div>
             </div>
@@ -61,16 +61,16 @@
               Connect
             </a>
             {% endif %} {% if obj.last_log %}
-            <a href="{% url 'device_logs' obj.id %}" class="btn btn-dark">
+            <a href="{% url 'service_logs' obj.id %}" class="btn btn-dark">
               Logs
             </a>
             {% endif %}
             <span> </span>
-            <a href="{% url 'edit_device' obj.id %}" class="btn btn-secondary">
+            <a href="{% url 'edit_service' obj.id %}" class="btn btn-secondary">
               Edit
             </a>
             <span> </span>
-            <a href="{% url 'remove_device' obj.id %}" class="btn btn-danger"
+            <a href="{% url 'remove_service' obj.id %}" class="btn btn-danger"
               >Remove</a
             >
           </div>
@@ -82,14 +82,14 @@
   <br />
   <nav>
     <ul class="pagination">
-      {% if devices.has_previous %}
+      {% if services.has_previous %}
       <li class="page-item">
         <a class="page-link" href="?page=1" aria-label="Previous">
           <span aria-hidden="true">&laquo;</span>
         </a>
       </li>
       <li class="page-item">
-        <a class="page-link" href="?page={{ devices.previous_page_number }}"
+        <a class="page-link" href="?page={{ services.previous_page_number }}"
           >Previous</a
         >
       </li>
@@ -97,20 +97,20 @@
 
       <li class="page-item disabled">
         <a class="page-link" href="#"
-          >{{ devices.number }} of {{ devices.paginator.num_pages }}</a
+          >{{ services.number }} of {{ services.paginator.num_pages }}</a
         >
       </li>
 
-      {% if devices.has_next %}
+      {% if services.has_next %}
       <li class="page-item">
-        <a class="page-link" href="?page={{ devices.next_page_number }}"
+        <a class="page-link" href="?page={{ services.next_page_number }}"
           >Next</a
         >
       </li>
       <li class="page-item">
         <a
           class="page-link"
-          href="?page={{ devices.paginator.num_pages }}"
+          href="?page={{ services.paginator.num_pages }}"
           aria-label="Next"
         >
           <span aria-hidden="true">&raquo;</span>
@@ -121,7 +121,7 @@
   </nav>
   {% else %}
   <br />
-  <h3>No devices yet <a href="{% url 'add_device' %}">add new one</a></h3>
+  <h3>No services yet <a href="{% url 'add_service' %}">add new one</a></h3>
   <br />
   {% endif %}
 </div>

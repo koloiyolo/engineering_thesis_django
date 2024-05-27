@@ -1,8 +1,7 @@
 from django.db import models
+from django.utils.translation import gettext_lazy as _
 import numpy as np
 import json
-
-from .functions import numpy_array_to_list, list_to_numpy_array
 
 # Create your models here.
 class Log(models.Model):
@@ -22,8 +21,22 @@ class Log(models.Model):
 class Device(models.Model):
     name                = models.TextField(max_length=50)
     ip                  = models.TextField(max_length=50)
+    port                = models.TextField(max_length=50, null=True)
     model               = models.TextField(max_length=50)
     location            = models.TextField(max_length=50)
     last_log            = models.TextField(max_length=50)
     ping                = models.TextField(max_length=50, null=True)
+    graph               = None
     
+class Service(models.Model):
+    name                = models.TextField(max_length=50)
+    ip                  = models.TextField(max_length=50)
+    port                = models.TextField(max_length=50, null=True)
+    service_type        = models.TextField(max_length=50)
+    last_log            = models.TextField(max_length=50)
+    ping                = models.TextField(max_length=50, null=True)
+    graph               = None
+
+class Ping(models.Model):
+    ip                  = models.TextField(max_length=50)
+    ping                = models.IntegerField(null=True)

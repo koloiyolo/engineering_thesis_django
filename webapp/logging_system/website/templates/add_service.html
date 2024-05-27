@@ -1,10 +1,9 @@
 {% extends 'base.html' %} {% block content %}
-
-<h1>Register</h1>
-
-<br />
 <div class="col-md-6 offset-md-3">
-  <form method="POST" action="{% url 'register' %}">
+  <br />
+  <h1>Add Service</h1>
+  <br />
+  <form method="POST" action="{% url 'add_service' %}">
     {% csrf_token %} {% if form.errors %}
     <div class="alert alert-danger alert-dismissible fade show" role="alert">
       <strong>Your form has Errors</strong>
@@ -19,7 +18,8 @@
     </div>
     {% endif %} {{ form.as_p }}
 
-    <button type="submit" class="btn btn-primary">Sign Up</button>
+    <button type="submit" class="btn btn-dark">Add</button>
+    <a href="{% url 'services' %}" class="btn btn-secondary">Back</a>
   </form>
 </div>
 
