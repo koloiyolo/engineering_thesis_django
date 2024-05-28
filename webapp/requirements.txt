@@ -20,4 +20,5 @@ joblib
 
 #utils
 ping3
+requests
 

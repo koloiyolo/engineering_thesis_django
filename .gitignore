@@ -10,3 +10,4 @@ webapp/logging_system/celerybeat-schedule
 webapp/logging_system/website/templates/devices_copy.html
 webapp/logging_system/website/templates/devices_.html
 webapp/logging_system/website/templates/devices__.html
+webapp/logging_system/website/templates/elements.html

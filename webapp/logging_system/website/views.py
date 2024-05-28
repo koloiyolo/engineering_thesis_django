@@ -3,28 +3,44 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from ping3 import ping
+from requests import get
 
 from .models import Log, Device, Service
 from .forms import SignUpForm, DeviceForm, ServiceForm
-from .functions import get_graph
+from .functions import get_ping_graph, get_labels_graph
 
 # Create your views here.
 
 def home(request):
     
     response = None
+    ip = None
+    logs = Log.objects.all().order_by("-id")[:5]
     try:
         pass
         response = f"{ping('8.8.8.8', unit='ms'):.3} ms"
+        ip = get('https://api.ipify.org').content.decode('utf8')
     except:
         response = None
+        ip = None
         
-
     devices_d = Device.objects.filter(ping=None)
+    for device in devices_d:
+        device.graph = get_ping_graph(device.ip, width=490)
 
+    services_d = Service.objects.filter(ping=None)
+    for service in services_d:
+        service.graph = get_ping_graph(service.ip, width=1000)
+
+    labels_graph = get_labels_graph()
 
     
-
+    data = {'ip': ip,
+            'ping': response,
+            'logs': logs,
+            'devices_d': devices_d, 
+            'services_d': services_d,
+            'labels_graph': labels_graph}
 
     if request.method == 'POST':
         username = request.POST['username']
@@ -39,8 +55,8 @@ def home(request):
             return redirect('home')
 
     else:
-        return render(request, 'home.html', {'ping': response, 'devices_d': devices_d})
-    return render(request, 'home.html', {'data': data})
+        return render(request, 'home.html', data)
+    return render(request, 'home.html', data)
 
 
 def logout_user(request):
@@ -76,13 +92,13 @@ def devices(request):
 
         # update device last_log
         for device in devices:
-            device.graph = get_graph(device.ip)
+            device.graph = get_ping_graph(device.ip)
             last_log = Log.objects.filter(host= device.ip).last()
             if last_log is not None:
                 device.last_log = last_log.datetime
                 device.save()
 
-        paginator = Paginator(devices, 7)
+        paginator = Paginator(devices, 10)
         page_number = request.GET.get("page")
         page_devices = paginator.get_page(page_number)
         
@@ -156,17 +172,17 @@ def remove_device(request, pk):
 
 def services(request):
     if request.user.is_authenticated:
-        services = Service.objects.all()
+        services = Service.objects.all().order_by('id')
 
         # update service last_log
         for service in services:
-            service.graph = get_graph(service.ip)
+            service.graph = get_ping_graph(service.ip)
             last_log = Log.objects.filter(host= service.ip).last()
             if last_log is not None:
                 service.last_log = last_log.datetime
                 service.save()
 
-        paginator = Paginator(services, 12)
+        paginator = Paginator(services, 10)
         page_number = request.GET.get("page")
         page_services = paginator.get_page(page_number)
         

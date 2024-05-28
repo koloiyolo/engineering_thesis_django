@@ -37,7 +37,7 @@
               <div class="col">{{ obj.id }}</div>
               <div class="col">{{ obj.name }}</div>
               <div class="col">{{ obj.ip }}</div>
-              <div class="col">{{ obj.type }}</div>
+              <div class="col">{{ obj.service_type }}</div>
               {% if obj.ping %}
               <div class="col text-success">{{ obj.ping }}</div>
               {% else %}
@@ -55,7 +55,7 @@
       >
         <div class="accordion-body">
           <div id="ping-plot">{{ obj.graph|safe }}</div>
-          <div class="btn-group" role="group">
+          <div class="input-group" role="group">
             {% if obj.port %}
             <a href="http://{{obj.ip}}:{{obj.port}}" class="btn btn-primary">
               Connect
@@ -65,11 +65,9 @@
               Logs
             </a>
             {% endif %}
-            <span> </span>
             <a href="{% url 'edit_service' obj.id %}" class="btn btn-secondary">
-              Edit
+               Edit
             </a>
-            <span> </span>
             <a href="{% url 'remove_service' obj.id %}" class="btn btn-danger"
               >Remove</a
             >

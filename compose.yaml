@@ -3,6 +3,7 @@ services:
 
   db:
     container_name: db_logging
+    restart: always
     image: mysql:8.0
     ports:
       - 3306:3306
@@ -14,12 +15,14 @@ services:
 
   phpmyadmin:
     container_name: phpmyadmin_logging
+    restart: always
     image: phpmyadmin:latest
     ports:
       - 8081:80
 
   syslog-ng:
     container_name: syslog-ng
+    restart: always
     depends_on:
       - db
     build: ./syslog-ng
