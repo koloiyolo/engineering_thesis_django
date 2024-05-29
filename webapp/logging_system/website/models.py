@@ -24,6 +24,7 @@ class BaseInfo(models.Model):
     port                = models.TextField(max_length=50, null=True)
     last_log            = models.TextField(max_length=50)
     ping                = models.TextField(max_length=50, null=True)
+    d_count             = models.IntegerField(default=0)
     graph               = None
 
     class Meta:

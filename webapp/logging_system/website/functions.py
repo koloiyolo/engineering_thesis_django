@@ -1,6 +1,7 @@
 import numpy as np
 import plotly.graph_objs as go
 from .models import Ping, Log
+from ping3 import ping
 
 # NumPy arrays and lists
 def numpy_array_to_list(obj):
@@ -57,3 +58,36 @@ def get_labels_graph():
     plot_div = figure.to_html(full_html=True, )
 
     return plot_div
+
+
+def ping_objects(objects):
+    for object in objects:
+        ip = object.ip
+        response_time = ping(object.ip, unit='ms')
+
+        if response_time is not None:
+            object.ping = f'{int(response_time)} ms'
+            object.d_count = 0
+            object.save()
+        else: 
+            object.ping = None
+            object.d_count = object.d_count + 1
+            if object.d_count >= 5:
+
+                # !!! Change to send_email() !!!
+
+                # send_mail(
+                #     f'Abnormal record detected, label: {label}',
+                #     f'{log.host} {log.tags} {log.message} {log.datetime}',
+                #     'from@example.com',
+                #     ["to@example.com"],
+                #     fail_silently=False,
+
+                # )
+
+                print(f'{object.id} {object.name} IP: {object.ip} is down')
+                object.d_count = 0
+
+            object.save()
+
+        Ping.objects.create(ip=ip, ping=response_time)
