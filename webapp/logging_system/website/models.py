@@ -4,6 +4,7 @@ import numpy as np
 import json
 
 # Create your models here.
+
 class Log(models.Model):
     datetime            = models.TextField(blank=True, null=True)
     host                = models.TextField(blank=True, null=True)
@@ -25,6 +26,7 @@ class BaseInfo(models.Model):
     last_log            = models.TextField(max_length=50)
     ping                = models.TextField(max_length=50, null=True)
     d_count             = models.IntegerField(default=0)
+    email_notify        =models.BooleanField(default=False)
     graph               = None
 
     class Meta:
@@ -41,3 +43,4 @@ class Service(BaseInfo):
 class Ping(models.Model):
     ip                  = models.TextField(max_length=50)
     ping                = models.IntegerField(null=True)
+

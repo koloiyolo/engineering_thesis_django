@@ -159,3 +159,15 @@ CELERY_BEAT_SCHEDULE = {
     }
 
 }
+
+from website.models import EmailConfiguration
+
+# Email SMTP Config
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.example.com'
+EMAIL_PORT = 465  # or 465 for SSL
+EMAIL_USE_SSL = True  # or EMAIL_USE_SSL = True
+EMAIL_HOST_USER = 'from@example.com'
+EMAIL_HOST_PASSWORD = 'example.password'
+DEFAULT_FROM_EMAIL = 'from@example.com'

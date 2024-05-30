@@ -11,7 +11,8 @@ import time
 import joblib
 import os
 
-from django.core.mail import send_mail
+from django.core.mail import send_mass_mail
+
 
 from .models import Log
 
@@ -55,6 +56,10 @@ def train():
 
 def classify():
     if os.path.exists("kmeans.joblib") and os.path.exists("encoder.joblib"):
+
+        emails = []
+        send_to = User.objects.values_list('email', flat=True).distinct()
+
         data = Log.objects.all().filter(label=None)[:2500]
 
         if data.count() == 0:
@@ -79,16 +84,15 @@ def classify():
 
                 # !!! Change to send_email() !!!
 
-                # send_mail(
-                #     f'Abnormal record detected, label: {label}',
-                #     f'{log.host} {log.tags} {log.message} {log.datetime}',
-                #     'from@example.com',
-                #     ["to@example.com"],
-                #     fail_silently=False,
-
-                # )
+                emails.append((
+                    f'Abnormal record detected, label: {label}',
+                    f'{log.host} {log.tags} {log.message} {log.datetime}',
+                    'from@example.com',
+                    send_to))
 
                 print(f'{log.datetime} {log.host} {log.tags} {log.message}')
+
+        send_mass_mail(emails)
 
         return True
     else:

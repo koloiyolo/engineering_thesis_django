@@ -1,7 +1,11 @@
 import numpy as np
 import plotly.graph_objs as go
 from .models import Ping, Log
+from django.contrib.auth.models import User
+
 from ping3 import ping
+
+from django.core.mail import send_mass_mail
 
 # NumPy arrays and lists
 def numpy_array_to_list(obj):
@@ -61,6 +65,10 @@ def get_labels_graph():
 
 
 def ping_objects(objects):
+
+    emails = []
+    send_to = User.objects.values_list('email', flat=True).distinct()
+
     for object in objects:
         ip = object.ip
         response_time = ping(object.ip, unit='ms')
@@ -68,26 +76,25 @@ def ping_objects(objects):
         if response_time is not None:
             object.ping = f'{int(response_time)} ms'
             object.d_count = 0
-            object.save()
-        else: 
+        elif object.email_notify: 
             object.ping = None
             object.d_count = object.d_count + 1
             if object.d_count >= 5:
 
                 # !!! Change to send_email() !!!
 
-                # send_mail(
-                #     f'Abnormal record detected, label: {label}',
-                #     f'{log.host} {log.tags} {log.message} {log.datetime}',
-                #     'from@example.com',
-                #     ["to@example.com"],
-                #     fail_silently=False,
+                emails.append(
+                    (f'Your device/serivce is down, name: {object.name}',
+                    f'{object.id} {object.name} {object.ip}',
+                    'from@example.com',
+                    send_to)
 
-                # )
-
-                print(f'{object.id} {object.name} IP: {object.ip} is down')
+                )
                 object.d_count = 0
 
-            object.save()
+        object.save()
 
         Ping.objects.create(ip=ip, ping=response_time)
+
+    if emails:
+        send_mass_mail(emails)
