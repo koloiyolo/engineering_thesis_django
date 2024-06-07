@@ -4,6 +4,7 @@ from sklearn.cluster import KMeans, AgglomerativeClustering
 # from sklearn.preprocessing import OneHotEncoder
 from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
 from sklearn.utils import Bunch
+from django.contrib.auth.models import User
 
 import numpy as np
 import random

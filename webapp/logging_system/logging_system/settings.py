@@ -160,8 +160,6 @@ CELERY_BEAT_SCHEDULE = {
 
 }
 
-from website.models import EmailConfiguration
-
 # Email SMTP Config
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
