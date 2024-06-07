@@ -11,3 +11,11 @@ webapp/logging_system/website/templates/devices_copy.html
 webapp/logging_system/website/templates/devices_.html
 webapp/logging_system/website/templates/devices__.html
 webapp/logging_system/website/templates/elements.html
+logging_system/celerybeat-schedule
+logging_system/encoder.joblib
+logging_system/kmeans.joblib
+logging_system/website/migrations/
+logging_system/website/__pycache__/
+logging_system/scheluder/migrations/
+logging_system/scheluder/__pycache__/
+logging_system/logging_system/__pycache__/

@@ -14,7 +14,7 @@ class Log(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'logs'
+        db_table = 'log'
 
     def get_features(self):
         return f"{self.message} {self.tags}"

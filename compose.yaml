@@ -41,3 +41,12 @@ services:
     environment:
       - REDIS_PORT=6379
       - REDIS_DATABASES=16
+
+  logging_system:
+    container_name: logging_system
+    restart: always
+    depends_on:
+      - db
+    build: "./logging_system"
+    ports:
+      - "80:8000"

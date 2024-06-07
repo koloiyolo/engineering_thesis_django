@@ -1,0 +1,103 @@
+{% extends 'base.html' %} {% block content %}
+<div class="col-md-12">
+  {% if devices %}
+  <a class="btn btn-dark" href="{% url 'add_device' %}"> Add Device </a>
+  <br />
+  <br />
+  <table class="table table-striped table-hover">
+    <thead>
+      <tr>
+        <th scope="col">ID</th>
+        <th scope="col">Name</th>
+        <th scope="col">IP</th>
+        <th scope="col">Model</th>
+        <th scope="col">Location</th>
+        <th scope="col">Last log</th>
+        <th scope="col">Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for obj in devices %}
+      <tr>
+        <td>{{ obj.id }}</td>
+        <td>{{ obj.name }}</td>
+        <td>{{ obj.ip }}</td>
+        <td>{{ obj.model }}</td>
+        <td>{{ obj.location }}</td>
+        <td>{{ obj.last_log }}</td>
+        {% if obj.ping %}
+        <td class="text-success">{{ obj.ping }}</td>
+        {% else %}
+        <td class="text-danger">Device down</td>
+        {% endif %}
+        <td class="text-end">
+          <div class="btn-group" role="group">
+            {% if obj.port %}
+            <a href="http://{{obj.ip}}:{{obj.port}}" class="btn btn-primary">
+              Connect
+            </a>
+            <span> </span>
+            {% endif %}
+            <a href="{% url 'device_logs' obj.id %}" class="btn btn-dark">
+              Logs
+            </a>
+            <span> </span>
+            <a href="{% url 'edit_device' obj.id %}" class="btn btn-secondary">
+              Edit
+            </a>
+            <span> </span>
+            <a href="{% url 'remove_device' obj.id %}" class="btn btn-danger"
+              >Remove</a
+            >
+          </div>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <nav>
+    <ul class="pagination">
+      {% if devices.has_previous %}
+      <li class="page-item">
+        <a class="page-link" href="?page=1" aria-label="Previous">
+          <span aria-hidden="true">&laquo;</span>
+        </a>
+      </li>
+      <li class="page-item">
+        <a class="page-link" href="?page={{ devices.previous_page_number }}"
+          >Previous</a
+        >
+      </li>
+      {% endif %}
+
+      <li class="page-item disabled">
+        <a class="page-link" href="#"
+          >{{ devices.number }} of {{ devices.paginator.num_pages }}</a
+        >
+      </li>
+
+      {% if devices.has_next %}
+      <li class="page-item">
+        <a class="page-link" href="?page={{ devices.next_page_number }}"
+          >Next</a
+        >
+      </li>
+      <li class="page-item">
+        <a
+          class="page-link"
+          href="?page={{ devices.paginator.num_pages }}"
+          aria-label="Next"
+        >
+          <span aria-hidden="true">&raquo;</span>
+        </a>
+      </li>
+      {% endif %}
+    </ul>
+  </nav>
+  {% else %}
+  <br />
+  <h3>No devices yet <a href="{% url 'add_device' %}">add new one</a></h3>
+  <br />
+  {% endif %}
+</div>
+{% endblock %}
