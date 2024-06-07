@@ -50,3 +50,17 @@ services:
     build: "./logging_system"
     ports:
       - "80:8000"
+
+  celery:
+    build: "./logging_system"
+    command: celery -A logging_system worker -l info
+    depends_on:
+      - db
+      - redis
+
+  celery-beat:
+    build: "./logging_system"
+    command: celery -A logging_system beat -l info
+    depends_on:
+      - db 
+      - redis
