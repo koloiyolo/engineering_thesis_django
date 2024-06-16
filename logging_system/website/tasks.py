@@ -2,18 +2,18 @@ from celery import shared_task
 from ping3 import ping
 
 from .models import Log, Device, Service, Ping
-from .ml import train, classify
+from .ml import classify_som, train_som, train_ahc, classify_ahc
 from .functions import ping_objects
 
 
 
 @shared_task
 def ml_classify_task ():
-    classify()
+    classify_ahc()
 
 @shared_task
 def ml_train_task ():
-    train()
+    train_ahc()
     
 @shared_task
 def ping_task ():

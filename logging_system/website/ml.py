@@ -3,99 +3,167 @@ from django.shortcuts import render
 from sklearn.cluster import KMeans, AgglomerativeClustering
 # from sklearn.preprocessing import OneHotEncoder
 from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
+from sklearn.preprocessing import MinMaxScaler
 from sklearn.utils import Bunch
-from django.contrib.auth.models import User
+
+from minisom import MiniSom
 
 import numpy as np
-import random
 import time
 import joblib
 import os
 
 from django.core.mail import send_mass_mail
 
-
 from .models import Log
+from .functions import get_logs, send_anomaly_emails
 
-def train():
-    count = Log.objects.count()
-    if count > 20000:
-        data = None
-        offset = None
-        if count > 100000:
-            offset = random.randint(0, (count - 100000))
-            data = Log.objects.all()[offset:offset + 100000]
 
-        elif count > 50000:
-            offset = random.randint(0, (count - 50000))
-            data = Log.objects.all()[offset:offset + 50000]
-            
-        else:
-            offset = random.randint(0, (count - 20000))
-            data = Log.objects.all()[offset:offset + 20000]
-        
+# sklearn ML train function prototype
+def train(model=KMeans(2, random_state=42), file_prefix='kmeans'):
+    data = get_logs(train=True)
+    if data is not None:
         features = [obj.get_features() for obj in data]
         encoder = TfidfVectorizer()
-        encoder.fit(features)
-        encoded_features = encoder.transform(features)
-        encoded_features = encoded_features.toarray()
-
+        encoded_features = encoder.fit_transform(features).toarray()
 
         clf = KMeans(10, random_state=42)
         X = np.array(encoded_features)
         clf.fit(X)
 
-        joblib.dump(clf, 'kmeans.joblib')
-        joblib.dump(encoder, 'encoder.joblib')
+        joblib.dump(clf, file_prefix + '.joblib')
+        joblib.dump(encoder, file_prefix + '_encoder.joblib')
 
         return True
 
     else:
         return True
 
-    pass
+    return False
 
-def classify():
-    if os.path.exists("kmeans.joblib") and os.path.exists("encoder.joblib"):
-
-        emails = []
-        send_to = User.objects.values_list('email', flat=True).distinct()
-
-        data = Log.objects.all().filter(label=None)[:2500]
-
-        if data.count() == 0:
+# sklearn ML classify function prototype
+def classify(file_prefix = 'kmeans'):
+    clf_file = file_prefix + '.joblib'
+    encoder_file = file_prefix + '_encoder.joblib'
+    if os.path.exists(clf_file) and os.path.exists(encoder_file):
+        data = get_logs()
+        if data is None:
             print("No data to classify")
             return True
 
         features = [obj.get_features() for obj in data]
 
-        encoder = joblib.load("encoder.joblib")
-        encoded_features = encoder.fit_transform(features)
-        encoded_features = encoded_features.toarray()
+        encoder = joblib.load(encoder_file)
+        encoded_features = encoder.transform(features).toarray()
         X = np.array(encoded_features)
 
-        clf = joblib.load("kmeans.joblib")
+        clf = joblib.load(clf_file)
         clf.fit(X)
         labels = clf.labels_
-
         for log, label in zip(data, labels):
             log.label = label
             log.save()
-            if label == 6 or label == 9:
 
-                # !!! Change to send_email() !!!
-
-                emails.append((
-                    f'Abnormal record detected, label: {label}',
-                    f'{log.host} {log.tags} {log.message} {log.datetime}',
-                    'from@example.com',
-                    send_to))
-
-                print(f'{log.datetime} {log.host} {log.tags} {log.message}')
-
-        send_mass_mail(emails)
+        send_anomaly_emails(data, debug=True)
 
         return True
     else:
         return True
+    return False
+
+#######################################################################################################
+
+# K-Means
+def train_kmeans():
+    return train(
+        model = KMeans(2, random_state=42),
+        file_prefix = 'kmeans'
+    )
+
+def classify_kmeans():
+    return classify(
+        file_prefix = 'kmeans'
+    )
+
+# AHC
+def train_ahc():
+    return train(
+        model = AgglomerativeClustering(n_clusters=2),
+        file_prefix = 'ahc'
+    )
+
+def classify_ahc():
+    return classify(
+        file_prefix = 'ahc'
+    )
+
+# SOM
+def train_som():
+    data = get_logs(train=True)
+    if data is not None:
+        file_prefix = 'som'
+        features = [obj.get_features() for obj in data]
+        encoder = TfidfVectorizer()
+        encoded_features = encoder.fit_transform(features).toarray()
+        input_len = encoded_features.shape[1]
+
+        som = MiniSom(x=20, y=2, input_len=input_len, sigma=1, learning_rate=0.5)
+        X = np.array(encoded_features)
+        som.random_weights_init(encoded_features)
+        som.train_random(encoded_features, 1000)
+
+        joblib.dump(som, 'som.joblib')
+        joblib.dump(encoder, 'som_encoder.joblib')
+
+        return True
+
+    else:
+        return False
+
+    return False
+
+def classify_som():
+    som_file = 'som.joblib'
+    encoder_file = 'som_encoder.joblib'
+
+    if os.path.exists(som_file) and os.path.exists(encoder_file):
+        data = get_logs()
+        if data is None or len(data) == 0:
+            print("No data to classify")
+            return True
+
+        features = [log.get_features() for log in data]
+
+        encoder = joblib.load(encoder_file)
+        encoded_features = encoder.transform(features).toarray()
+
+        som = joblib.load(som_file)
+
+        def assign_labels_som(som, encoded_features):
+            labels = []
+            for feat in encoded_features:
+                winner = som.winner(feat)
+                if winner == (0, 0):
+                    labels.append(0)  # Normal
+                else:
+                    labels.append(1)  # Anomaly
+            return np.array(labels)
+
+        predicted_labels = assign_labels_som(som, encoded_features)
+
+        for log, label in zip(data, predicted_labels):
+            log.label = label
+            log.save()
+
+        send_anomaly_emails(data, debug=True)
+
+        return True
+
+    else:
+        if train_som():
+            classify_som()
+            return True
+        else:
+            return False
+
     return False
