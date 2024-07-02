@@ -139,19 +139,16 @@ def classify_som():
 
         som = joblib.load(som_file)
 
-        def assign_labels_som(som, encoded_features):
-            labels = []
-            for feat in encoded_features:
-                winner = som.winner(feat)
-                if winner == (0, 0):
-                    labels.append(0)  # Normal
-                else:
-                    labels.append(1)  # Anomaly
-            return np.array(labels)
+        labels = []
+        for feat in encoded_features:
+            winner = som.winner(feat)
+            if winner == (0, 0):
+                labels.append(0)  # Normal
+            else:
+                labels.append(1)  # Anomaly
 
-        predicted_labels = assign_labels_som(som, encoded_features)
 
-        for log, label in zip(data, predicted_labels):
+        for log, label in zip(data, labels):
             log.label = label
             log.save()
 

@@ -117,7 +117,7 @@ def device_logs(request, pk):
             logs = Log.objects.filter(host= host.ip)
    
         sort_by = request.GET.get('sort')
-        if sort_by in ['datetime', 'host', 'tags', 'message']:
+        if sort_by in ['datetime', 'host', 'program', 'message']:
             logs = logs.order_by(sort_by)
         else:
             logs = logs.order_by('-id')
@@ -201,7 +201,7 @@ def service_logs(request, pk):
             logs = Log.objects.filter(host= host.ip)
    
         sort_by = request.GET.get('sort')
-        if sort_by in ['datetime', 'host', 'tags', 'message']:
+        if sort_by in ['datetime', 'host', 'program', 'message']:
             logs = logs.order_by(sort_by)
         else:
             logs = logs.order_by('-id')

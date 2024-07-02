@@ -25,7 +25,7 @@
             style="text-decoration: none"
             href="?sort=tags{% if label %}&label={{label}}{% endif %}"
           >
-            Tags
+            Program
           </a>
         </th>
         <th scope="col">
@@ -66,7 +66,7 @@
       {% for log in logs %}
       <tr>
         <td>{{ log.datetime }}</td>
-        <td>{{ log.tags }}</td>
+        <td>{{ log.program }}</td>
         <td>{{ log.message }}</td>
         <td>{{ log.label }}</td>
       </tr>
