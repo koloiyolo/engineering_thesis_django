@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 from django.core.paginator import Paginator
+from django.contrib import messages
 from config.models import Settings
 from .models import Log, Service
 from .forms import ServiceForm
@@ -60,7 +61,7 @@ def add(request):
             if form.is_valid():
                 add_record = form.save()
                 messages.success(request, "Service added successfully")
-                return redirect('services')
+                return redirect('services:list')
         else:
             return render(request, 'add_service.html', {'form': form})
         return render(request, 'add_service.html', {'form': form})
@@ -74,7 +75,7 @@ def edit(request, pk):
         if form.is_valid():
             form.save()
             messages.success(request, "Service updated successfully")
-            return redirect('services')
+            return redirect('services:list')
         else:
             return render(request, 'edit_service.html', {'form': form})
     else:
@@ -85,7 +86,7 @@ def remove(request, pk):
         delete_it = Service.objects.get(id=pk)
         delete_it.delete()
         messages.success(request, "Service removed successfully")
-        return redirect('services')
+        return redirect('services:list')
     else:
         return redirect('home')
 

@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 from django.core.paginator import Paginator
+from django.contrib import messages
 from website.functions import get_ping_graph
 from .models import Device, Log
 from config.models import Settings
@@ -60,7 +61,7 @@ def add(request):
             if form.is_valid():
                 add_record = form.save()
                 messages.success(request, "Device added successfully")
-                return redirect('devices')
+                return redirect('devices:list')
         else:
             return render(request, 'add_device.html', {'form': form})
         return render(request, 'add_device.html', {'form': form})
@@ -74,7 +75,7 @@ def edit(request, pk):
         if form.is_valid():
             form.save()
             messages.success(request, "Device updated successfully")
-            return redirect('devices')
+            return redirect('devices:list')
         else:
             return render(request, 'edit_device.html', {'form': form})
     else:
@@ -85,7 +86,7 @@ def remove(request, pk):
         delete_it = Device.objects.get(id=pk)
         delete_it.delete()
         messages.success(request, "Device removed successfully")
-        return redirect('devices')
+        return redirect('devices:list')
     else:
         return redirect('home')
 

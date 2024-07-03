@@ -157,7 +157,7 @@ CELERY_BEAT_SCHEDULE = {
     },
     'ping-every-2-minutes': {
         'task': 'website.tasks.ping_task',
-        'schedule': 300.0,
+        'schedule': 60.0,
         'args':(),
     }
 

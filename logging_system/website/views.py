@@ -19,7 +19,6 @@ def home(request):
     ip = None
     logs = Log.objects.all().order_by("-id")[:5]
     try:
-        pass
         response = f"{ping('8.8.8.8', unit='ms'):.3} ms"
         ip = get('https://api.ipify.org').content.decode('utf8')
     except:
@@ -32,7 +31,7 @@ def home(request):
 
     services_d = Service.objects.filter(ping=None)
     for service in services_d:
-        service.graph = get_ping_graph(service.ip, width=1000)
+        service.graph = get_ping_graph(service.ip, width=490)
 
     labels_graph = get_labels_graph()
 

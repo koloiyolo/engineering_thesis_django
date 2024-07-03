@@ -1,7 +1,9 @@
+from django.contrib.auth.models import User
 import numpy as np
 import plotly.graph_objs as go
 from .models import Ping, Log
-from django.contrib.auth.models import User
+from devices.models import Device
+from services.models import Service
 
 from ping3 import ping
 import random
@@ -73,26 +75,24 @@ def ping_objects(objects):
     for object in objects:
         ip = object.ip
         response_time = ping(object.ip, unit='ms')
-
+        print(f"{object.ip}, {response_time}")
         if response_time is not None:
             object.ping = f'{int(response_time)} ms'
             object.d_count = 0
-        elif object.email_notify: 
+        else:
             object.ping = None
             object.d_count = object.d_count + 1
-            if object.d_count >= 5:
+            if object.d_count >= 5 and object.email_notify:
 
                 # !!! Change to send_email() !!!
-
-                emails.append(
-                    (f'Your device/serivce is down, name: {object.name}',
-                    f'{object.id} {object.name} {object.ip}',
-                    'from@example.com',
-                    send_to)
-
-                )
+                print(f'Your device/serivce is down, name: {object.name}')
+                # emails.append(
+                #     (f'Your device/serivce is down, name: {object.name}',
+                #     f'{object.id} {object.name} {object.ip}',
+                #     'from@example.com',
+                #     send_to))
                 object.d_count = 0
-
+        
         object.save()
 
         Ping.objects.create(ip=ip, ping=response_time)

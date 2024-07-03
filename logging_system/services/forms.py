@@ -10,10 +10,10 @@ class ServiceForm(forms.ModelForm):
         (False, 'No'),
     ]
 
-    name            = forms.CharField(label="Service name", max_length="32", widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':'Device name'}))
-    ip              = forms.CharField(label="IP address", max_length="32", widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':'Device IP'}))
+    name            = forms.CharField(label="Service name", max_length="32", widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':'Service name'}))
+    ip              = forms.CharField(label="IP address", max_length="32", widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':'Service IP'}))
     email_notify    = forms.ChoiceField(choices=EMAIL_NOTIFY_CHOICES,widget=forms.RadioSelect,label="Do you want to receive email notifications for abnormalities?") 
-    port            = forms.CharField(label="Http port", max_length="32", widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':'Device HTTP Port'}), required=False)
+    port            = forms.CharField(label="Http port", max_length="32", widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':'Service HTTP Port'}), required=False)
     service_type    = forms.CharField(label="Service type", max_length="32", widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':'Service type'}))
 
 

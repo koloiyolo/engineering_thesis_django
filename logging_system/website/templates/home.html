@@ -148,10 +148,10 @@
                           {% if device.port %}
                             <a href="http://{{ device.ip }}:{{ device.port }}" class="btn btn-primary">Connect</a>
                           {% endif %} {% if device.last_log %}
-                            <a href="{% url 'device_logs' device.id %}" class="btn btn-dark">Logs</a>
+                            <a href="{% url 'devices:logs' device.id %}" class="btn btn-dark">Logs</a>
                           {% endif %}
-                          <a href="{% url 'edit_device' device.id %}" class="btn btn-secondary">Edit</a>
-                          <a href="{% url 'remove_device' device.id %}" class="btn btn-danger">Remove</a>
+                          <a href="{% url 'devices:edit' device.id %}" class="btn btn-secondary">Edit</a>
+                          <a href="{% url 'devices:remove' device.id %}" class="btn btn-danger">Remove</a>
                         </div>
                       </div>
                     </div>
@@ -199,10 +199,10 @@
                         {% if service.port %}
                           <a href="http://{{ service.ip }}:{{ service.port }}" class="btn btn-primary">Connect</a>
                         {% endif %} {% if service.last_log %}
-                          <a href="{% url 'service_logs' service.id %}" class="btn btn-dark">Logs</a>
+                          <a href="{% url 'services:logs' service.id %}" class="btn btn-dark">Logs</a>
                         {% endif %}
-                        <a href="{% url 'edit_service' service.id %}" class="btn btn-secondary">Edit</a>
-                        <a href="{% url 'remove_service' service.id %}" class="btn btn-danger">Remove</a>
+                        <a href="{% url 'services:edit' service.id %}" class="btn btn-secondary">Edit</a>
+                        <a href="{% url 'services:remove' service.id %}" class="btn btn-danger">Remove</a>
                       </div>
                     </div>
                   </div>
