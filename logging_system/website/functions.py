@@ -103,31 +103,20 @@ def ping_objects(objects):
         send_mass_mail(emails)
     return True
 
-def get_logs(train = False):
+def get_logs(get_count):
     data = None
-    if train:
-        count = Log.objects.all().count()
-        offset = None
-        if count > 20000:
-            data = None
-            offset = None
-            if count > 100000:
-                offset = random.randint(0, (count - 100000))
-                data = Log.objects.all()[offset:offset + 100000]
-
-            elif count > 50000:
-                offset = random.randint(0, (count - 50000))
-                data = Log.objects.all()[offset:offset + 50000]
-
-            else:
-                offset = random.randint(0, (count - 20000))
-                data = Log.objects.all()[offset:offset + 20000]
+    count = Log.objects.all().count()
+    if count > get_count:
+        offset = random.randint(0, (count - get_count))
+        data = Log.objects.all()[offset:offset + get_count]
     else:
-        data = Log.objects.all().filter(label=None)[:2500]
+        data = Log.objects.all()
+    
+    data = Log.objects.all().filter(label=None)[:2500]
 
-        if data.count() == 0:
-            data = None
-            return data
+    if data.count() == 0:
+        data = None
+        return data
 
     return data
 

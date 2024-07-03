@@ -19,3 +19,5 @@ logging_system/website/__pycache__/
 logging_system/scheluder/migrations/
 logging_system/scheluder/__pycache__/
 logging_system/logging_system/__pycache__/
+logging_system/config/__pycache__/
+logging_system/config/migrations/

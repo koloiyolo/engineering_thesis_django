@@ -5,6 +5,7 @@ from django.contrib import messages
 from ping3 import ping
 from requests import get
 
+from config.models import Settings
 from .models import Log, Device, Service
 from .forms import SignUpForm, DeviceForm, ServiceForm
 from .functions import get_ping_graph, get_labels_graph
@@ -108,6 +109,7 @@ def devices(request):
 
 def device_logs(request, pk):
     if request.user.is_authenticated:
+
         host = Device.objects.get(id=pk)
 
         label = request.GET.get('label')
@@ -121,8 +123,9 @@ def device_logs(request, pk):
             logs = logs.order_by(sort_by)
         else:
             logs = logs.order_by('-id')
-
-        paginator = Paginator(logs, 16)
+            
+        items_per_page = Settings.load().items_per_page
+        paginator = Paginator(logs, items_per_page)
         page_number = request.GET.get("page")
         page_logs = paginator.get_page(page_number)
 
@@ -206,7 +209,8 @@ def service_logs(request, pk):
         else:
             logs = logs.order_by('-id')
 
-        paginator = Paginator(logs, 16)
+        items_per_page = Settings.load().items_per_page
+        paginator = Paginator(logs, items_per_page)
         page_number = request.GET.get("page")
         page_logs = paginator.get_page(page_number)
 

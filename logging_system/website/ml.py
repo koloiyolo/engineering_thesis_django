@@ -16,12 +16,13 @@ import os
 from django.core.mail import send_mass_mail
 
 from .models import Log
+from config.models import Settings
 from .functions import get_logs, send_anomaly_emails
 
 
 # sklearn ML train function prototype
 def train(model=KMeans(2, random_state=42), file_prefix='kmeans'):
-    data = get_logs(train=True)
+    data = get_logs(Settings.load().ml_train)
     if data is not None:
         features = [obj.get_features() for obj in data]
         encoder = TfidfVectorizer()
@@ -46,7 +47,7 @@ def classify(file_prefix = 'kmeans'):
     clf_file = file_prefix + '.joblib'
     encoder_file = file_prefix + '_encoder.joblib'
     if os.path.exists(clf_file) and os.path.exists(encoder_file):
-        data = get_logs()
+        data = get_logs(Settings.load().ml_classify)
         if data is None:
             print("No data to classify")
             return True
@@ -99,7 +100,7 @@ def classify_ahc():
 
 # SOM
 def train_som():
-    data = get_logs(train=True)
+    data = get_logs(Settings.load().ml_train)
     if data is not None:
         file_prefix = 'som'
         features = [obj.get_features() for obj in data]
@@ -127,7 +128,7 @@ def classify_som():
     encoder_file = 'som_encoder.joblib'
 
     if os.path.exists(som_file) and os.path.exists(encoder_file):
-        data = get_logs()
+        data = get_logs(Settings.load().ml_classify)
         if data is None or len(data) == 0:
             print("No data to classify")
             return True

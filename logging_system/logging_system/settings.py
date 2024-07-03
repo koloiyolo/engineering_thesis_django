@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'website',
+    'config'
 ]
 
 MIDDLEWARE = [
@@ -162,10 +163,26 @@ CELERY_BEAT_SCHEDULE = {
 
 # Email SMTP Config
 
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.example.com'
-EMAIL_PORT = 465  # or 465 for SSL
-EMAIL_USE_SSL = True  # or EMAIL_USE_SSL = True
-EMAIL_HOST_USER = 'from@example.com'
-EMAIL_HOST_PASSWORD = 'example.password'
-DEFAULT_FROM_EMAIL = 'from@example.com'
+# def load_app_settings():
+#     from config.models import Settings
+#     settings = Settings.load()
+#     return {
+#         'EMAIL_HOST': settings.email_host,
+#         'EMAIL_PORT': settings.email_port,
+#         'EMAIL_HOST_USER': settings.email_host_user,
+#         'EMAIL_HOST_PASSWORD': settings.email_host_password,
+#         'EMAIL_USE_SSL': settings.email_use_ssl,
+#         'DEFAULT_FROM_EMAIL': settings.email_from_address,
+#     }
+
+# # Update EMAIL settings
+# EMAIL_CONFIG = load_app_settings()
+
+# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+# EMAIL_HOST = EMAIL_CONFIG['EMAIL_HOST']
+# EMAIL_PORT = EMAIL_CONFIG['EMAIL_PORT']
+# EMAIL_HOST_USER = EMAIL_CONFIG['EMAIL_HOST_USER']
+# EMAIL_HOST_PASSWORD = EMAIL_CONFIG['EMAIL_HOST_PASSWORD']
+# EMAIL_USE_SSL = EMAIL_CONFIG['EMAIL_USE_SSL']
+# DEFAULT_FROM_EMAIL = EMAIL_CONFIG['DEFAULT_FROM_EMAIL']
+
