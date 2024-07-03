@@ -3,7 +3,7 @@
   <br />
   <h1>Add Service</h1>
   <br />
-  <form method="POST" action="{% url 'add_service' %}">
+  <form method="POST" action="{% url 'services:add' %}">
     {% csrf_token %} {% if form.errors %}
     <div class="alert alert-danger alert-dismissible fade show" role="alert">
       <strong>Your form has Errors</strong>
@@ -19,7 +19,7 @@
     {% endif %} {{ form.as_p }}
 
     <button type="submit" class="btn btn-dark">Add</button>
-    <a href="{% url 'services' %}" class="btn btn-secondary">Back</a>
+    <a href="{% url 'services:list' %}" class="btn btn-secondary">Back</a>
   </form>
 </div>
 

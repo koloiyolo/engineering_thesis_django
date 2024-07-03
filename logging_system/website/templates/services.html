@@ -1,7 +1,7 @@
 {% extends 'base.html' %} {% block content %}
 <div class="col-md-12">
   {% if services %}
-  <a class="btn btn-dark" href="{% url 'add_service' %}"> Add Service </a>
+  <a class="btn btn-dark" href="{% url 'services:add' %}"> Add Service </a>
   <br />
   <br />
 
@@ -61,14 +61,14 @@
               Connect
             </a>
             {% endif %} {% if obj.last_log %}
-            <a href="{% url 'service_logs' obj.id %}" class="btn btn-dark">
+            <a href="{% url 'services:logs' obj.id %}" class="btn btn-dark">
               Logs
             </a>
             {% endif %}
-            <a href="{% url 'edit_service' obj.id %}" class="btn btn-secondary">
+            <a href="{% url 'services:edit' obj.id %}" class="btn btn-secondary">
                Edit
             </a>
-            <a href="{% url 'remove_service' obj.id %}" class="btn btn-danger"
+            <a href="{% url 'services:remove' obj.id %}" class="btn btn-danger"
               >Remove</a
             >
           </div>
@@ -119,7 +119,7 @@
   </nav>
   {% else %}
   <br />
-  <h3>No services yet <a href="{% url 'add_service' %}">add new one</a></h3>
+  <h3>No services yet <a href="{% url 'services:add' %}">add new one</a></h3>
   <br />
   {% endif %}
 </div>

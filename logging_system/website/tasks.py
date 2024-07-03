@@ -1,7 +1,9 @@
 from celery import shared_task
 from ping3 import ping
 
-from .models import Log, Device, Service, Ping
+from .models import Log, Ping
+from devices.models import Device
+from services.models import Service
 from config.models import Settings
 from .ml import classify_som, train_som, classify_ahc, train_ahc, classify_kmeans, train_kmeans
 from .functions import ping_objects

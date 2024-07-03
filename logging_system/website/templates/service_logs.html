@@ -2,7 +2,7 @@
 <div class="col-md-12">
   <br />
   <h4>
-    <a class="btn btn-dark" href="{% url 'services' %}">&laquo; Back</a> {{ host.name }}'s logs
+    <a class="btn btn-dark" href="{% url 'services:list' %}">&laquo; Back</a> {{ host.name }}'s logs
   </h4>
   <br />
   {% if logs %}
