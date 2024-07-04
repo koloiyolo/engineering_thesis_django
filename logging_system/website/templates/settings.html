@@ -1,19 +1,76 @@
 {% extends 'base.html' %} {% block content %}
 
-<div class="col-md-10 offset-md-1">
-  <br />
-  <h1>Settings</h1>
-  <br />
+<div class="col-md-8 offset-md-2">
   <form method="POST">
     {% csrf_token %} {% if form.errors %}
     <div class="alert alert-danger alert-dismissible fade show" role="alert">
       <strong>Your form has Errors</strong>
-      {% for field in form %} {% if field.errors %} {{ field.errors }} {% endif %} {% endfor %}
+      {% for field in form %} 
+      {% if field.errors %} 
+      {{ field.errors }} 
+      {% endif %} {% endfor %}
     </div>
-    {% endif %} {{ form.as_p }}
-
+    {% endif %}
+    <br />
+    <h1>
+      Settings
+    </h1>
+    <br />
+    <div class="card">
+      <ul class="list-group list-group-flush">
+        <li class="list-group-item">
+          <div class="form-group">
+            <br />
+            <h5>Main settings</h5>
+              {{ form.maintenance_mode.label_tag }}
+              {{ form.maintenance_mode }}
+              {{ form.contact_email.label_tag }}
+              {{ form.contact_email }}
+              {{ form.items_per_page.label_tag }}
+              {{ form.items_per_page }}
+              <br />
+          </div>
+        </li>
+        <li class="card-header" style='list-style-type: none;'>
+          <div class="form-group">
+            <br />
+            <h5>Email settings</h5>
+              {{ form.email_host.label_tag }}
+              {{ form.email_host }}
+              {{ form.email_port.label_tag }}
+              {{ form.email_port }}
+              {{ form.email_use_ssl.label_tag }}
+              {{ form.email_use_ssl }}
+              {{ form.email_host_user.label_tag }}
+              {{ form.email_host_user }}
+              {{ form.email_host_password.label_tag }}
+              {{ form.email_host_password }}
+              {{ form.email_from_address.label_tag }}
+              {{ form.email_from_address }}
+              <br/>
+          </div>
+        </li>
+        <li class="list-group-item">
+          <div class="form-group">
+            <br />
+            <h5>Machine Learning Settings</h5>
+              {{ form.ml_model.label_tag }}
+              {{ form.ml_model }}
+              {{ form.ml_train.label_tag }}
+              {{ form.ml_train }}
+              {{ form.ml_classify.label_tag }}
+              {{ form.ml_classify }}
+              <br />
+          </div>
+        </li>
+      </ul>
+    </div>
+    <br />
+    <br />
     <button type="submit" class="btn btn-dark">Save</button>
     <a class="btn btn-secondary" href="{% url 'home' %}">Back</a>
+    <br />
+    <br />
   </form>
   <br />
   <br />

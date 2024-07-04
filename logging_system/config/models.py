@@ -7,9 +7,20 @@ from django.core.exceptions import ValidationError
 
 class Settings(models.Model):
 
+    # RadioSelect choices
+    ML_MODEL_CHOICES = [
+        (0, 'K-Means'),
+        (1, 'AHC'),
+        (2, 'SOM'),
+    ]
+    BOOL_CHOICES = [
+        (True, 'Yes'),
+        (False, 'No'),
+    ]
+
     # Site settings
     site_name = models.CharField(max_length=200, default='My Site')
-    maintenance_mode = models.BooleanField(default=False)
+    maintenance_mode = models.BooleanField(default=False, choices=BOOL_CHOICES)
     contact_email = models.EmailField(default='admin@example.com')
     items_per_page = models.IntegerField(default=20)
     
@@ -18,11 +29,11 @@ class Settings(models.Model):
     email_port = models.IntegerField(default=465)
     email_host_user = models.CharField(max_length=200, default='from@example.com')
     email_host_password = models.CharField(max_length=200, default='password')
-    email_use_ssl = models.BooleanField(default=True)
+    email_use_ssl = models.BooleanField(default=True, choices=BOOL_CHOICES)
     email_from_address = models.EmailField(default='noreply@example.com')
 
     # ML settings
-    ml_model = models.IntegerField(default=0)
+    ml_model = models.IntegerField(default=0, choices=ML_MODEL_CHOICES)
     ml_train = models.IntegerField(default=10000)
     ml_classify = models.IntegerField(default = 2000)
 
