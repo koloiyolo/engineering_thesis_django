@@ -83,7 +83,7 @@ DATABASES = {
         'NAME': 'logging_system',
         'USER': 'root',
         'PASSWORD': 'password123',
-        'HOST': 'db',
+        'HOST': 'db_logging',
         'PORT': '3306'
 
     }
