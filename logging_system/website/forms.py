@@ -8,6 +8,7 @@ from datetime import datetime
 from .functions import numpy_array_to_list
 
 class SignUpForm(UserCreationForm):
+    usable_password = None
     email = forms.EmailField(label="", widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':'Email address'}))
     first_name = forms.CharField(label="", max_length="32", widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':'First name'}))
     last_name = forms.CharField(label="", max_length="32", widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':'Last name'}))
