@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/5.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.0/ref/settings/
 """
-
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -80,9 +80,9 @@ WSGI_APPLICATION = 'logging_system.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'logging_system',
+        'NAME': os.getenv('MYSQL_DATABASE', 'logging_system'),
         'USER': 'root',
-        'PASSWORD': 'password123',
+        'PASSWORD': os.getenv('MYSQL_ROOT_PASSWORD', 'password'),
         'HOST': 'db',
         'PORT': '3306'
 

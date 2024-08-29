@@ -7,9 +7,8 @@ services:
     image: mysql:8.0
     ports:
       - 3306:3306
-    environment:
-      MYSQL_ROOT_PASSWORD: password123
-      MYSQL_DATABASE: logging_system
+    env_file:
+      - config.env
     volumes: 
       - ./db:/var/lib/mysql
 
@@ -29,6 +28,8 @@ services:
     ports:
       - 5014:514/udp
       - 6001:601
+    env_file:
+      - config.env
     volumes:
       - ./logs:/var/log
 
@@ -50,6 +51,8 @@ services:
     build: "./logging_system"
     ports:
       - "80:8000"
+    env_file:
+      - config.env
 
   celery:
     build: "./logging_system"
@@ -57,6 +60,8 @@ services:
     depends_on:
       - db
       - redis
+    env_file:
+      - config.env
 
   celery-beat:
     build: "./logging_system"
@@ -64,3 +69,5 @@ services:
     depends_on:
       - db 
       - redis
+    env_file:
+      - config.env
