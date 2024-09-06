@@ -177,14 +177,13 @@ CELERY_BEAT_SCHEDULE = {
 #         'DEFAULT_FROM_EMAIL': settings.email_from_address,
 #     }
 
-# # Update EMAIL settings
-# EMAIL_CONFIG = load_app_settings()
+# Update EMAIL settings
 
-# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-# EMAIL_HOST = EMAIL_CONFIG['EMAIL_HOST']
-# EMAIL_PORT = EMAIL_CONFIG['EMAIL_PORT']
-# EMAIL_HOST_USER = EMAIL_CONFIG['EMAIL_HOST_USER']
-# EMAIL_HOST_PASSWORD = EMAIL_CONFIG['EMAIL_HOST_PASSWORD']
-# EMAIL_USE_SSL = EMAIL_CONFIG['EMAIL_USE_SSL']
-# DEFAULT_FROM_EMAIL = EMAIL_CONFIG['DEFAULT_FROM_EMAIL']
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = os.getenv('EMAIL_HOST', 'smtp.example.com')
+EMAIL_PORT = os.getenv('EMAIL_PORT', 465)
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER', 'from@example.com')
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD', 'password')
+EMAIL_USE_SSL = os.getenv('EMAIL_USE_SSL', False).lower() in ('true', '1', 't')
+DEFAULT_FROM_EMAIL = os.getenv('EMAIL_ADDRESS', 'from@example.com')
 
