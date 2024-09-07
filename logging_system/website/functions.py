@@ -30,7 +30,6 @@ def list_to_numpy_array(obj):
 
 
 def get_ping_graph(service_ip, height=300, width=1200, range=144):
-    range = range
     pings = Ping.objects.filter(ip=service_ip).order_by('-id')[:range]
     n = 0
     timestamps = [n + i/12 for i,_ in enumerate(pings)]
@@ -46,6 +45,28 @@ def get_ping_graph(service_ip, height=300, width=1200, range=144):
 
     return plot_div
 
+def get_uptime_graph(height=300, width=300):
+    pings = Ping.objects.filter(ip="192.168.1.1").order_by('-id')[:144]
+    n = 0
+    positive_pings = sum(1 for ping.ping in pings if ping is not None)
+    negative_pings = sum(1 for ping.ping in pings if ping is None)
+
+    labels = ['Positive Pings', 'Negative Pings']
+    values = [positive_pings, negative_pings]
+    colors = ['green', 'red']
+
+    trace_pie = go.Pie(
+        labels=labels, 
+        values=values,
+        marker=dict(colors=colors)
+    )
+    layout_pie = go.Layout(
+        title='Ping Status Distribution'
+    )
+    figure_pie = go.Figure(data=[trace_pie], layout=layout_pie)
+    pie_plot_div = figure_pie.to_html(full_html=False)
+
+    return pie_plot_div
 
 
 def get_labels_graph():
@@ -67,8 +88,7 @@ def get_labels_graph():
     return plot_div
 
 
-def ping_objects(objects):
-
+def ping_objects(objects, debug=True):
     emails = []
     send_to = User.objects.values_list('email', flat=True).distinct()
 
@@ -83,21 +103,20 @@ def ping_objects(objects):
             object.ping = None
             object.d_count = object.d_count + 1
             if object.d_count >= 5 and object.email_notify:
+                if debug:
+                    print(f'Your device/serivce is down, name: {object.name}')
+                else:
+                    emails.append(
+                        (f'Your device/serivce is down, name: {object.name}',
+                        f'{object.id} {object.name} {object.ip}',
+                        'from@example.com',
+                        send_to))
 
-                # !!! Change to send_email() !!!
-                print(f'Your device/serivce is down, name: {object.name}')
-                # emails.append(
-                #     (f'Your device/serivce is down, name: {object.name}',
-                #     f'{object.id} {object.name} {object.ip}',
-                #     'from@example.com',
-                #     send_to))
                 object.d_count = 0
         
         object.save()
 
         Ping.objects.create(ip=ip, ping=response_time)
-
-    return False
 
     if emails:
         send_mass_mail(emails)
@@ -120,7 +139,7 @@ def get_logs(get_count):
 
     return data
 
-def send_anomaly_emails(data, debug = False):
+def send_anomaly_emails(data, debug = True):
     emails = []
     send_to = User.objects.values_list('email', flat=True).distinct()
 
@@ -135,9 +154,7 @@ def send_anomaly_emails(data, debug = False):
                     'from@example.com',
                     send_to))
 
-    if debug:
-        pass
-    else:        
+    if emails:       
         send_mass_mail(emails)
 
     return True

@@ -39,9 +39,8 @@ services:
     restart: always
     ports:
       - "6379:6379"
-    environment:
-      - REDIS_PORT=6379
-      - REDIS_DATABASES=16
+    env_file:
+      - config.env
 
   logging_system:
     container_name: logging_system
