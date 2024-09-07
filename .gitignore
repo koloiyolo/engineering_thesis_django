@@ -19,3 +19,4 @@ logging_system/logging_system/__pycache__/
 logging_system/config/__pycache__/
 logging_system/website/templates/_log_table.html
 logging_system/website/templates/home copy.html
+.venv
