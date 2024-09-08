@@ -11,13 +11,13 @@ def ping_systems(systems, debug=True):
         ip = system.ip
         response_time = ping(ip, unit='ms')
         print(f"{ip}, {response_time}")
-        if response_time is not None:
+        if response_time is not False:
             system.last_ping = f'{int(response_time)} ms'
             system.d_count = 0
         else:
             system.last_ping = None
             system.d_count = system.d_count + 1
-            if system.d_count == Settings.objects.load().ping_retries and system.email_notify:
+            if system.d_count == Settings.load().ping_retries:
                 create_incident(system=system, tag=0)
         
         system.save()

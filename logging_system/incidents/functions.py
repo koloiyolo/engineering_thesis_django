@@ -8,13 +8,16 @@ from .models import Incident
 def create_incident(ip=None, system=None, tag=0):
     # case "System is down"
     if tag is 0:
-        incident = Incident.objects.create(
+        Incident.objects.create(
             system=system,
             tag=tag,
-            message= f" System {system.name} {system.ip} is down.\n Failed to contact {system.name} after {Settings.objects.load().ping_retries} retries",
+            message= f" System {system.name} is down.\n Failed to contact {system.name} after {Settings.load().ping_retries} retries \n \n Incident date: {datetime.now()} \n IP Address: {system.ip} \n System type: {system.system_type}",
             ip=system.ip)
-        send_email_notifications(incident=Incident)
-        return True
+        if system.email_notify:
+            # send_email_notifications(incident=incident)
+            return True
+        else:
+            return True
 
     # case "Log anomaly detected"
     elif tag is 1:
@@ -22,10 +25,14 @@ def create_incident(ip=None, system=None, tag=0):
         incident = Incident.objects.create(
             system=system,
             tag=tag,
-            message= f" Possible anomaly found in {system.name}'s logs. \n Anomaly found {datetime.now()} \n IP Address {system.ip} \n System type: {system.system_type}",
+            message= f" Possible anomaly found in {system.name}'s logs. \n\n Anomaly date: {datetime.now()} \n IP Address: {system.ip} \n System type: {system.system_type}",
             ip=system.ip)
-        send_email_notifications(incident=Incident)
-        return True
+        if system.email_notify:
+            # send_email_notifications(incident=incident)
+            return True
+        else:
+            return True
+            
     return False
 
 def send_email_notifications(incident=None):
