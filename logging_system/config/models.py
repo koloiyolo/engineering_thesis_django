@@ -17,6 +17,13 @@ class Settings(models.Model):
         (True, 'Yes'),
         (False, 'No'),
     ]
+    NOTIFICATION_CHOICES = [
+        (0, 'None'),
+        (1, 'System down'),
+        (2, 'Log anomaly'),
+        (3, 'Both')
+    ]
+
 
     # Site settings
     site_name = models.CharField(max_length=200, default='My Site')
@@ -24,7 +31,11 @@ class Settings(models.Model):
     contact_email = models.EmailField(default='admin@example.com')
     items_per_page = models.IntegerField(default=20)
     
+    ping_retries = models.IntegerField(default=5)
+
     # Email settings
+    send_email_notifications = models.BooleanField(choices=BOOL_CHOICES, default=False)
+    notifications_mode = models.IntegerField(choices=NOTIFICATION_CHOICES, default=0)
     email_host = models.CharField(max_length=200, default='smtp.example.com')
     email_port = models.IntegerField(default=465)
     email_host_user = models.CharField(max_length=200, default='from@example.com')

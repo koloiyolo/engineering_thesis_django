@@ -20,8 +20,3 @@ class Log(models.Model):
         return f"{self.message} {self.program}"
 
 
-class Ping(models.Model):
-    date                = models.DateField(auto_now_add=True)
-    ip                  = models.TextField(max_length=50)
-    ping                = models.IntegerField(null=True)
-

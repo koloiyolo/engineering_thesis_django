@@ -6,9 +6,8 @@ from ping3 import ping
 from requests import get
 
 from config.models import Settings
+from systems.models import System
 from .models import Log
-from devices.models import Device
-from services.models import Service
 from .forms import SignUpForm
 from .functions import get_ping_graph, get_labels_graph, get_uptime_graph
 
@@ -26,13 +25,10 @@ def home(request):
         response = None
         ip = None
         
-    devices_d = Device.objects.filter(ping=None)
-    for device in devices_d:
-        device.graph = get_ping_graph(device.ip, width=490)
+    systems_d = System.objects.filter(last_ping=None)
+    for system in systems_d:
+        system.graph = get_ping_graph(system, width=490)
 
-    services_d = Service.objects.filter(ping=None)
-    for service in services_d:
-        service.graph = get_ping_graph(service.ip, width=490)
 
     labels_graph = get_labels_graph()
     uptime_graph = get_uptime_graph()
@@ -41,8 +37,7 @@ def home(request):
     data = {'ip': ip,
             'ping': response,
             'logs': logs,
-            'devices_d': devices_d, 
-            'services_d': services_d,
+            'systems_d': systems_d, 
             'labels_graph': labels_graph,
             'uptime_graph': uptime_graph}
 

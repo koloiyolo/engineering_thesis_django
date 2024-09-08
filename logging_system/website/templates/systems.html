@@ -1,7 +1,7 @@
 {% extends 'base.html' %} {% block content %}
 <div class="col-md-12">
-  {% if devices %}
-  <a class="btn btn-dark" href="{% url 'devices:add' %}"> Add Device </a>
+  {% if systems %}
+  <a class="btn btn-dark" href="{% url 'systems:add' %}"> Add Device </a>
   <br />
   <br />
 
@@ -22,7 +22,7 @@
         </button>
       </h2>
     </div>
-    {% for obj in devices %}
+    {% for obj in systems %}
     <div class="accordion-item">
       <h2 class="accordion-header" id="heading{{ obj.id }}">
         <button
@@ -39,7 +39,7 @@
               <div class="col">{{ obj.ip }}</div>
               <div class="col">{{ obj.model }}</div>
               {% if obj.ping %}
-              <div class="col text-success">{{ obj.ping }}</div>
+              <div class="col text-success">{{ obj.last_ping }}</div>
               {% else %}
               <div class="col text-danger">Device down</div>
               {% endif %}
@@ -61,14 +61,14 @@
               Connect
             </a>
             {% endif %} {% if obj.last_log %}
-            <a href="{% url 'devices:logs' obj.id %}" class="btn btn-dark">
+            <a href="{% url 'systems:logs' obj.id %}" class="btn btn-dark">
               Logs
             </a>
             {% endif %}
-            <a href="{% url 'devices:edit' obj.id %}" class="btn btn-secondary">
+            <a href="{% url 'systems:edit' obj.id %}" class="btn btn-secondary">
               Edit
             </a>
-            <a href="{% url 'devices:remove' obj.id %}" class="btn btn-danger"
+            <a href="{% url 'systems:remove' obj.id %}" class="btn btn-danger"
               >Remove</a
             >
           </div>
@@ -80,14 +80,14 @@
   <br />
   <nav>
     <ul class="pagination">
-      {% if devices.has_previous %}
+      {% if systems.has_previous %}
       <li class="page-item">
         <a class="page-link" href="?page=1" aria-label="Previous">
           <span aria-hidden="true">&laquo;</span>
         </a>
       </li>
       <li class="page-item">
-        <a class="page-link" href="?page={{ devices.previous_page_number }}"
+        <a class="page-link" href="?page={{ systems.previous_page_number }}"
           >Previous</a
         >
       </li>
@@ -95,20 +95,20 @@
 
       <li class="page-item disabled">
         <a class="page-link" href="#"
-          >{{ devices.number }} of {{ devices.paginator.num_pages }}</a
+          >{{ systems.number }} of {{ systems.paginator.num_pages }}</a
         >
       </li>
 
-      {% if devices.has_next %}
+      {% if systems.has_next %}
       <li class="page-item">
-        <a class="page-link" href="?page={{ devices.next_page_number }}"
+        <a class="page-link" href="?page={{ systems.next_page_number }}"
           >Next</a
         >
       </li>
       <li class="page-item">
         <a
           class="page-link"
-          href="?page={{ devices.paginator.num_pages }}"
+          href="?page={{ systems.paginator.num_pages }}"
           aria-label="Next"
         >
           <span aria-hidden="true">&raquo;</span>
@@ -119,7 +119,7 @@
   </nav>
   {% else %}
   <br />
-  <h3>No devices yet <a href="{% url 'devices:add' %}">add new one</a></h3>
+  <h3>No systems yet <a href="{% url 'systems:add' %}">add new one</a></h3>
   <br />
   {% endif %}
 </div>

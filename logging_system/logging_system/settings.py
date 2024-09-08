@@ -39,8 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'website',
     'config',
-    'devices',
-    'services',
+    'systems',
+    'incidents',
 ]
 
 MIDDLEWARE = [
@@ -155,9 +155,9 @@ CELERY_BEAT_SCHEDULE = {
         'schedule': 3600.0,
         'args':()
     },
-    'ping-every-2-minutes': {
-        'task': 'website.tasks.ping_task',
-        'schedule': 60.0,
+    'ping-every-3-minutes': {
+        'task': 'systems.tasks.ping_task',
+        'schedule': 120.0,
         'args':(),
     }
 
@@ -184,6 +184,6 @@ EMAIL_HOST = os.getenv('EMAIL_HOST', 'smtp.example.com')
 EMAIL_PORT = os.getenv('EMAIL_PORT', 465)
 EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER', 'from@example.com')
 EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD', 'password')
-EMAIL_USE_SSL = os.getenv('EMAIL_USE_SSL', False).lower() in ('true', '1', 't')
+EMAIL_USE_SSL = os.getenv('EMAIL_USE_SSL', 'True').lower() in ('true', '1', 't')
 DEFAULT_FROM_EMAIL = os.getenv('EMAIL_ADDRESS', 'from@example.com')
 

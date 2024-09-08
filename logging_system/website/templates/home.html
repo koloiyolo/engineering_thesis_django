@@ -107,36 +107,36 @@
 
         {% comment %} Devices Down {% endcomment %}
 
-        {% if devices_d %}
+        {% if systems_d %}
         <div class="card bg-danger">
           <div class="card-header bg-danger text-light">Devices down</div>
           <div class="accordion" id="accordionDevices">
-            {% for device in devices_d %}
+            {% for system in systems_d %}
             <div class="accordion-item">
               <h2 class="accordion-header" id="heading{{ service.id }}">
                 <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                  data-bs-target="#collapse{{ device.id }}" aria-expanded="false">
+                  data-bs-target="#collapse{{ system.id }}" aria-expanded="false">
                   <div class="container text-start">
                     <div class="row">
-                      <div class="col">{{ device.name }}</div>
-                      <div class="col">{{ device.ip }}</div>
-                      <div class="col">{{ device.model }}</div>
-                      <div class="col">{{ device.last_log }}</div>
+                      <div class="col">{{ system.name }}</div>
+                      <div class="col">{{ system.ip }}</div>
+                      <div class="col">{{ system.model }}</div>
+                      <div class="col">{{ system.last_log }}</div>
                     </div>
                   </div>
                 </button>
               </h2>
-              <div id="collapse{{ device.id }}" class="accordion-collapse collapse" data-bs-parent="#accordionDevices">
+              <div id="collapse{{ system.id }}" class="accordion-collapse collapse" data-bs-parent="#accordionDevices">
                 <div class="accordion-body">
-                  <div id="ping-plot">{{ device.graph|safe }}</div>
+                  <div id="ping-plot">{{ system.graph|safe }}</div>
                   <div class="btn-group" role="group">
-                    {% if device.port %}
-                    <a href="http://{{ device.ip }}:{{ device.port }}" class="btn btn-primary">Connect</a>
-                    {% endif %} {% if device.last_log %}
-                    <a href="{% url 'devices:logs' device.id %}" class="btn btn-dark">Logs</a>
+                    {% if system.port %}
+                    <a href="http://{{ system.ip }}:{{ system.port }}" class="btn btn-primary">Connect</a>
+                    {% endif %} {% if system.last_log %}
+                    <a href="{% url 'systems:logs' system.id %}" class="btn btn-dark">Logs</a>
                     {% endif %}
-                    <a href="{% url 'devices:edit' device.id %}" class="btn btn-secondary">Edit</a>
-                    <a href="{% url 'devices:remove' device.id %}" class="btn btn-danger">Remove</a>
+                    <a href="{% url 'systems:edit' system.id %}" class="btn btn-secondary">Edit</a>
+                    <a href="{% url 'systems:remove' system.id %}" class="btn btn-danger">Remove</a>
                   </div>
                 </div>
               </div>

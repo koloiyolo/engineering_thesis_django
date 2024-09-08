@@ -28,6 +28,8 @@
               {{ form.contact_email }}
               {{ form.items_per_page.label_tag }}
               {{ form.items_per_page }}
+              {{ form.ping_retries.label_tag }}
+              {{ form.ping_retries }}
               <br />
           </div>
         </li>
@@ -35,6 +37,10 @@
           <div class="form-group">
             <br />
             <h5>Email settings</h5>
+              {{ form.send_email_notifications.label_tag }}
+              {{ form.send_email_notifications }}
+              {{ form.notifications_mode.label_tag }}
+              {{ form.notifications_mode }}
               {{ form.email_host.label_tag }}
               {{ form.email_host }}
               {{ form.email_port.label_tag }}

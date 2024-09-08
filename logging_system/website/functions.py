@@ -1,9 +1,9 @@
 from django.contrib.auth.models import User
 import numpy as np
 import plotly.graph_objs as go
-from .models import Ping, Log
-from devices.models import Device
-from services.models import Service
+from .models import Log
+from systems.models import System, Ping
+
 
 from ping3 import ping
 import random
@@ -29,8 +29,8 @@ def list_to_numpy_array(obj):
 
 
 
-def get_ping_graph(service_ip, height=300, width=1200, range=144):
-    pings = Ping.objects.filter(ip=service_ip).order_by('-id')[:range]
+def get_ping_graph(system, height=300, width=1200, range=144):
+    pings = Ping.objects.filter(system=system).order_by('-id')[:range]
     n = 0
     timestamps = [n + i/12 for i,_ in enumerate(pings)]
     ping_values = [ping.ping for ping in pings][::-1]
@@ -46,7 +46,7 @@ def get_ping_graph(service_ip, height=300, width=1200, range=144):
     return plot_div
 
 def get_uptime_graph(height=300, width=300):
-    pings = Ping.objects.filter(ip="192.168.1.1").order_by('-id')[:144]
+    pings = Ping.objects.all().order_by('-id')[:144]
     n = 0
     positive_pings = sum(1 for ping.ping in pings if ping is not None)
     negative_pings = sum(1 for ping.ping in pings if ping is None)
@@ -87,40 +87,6 @@ def get_labels_graph():
 
     return plot_div
 
-
-def ping_objects(objects, debug=True):
-    emails = []
-    send_to = User.objects.values_list('email', flat=True).distinct()
-
-    for object in objects:
-        ip = object.ip
-        response_time = ping(object.ip, unit='ms')
-        print(f"{object.ip}, {response_time}")
-        if response_time is not None:
-            object.ping = f'{int(response_time)} ms'
-            object.d_count = 0
-        else:
-            object.ping = None
-            object.d_count = object.d_count + 1
-            if object.d_count >= 5 and object.email_notify:
-                if debug:
-                    print(f'Your device/serivce is down, name: {object.name}')
-                else:
-                    emails.append(
-                        (f'Your device/serivce is down, name: {object.name}',
-                        f'{object.id} {object.name} {object.ip}',
-                        'from@example.com',
-                        send_to))
-
-                object.d_count = 0
-        
-        object.save()
-
-        Ping.objects.create(ip=ip, ping=response_time)
-
-    if emails:
-        send_mass_mail(emails)
-    return True
 
 def get_logs(get_count):
     data = None

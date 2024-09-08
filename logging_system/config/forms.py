@@ -15,6 +15,9 @@ class SettingsPage(forms.ModelForm):
             "maintenance_mode",
             "contact_email",
             "items_per_page",
+            "ping_retries",
+            "send_email_notifications",
+            "notifications_mode",
             "email_host",
             "email_port",
             "email_host_user",
@@ -38,7 +41,16 @@ class SettingsPage(forms.ModelForm):
                 'class': "form-control",
                 'placeholder': '20'
             }),
-
+            "ping_retries": NumberInput(attrs={
+                'class': "form-control",
+                'placeholder': '20'
+            }),
+            "send_email_notifications": Select(attrs={
+                'class': "form-control",
+            }),
+            "notifications_mode": Select(attrs={
+                'class': "form-control",
+            }),
             "email_host": TextInput(attrs={
                 'class': "form-control",
                 'label': 'Email hosting',

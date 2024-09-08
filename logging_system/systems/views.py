@@ -2,35 +2,35 @@ from django.shortcuts import render, redirect
 from django.core.paginator import Paginator
 from django.contrib import messages
 from website.functions import get_ping_graph
-from .models import Device, Log
+from .models import System, Log
 from config.models import Settings
-from .forms import DeviceForm
+from .forms import SystemForm
 # Create your views here.
 
-def devices(request):
+def systems(request):
     if request.user.is_authenticated:
-        devices = Device.objects.all().order_by("id")
+        systems = System.objects.all().order_by("id")
 
-        # update device last_log
-        for device in devices:
-            device.graph = get_ping_graph(device.ip)
-            last_log = Log.objects.filter(host= device.ip).last()
+        # update system last_log
+        for system in systems:
+            system.graph = get_ping_graph(system)
+            last_log = Log.objects.filter(host= system.ip).last()
             if last_log is not None:
-                device.last_log = last_log.datetime
-                device.save()
+                system.last_log = last_log.datetime
+                system.save()
 
-        paginator = Paginator(devices, 10)
+        paginator = Paginator(systems, 10)
         page_number = request.GET.get("page")
-        page_devices = paginator.get_page(page_number)
+        page_systems = paginator.get_page(page_number)
         
-        return render(request, 'devices.html', {'devices': page_devices})
+        return render(request, 'systems.html', {'systems': page_systems})
     else:
         return redirect('home')
 
 def logs(request, pk):
     if request.user.is_authenticated:
 
-        host = Device.objects.get(id=pk)
+        host = System.objects.get(id=pk)
 
         label = request.GET.get('label')
         if label is not None:
@@ -49,44 +49,44 @@ def logs(request, pk):
         page_number = request.GET.get("page")
         page_logs = paginator.get_page(page_number)
 
-        return render(request, 'device_logs.html', {'host': host, 'logs': page_logs, 'label': label, 'sort': sort_by,})
+        return render(request, 'system_logs.html', {'host': host, 'logs': page_logs, 'label': label, 'sort': sort_by,})
         pass
     else:
         return redirect('home')
 
 def add(request):
     if request.user.is_authenticated:
-        form = DeviceForm(request.POST or None)
+        form = SystemForm(request.POST or None)
         if request.method == 'POST':
             if form.is_valid():
                 add_record = form.save()
-                messages.success(request, "Device added successfully")
-                return redirect('devices:list')
+                messages.success(request, "System added successfully")
+                return redirect('systems:list')
         else:
-            return render(request, 'add_device.html', {'form': form})
-        return render(request, 'add_device.html', {'form': form})
+            return render(request, 'add_system.html', {'form': form})
+        return render(request, 'add_system.html', {'form': form})
     else:
         return redirect('home')
 
 def edit(request, pk):
     if request.user.is_authenticated:
-        update_it = Device.objects.get(id=pk)
-        form = DeviceForm(request.POST or None, instance=update_it)
+        update_it = System.objects.get(id=pk)
+        form = SystemForm(request.POST or None, instance=update_it)
         if form.is_valid():
             form.save()
-            messages.success(request, "Device updated successfully")
-            return redirect('devices:list')
+            messages.success(request, "System updated successfully")
+            return redirect('systems:list')
         else:
-            return render(request, 'edit_device.html', {'form': form})
+            return render(request, 'edit_system.html', {'form': form})
     else:
         return redirect('home')
 
 def remove(request, pk):
     if request.user.is_authenticated:
-        delete_it = Device.objects.get(id=pk)
+        delete_it = System.objects.get(id=pk)
         delete_it.delete()
-        messages.success(request, "Device removed successfully")
-        return redirect('devices:list')
+        messages.success(request, "System removed successfully")
+        return redirect('systems:list')
     else:
         return redirect('home')
 

@@ -1,14 +1,13 @@
 {% extends 'base.html' %} {% block content %}
 <div class="col-md-6 offset-md-3">
   <br />
-  <h1>Add Service</h1>
+  <h1>Add system</h1>
   <br />
-  <form method="POST" action="{% url 'services:add' %}">
+  <form method="POST" action="{% url 'systems:add' %}">
     {% csrf_token %} {% if form.errors %}
     <div class="alert alert-danger alert-dismissible fade show" role="alert">
       <strong>Your form has Errors</strong>
-      {% for field in form %} {% if field.errors %} {{ field.errors }} 
-      {% endif%} {% endfor %}
+      {% for field in form %} {% if field.errors %} {{ field.errors }} {% endif %} {% endfor %}
       <button
         type="button"
         class="btn-close"
@@ -19,7 +18,7 @@
     {% endif %} {{ form.as_p }}
 
     <button type="submit" class="btn btn-dark">Add</button>
-    <a href="{% url 'services:list' %}" class="btn btn-secondary">Back</a>
+    <a href="{% url 'systems:list' %}" class="btn btn-secondary">Back</a>
   </form>
 </div>
 

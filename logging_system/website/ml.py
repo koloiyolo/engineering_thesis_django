@@ -13,11 +13,11 @@ import time
 import joblib
 import os
 
-from django.core.mail import send_mass_mail
+from .functions import get_logs
 
 from .models import Log
 from config.models import Settings
-from .functions import get_logs, send_anomaly_emails
+# from .functions import get_logs, send_anomaly_emails
 
 
 # sklearn ML train function prototype
@@ -65,7 +65,7 @@ def classify(file_prefix = 'kmeans'):
             log.label = label
             log.save()
 
-        send_anomaly_emails(data, debug=True)
+        # send_anomaly_emails(data, debug=True)
 
         return True
     else:

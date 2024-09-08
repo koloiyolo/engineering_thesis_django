@@ -1,12 +1,8 @@
 from celery import shared_task
-from ping3 import ping
 
-from .models import Log, Ping
-from devices.models import Device
-from services.models import Service
 from config.models import Settings
+
 from .ml import classify_som, train_som, classify_ahc, train_ahc, classify_kmeans, train_kmeans
-from .functions import ping_objects
 
 
 
@@ -34,8 +30,3 @@ def ml_train_task ():
         train_som()
         return "SOM training complete."
     
-@shared_task
-def ping_task ():
-    ping_objects(Device.objects.all())
-    ping_objects(Service.objects.all())
-    return "Objects pinged sucessfully"
