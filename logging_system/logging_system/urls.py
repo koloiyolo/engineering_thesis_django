@@ -22,5 +22,6 @@ urlpatterns = [
     path('', include('website.urls')),
     path('settings/', include('config.urls')),
     path('systems/', include('systems.urls')),
+    path('incidents/', include('incidents.urls')),
     # path('incidents/', include('incidents.urls')),
 ]

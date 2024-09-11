@@ -11,7 +11,7 @@ def create_incident(ip=None, system=None, tag=0):
         Incident.objects.create(
             system=system,
             tag=tag,
-            message= f" System {system.name} is down.\n Failed to contact {system.name} after {Settings.load().ping_retries} retries \n \n Incident date: {datetime.now()} \n IP Address: {system.ip} \n System type: {system.system_type}",
+            message= f" System {system.name} {system.ip} is down.",
             ip=system.ip)
         if system.email_notify:
             # send_email_notifications(incident=incident)
@@ -25,10 +25,10 @@ def create_incident(ip=None, system=None, tag=0):
         incident = Incident.objects.create(
             system=system,
             tag=tag,
-            message= f" Possible anomaly found in {system.name}'s logs. \n\n Anomaly date: {datetime.now()} \n IP Address: {system.ip} \n System type: {system.system_type}",
+            message= f" Possible anomaly found in {system.name}'s logs.",
             ip=system.ip)
         if system.email_notify:
-            # send_email_notifications(incident=incident)
+            send_email_notifications(incident=incident)
             return True
         else:
             return True

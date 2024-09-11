@@ -6,15 +6,10 @@
   </h4>
   <br />
   {% if logs %}
-  <input type="text" placeholder="Filter items"
-       hx-get="{% url 'logs' %}"
-       hx-trigger="keyup changed delay:500ms"
-       hx-target="tbody" 
-       hx-swap="innerHTML">
-  <table class="table table-striped table-hover">
+  <table class="table table-striped table-hover .table-bordered">
     <thead>
       <tr>
-        <th scope="col">
+        <th style="width: 10%;" scope="col">
           <a
             class="text-dark"
             style="text-decoration: none"
@@ -23,7 +18,7 @@
             Datetime
           </a>
         </th>
-        <th scope="col">
+        <th style="width: 10%;" scope="col">
           <a
             class="text-dark"
             style="text-decoration: none"
@@ -32,7 +27,7 @@
             IP Address
           </a>
         </th>
-        <th scope="col">
+        <th style="width: 10%;" scope="col">
           <a
             class="text-dark"
             style="text-decoration: none"
@@ -41,7 +36,7 @@
             Program
           </a>
         </th>
-        <th scope="col">
+        <th style="width: 65%;" colspan="2" scope="col">
           <a
             class="text-dark"
             style="text-decoration: none"
@@ -50,7 +45,7 @@
             Message
           </a>
         </th>
-        <th scope="col">
+        <th style="width: 5%;" scope="col">
           <a
             class="nav-link dropdown-toggle"
             href="#"
@@ -78,11 +73,11 @@
     <tbody>
       {% for log in logs %}
       <tr>
-        <td>{{ log.datetime }}</td>
-        <td>{{ log.ip }}</td>
-        <td>{{ log.program }}</td>
-        <td>{{ log.message }}</td>
-        <td>{{ log.label }}</td>
+        <td >{{ log.datetime }}</td>
+        <td >{{ log.host }}</td>
+        <td >{{ log.program }}</td>
+        <td colspan="2">{{ log.message }}</td>
+        <td >{{ log.label }}</td>
       </tr>
       {% endfor %}
     </tbody>
