@@ -38,7 +38,7 @@
               <div class="col">{{ obj.name }}</div>
               <div class="col">{{ obj.ip }}</div>
               <div class="col">{{ obj.model }}</div>
-              {% if obj.ping %}
+              {% if obj.last_ping %}
               <div class="col text-success">{{ obj.last_ping }}</div>
               {% else %}
               <div class="col text-danger">Device down</div>
