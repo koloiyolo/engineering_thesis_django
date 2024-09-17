@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.core.paginator import Paginator
+from django.http import JsonResponse
 from ping3 import ping
 from requests import get
 
@@ -10,6 +11,10 @@ from systems.models import System
 from .models import Log
 from .forms import SignUpForm
 from .functions import get_ping_graph, get_labels_graph, get_uptime_graph
+
+# docker compose health check
+def health_check(request):
+    return JsonResponse({'status': 'ok'})
 
 # Create your views here.
 
@@ -93,6 +98,7 @@ def logs(request):
         return render(request, 'logs.html', {'logs': page_logs})
     else:
         return redirect('home')
+
 
 # def logs(request):
 #     if request.user.is_authenticated:
