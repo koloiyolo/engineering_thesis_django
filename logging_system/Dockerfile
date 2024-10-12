@@ -10,5 +10,3 @@ COPY . .
 
 
 EXPOSE 80
-
-CMD ["./script.sh"]

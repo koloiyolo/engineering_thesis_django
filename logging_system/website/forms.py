@@ -42,3 +42,14 @@ class SignUpForm(UserCreationForm):
         self.fields['password2'].label = ''
         self.fields['password2'].help_text = '<span class="form-text text-muted"><small>Enter the same password as before, for verification.</small></span>'
 
+    def save(self, commit=True):
+        user = super().save(commit=False)
+
+        # Check if this is the first user
+        if User.objects.count() == 0:
+            user.is_staff = True
+            user.is_superuser = True
+
+        if commit:
+            user.save()
+        return user

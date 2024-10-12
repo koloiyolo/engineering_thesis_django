@@ -5,7 +5,7 @@ from systems.models import System
 # Create your models here.
 
 TAG_CHOICES = [
-                (0, 'Service down'),
+                (0, 'System down'),
                 (1, 'Log anomaly detected'),
                 ]
 

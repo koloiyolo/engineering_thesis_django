@@ -24,6 +24,7 @@ class SettingsPage(forms.ModelForm):
             "email_host_password",
             "email_use_ssl",
             "email_from_address",
+            "on_model_change_reset_labels",
             "ml_model",
             "ml_train",
             "ml_classify"
@@ -80,7 +81,9 @@ class SettingsPage(forms.ModelForm):
                 'label': 'Email address',
                 'placeholder': 'user@example.com',                
             }),
-            
+            "on_model_change_reset_labels": Select(attrs={
+                'class': "form-control",
+            }),
             "ml_model": Select(attrs={
                 'class': "form-control",
             }),

@@ -4,6 +4,7 @@ from django.db import models
 # Create your models here.
 
 from django.core.exceptions import ValidationError
+from website.models import Log
 
 class Settings(models.Model):
 
@@ -44,7 +45,9 @@ class Settings(models.Model):
     email_from_address = models.EmailField(default='noreply@example.com')
 
     # ML settings
+    on_model_change_reset_labels = models.BooleanField(choices=BOOL_CHOICES, default=False)
     ml_model = models.IntegerField(default=0, choices=ML_MODEL_CHOICES)
+    last_ml_model = models.IntegerField(default=0, choices=ML_MODEL_CHOICES)
     ml_train = models.IntegerField(default=10000)
     ml_classify = models.IntegerField(default = 2000)
 
@@ -58,6 +61,11 @@ class Settings(models.Model):
     def save(self, *args, **kwargs):
         if not self.pk and AppSettings.objects.exists():
             raise ValidationError("There can be only one Settings instance.")
+        
+        if self.on_model_change_reset_labels and self.ml_model is not self.last_ml_model:
+            Log.objects.update(label=None)
+            self.last_ml_model = self.ml_model
+        
         super().save(*args, **kwargs)
 
     def __str__(self):

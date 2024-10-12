@@ -4,6 +4,7 @@ from django.contrib import messages
 
 from .forms import SettingsPage
 from .models import Settings
+from website.models import Log
 
 # Create your views here.
 
@@ -20,6 +21,13 @@ def settings(request):
             return render(request, 'settings.html', {'form': form})
     else:
         return redirect('home')
+
+def reset_labels(request):
+    if request.user.is_authenticated:
+        Log.objects.update(label=None)
+        return redirect('settings')
+    else:
+        return redirect('settings')
 
 # validated function
 

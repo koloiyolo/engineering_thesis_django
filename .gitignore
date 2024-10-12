@@ -25,3 +25,7 @@ logging_system/services/__pycache__/
 logging_system/systems/__pycache__/
 logging_system/incidents/__pycache__/
 
+logging_system/config/migrations/
+logging_system/incidents/migrations/
+logging_system/systems/migrations/
+logging_system/website/migrations/

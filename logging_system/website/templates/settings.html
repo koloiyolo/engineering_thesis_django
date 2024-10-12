@@ -60,6 +60,9 @@
           <div class="form-group">
             <br />
             <h5>Machine Learning Settings</h5>
+              
+              {{ form.on_model_change_reset_labels.label_tag }}
+              {{ form.on_model_change_reset_labels }}
               {{ form.ml_model.label_tag }}
               {{ form.ml_model }}
               {{ form.ml_train.label_tag }}

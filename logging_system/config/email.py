@@ -1,5 +1,6 @@
 from django.contrib.auth.models import User
-from .models import Ping, Log
+from .models import Ping
+from website.models import Log
 from systems.models import System
 
 

@@ -2,7 +2,8 @@ from django.shortcuts import render, redirect
 from django.core.paginator import Paginator
 from django.contrib import messages
 from website.functions import get_ping_graph
-from .models import System, Log
+from .models import System
+from website.models import Log
 from config.models import Settings
 from .forms import SystemForm
 # Create your views here.
