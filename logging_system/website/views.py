@@ -95,10 +95,34 @@ def logs(request):
         paginator = Paginator(logs, items_per_page)
         page_number = request.GET.get("page")
         page_logs = paginator.get_page(page_number)
+        for log in page_logs:
+            if len(log.message) > 90:
+                log.short_message = log.message[:90] + "..."
+            else:
+                log.short_message = log.message
         return render(request, 'logs.html', {'logs': page_logs})
     else:
         return redirect('home')
 
+def label(request, label):
+    if request.user.is_authenticated:
+        query = request.GET.get('q', '')  # Get the search query from the request
+        logs = Log.objects.filter(label=label, message__icontains=query)  # Filter items by name
+        if logs.count() is 0:
+            messages.warning(request, f"Label '{label}' is empty!")
+            return redirect('logs')
+        items_per_page = Settings.load().items_per_page
+        paginator = Paginator(logs, items_per_page)
+        page_number = request.GET.get("page")
+        page_logs = paginator.get_page(page_number)
+        for log in page_logs:
+            if len(log.message) > 90:
+                log.short_message = log.message[:90] + "..."
+            else:
+                log.short_message = log.message
+        return render(request, 'logs.html', {'logs': page_logs})
+    else:
+        return redirect('home')
 
 # def logs(request):
 #     if request.user.is_authenticated:

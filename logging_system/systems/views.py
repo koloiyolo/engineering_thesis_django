@@ -32,28 +32,52 @@ def logs(request, pk):
     if request.user.is_authenticated:
 
         host = System.objects.get(id=pk)
-
-        label = request.GET.get('label')
-        if label is not None:
-            logs = Log.objects.filter(host= host.ip, label=label)
-        else:
-            logs = Log.objects.filter(host= host.ip)
-   
-        sort_by = request.GET.get('sort')
-        if sort_by in ['datetime', 'host', 'program', 'message']:
-            logs = logs.order_by(sort_by)
-        else:
-            logs = logs.order_by('-id')
-            
+        query = request.GET.get('q', '')  # Get the search query from the request
+        logs = Log.objects.filter(host=host.ip, message__icontains=query)  # Filter items by name
+        if logs.count() is 0:
+            messages.warning(request, f"Label '{label}' is empty!")
+            return redirect('logs')
         items_per_page = Settings.load().items_per_page
         paginator = Paginator(logs, items_per_page)
         page_number = request.GET.get("page")
         page_logs = paginator.get_page(page_number)
-
-        return render(request, 'system_logs.html', {'host': host, 'logs': page_logs, 'label': label, 'sort': sort_by,})
+        for log in page_logs:
+            if len(log.message) > 90:
+                log.short_message = log.message[:90] + "..."
+            else:
+                log.short_message = log.message
+        return render(request, 'system_logs.html', {'host': host, 'logs': page_logs})
         pass
     else:
         return redirect('home')
+
+def label(request, pk, label):
+    if request.user.is_authenticated:
+        host = System.objects.get(id=pk)
+        query = request.GET.get('q', '')  # Get the search query from the request
+        logs = Log.objects.filter(host=host.ip, label=label, message__icontains=query)  # Filter items by name
+        if logs.count() is 0:
+            messages.warning(request, f"Label '{label}' is empty!")
+            return redirect('systems:logs', host.id)
+        items_per_page = Settings.load().items_per_page
+        paginator = Paginator(logs, items_per_page)
+        page_number = request.GET.get("page")
+        page_logs = paginator.get_page(page_number)
+        for log in page_logs:
+            if len(log.message) > 90:
+                log.short_message = log.message[:90] + "..."
+            else:
+                log.short_message = log.message
+        return render(request, 'system_logs.html', {'host': host, 'logs': page_logs})
+        pass
+    else:
+        return redirect('home')
+
+# query = request.GET.get('q', '')  # Get the search query from the request
+#         logs = Log.objects.filter(label=label, message__icontains=query)  # Filter items by name
+#         if logs.count() is 0:
+#             messages.warning(request, f"Label '{label}' is empty!")
+#             return redirect('logs')
 
 def add(request):
     if request.user.is_authenticated:

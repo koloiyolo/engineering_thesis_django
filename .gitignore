@@ -29,3 +29,4 @@ logging_system/config/migrations/
 logging_system/incidents/migrations/
 logging_system/systems/migrations/
 logging_system/website/migrations/
+logging_system/website/templates/_logs.html

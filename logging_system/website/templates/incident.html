@@ -1,10 +1,9 @@
 {% extends 'base.html' %}
 {% block content %}
 <div class="col-md-8 offset-md-2">
-    <br/>
-    <a class="btn btn-dark" href="{% url 'incidents:list' %}">&laquo; Back</a>
-    <br/>
-    <br/>
+    <div class="input-group mb-3">
+        <a class="btn btn-secondary" href="{% url 'incidents:list' %}">&laquo; Back</a>
+    </div>
     {% if incident %}
         <div class="card">
             <div class="card-body card-header">

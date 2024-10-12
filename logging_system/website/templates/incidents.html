@@ -1,17 +1,14 @@
 {% extends 'base.html' %} {% block content %}
 <div class="col-md-12">
   {% if incidents %}
-  <br />
   <div class="input-group mb-3">
-    <div class="input-group-prepend">
-      <span class="input-group-text" id="inputGroup-sizing-default">Create analysis</span>
-    </div>
-    <button type="button" class="btn btn-secondary">Today</button>
-    <button type="button" class="btn btn-secondary">Last Week</button>
-    <button type="button" class="btn btn-secondary">Last Month</button>
-    <button type="button" class="btn btn-secondary">Last Year</button>
+    <a class="btn btn-secondary" href="{% url 'home' %}">&laquo; Back</a>
+    <a class="btn btn-btn-outline-dark">Create analysis</a>
+    <a class="btn btn-dark">Today</a>
+    <a class="btn btn-dark">Last Week</a>
+    <a class="btn btn-dark">Last Month</a>
+    <a class="btn btn-dark">Last Year</a>
   </div>
-  <br />
   <div class="accordion" id="accordionServices">
     <div class="accordion-item">
       <h2 class="accordion-header">

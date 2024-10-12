@@ -6,6 +6,7 @@ app_name = 'systems'
 urlpatterns = [
     path('', views.systems, name='list'),
     path('logs/<int:pk>', views.logs, name='logs'),
+    path('logs/<int:pk>/<int:label>', views.label, name='label'),
     path('add/', views.add, name='add'),
     path('edit/<int:pk>', views.edit, name='edit'),
     path('remove/<int:pk>', views.remove, name='remove'),

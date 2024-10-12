@@ -1,9 +1,10 @@
 {% extends 'base.html' %} {% block content %}
 <div class="col-md-12">
   {% if systems %}
-  <a class="btn btn-dark" href="{% url 'systems:add' %}"> Add Device </a>
-  <br />
-  <br />
+  <div class="input-group mb-3">
+    <a class="btn btn-secondary" href="{% url 'home' %}">&laquo; Back</a>
+    <a class="btn btn-dark" href="{% url 'systems:add' %}"> Add Device </a>
+  </div>
 
   <div class="accordion" id="accordionServices">
     <div class="accordion-item">
