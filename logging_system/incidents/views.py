@@ -14,7 +14,8 @@ from .forms import CommentForm
 def incidents(request):
     if request.user.is_authenticated:
         incidents = Incident.objects.all().order_by("-id")
-        paginator = Paginator(incidents, 10)
+        items_per_page = Settings.load().items_per_page
+        paginator = Paginator(incidents, items_per_page)
         page_number = request.GET.get("page")
         page_incidents = paginator.get_page(page_number)
 

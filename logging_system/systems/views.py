@@ -19,8 +19,8 @@ def systems(request):
             if last_log is not None:
                 system.last_log = last_log.datetime
                 system.save()
-
-        paginator = Paginator(systems, 10)
+        items_per_page = Settings.load().items_per_page
+        paginator = Paginator(systems, items_per_page)
         page_number = request.GET.get("page")
         page_systems = paginator.get_page(page_number)
         

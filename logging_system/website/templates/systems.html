@@ -3,7 +3,8 @@
   {% if systems %}
   <div class="input-group mb-3">
     <a class="btn btn-secondary" href="{% url 'home' %}">&laquo; Back</a>
-    <a class="btn btn-dark" href="{% url 'systems:add' %}"> Add Device </a>
+    <a class="btn btn-outline-dark disabled" > Systems </a>
+    <a class="btn btn-dark" href="{% url 'systems:add' %}"> Add System </a>
   </div>
 
   <div class="accordion" id="accordionServices">

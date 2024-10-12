@@ -3,7 +3,7 @@
   {% if incidents %}
   <div class="input-group mb-3">
     <a class="btn btn-secondary" href="{% url 'home' %}">&laquo; Back</a>
-    <a class="btn btn-btn-outline-dark">Create analysis</a>
+    <a class="btn btn-outline-dark disabled" > Create analysis </a>
     <a class="btn btn-dark">Today</a>
     <a class="btn btn-dark">Last Week</a>
     <a class="btn btn-dark">Last Month</a>
@@ -15,11 +15,11 @@
         <button class="accordion-button collapsed">
           <div class="container text-start">
             <div class="row">
-              <div class="col">Date:</div>
-              <div class="col">Time:</div>
-              <div class="col">System name:</div>
-              <div class="col">Tag:</div>
-              <div class="col-3">Message:</div>
+              <div class="col-2">Date:</div>
+              <div class="col-1">Time:</div>
+              <div class="col-2">System name:</div>
+              <div class="col-2">Tag:</div>
+              <div class="col-5">Message:</div>
             </div>
           </div>
         </button>
@@ -37,11 +37,11 @@
         >
           <div class="container text-start">
             <div class="row">
-              <div class="col">{{ obj.date }}</div>
-              <div class="col">{{ obj.time }}</div>
-              <div class="col">{{ obj.system.name }}</div>
-              <div class="col">{{ obj.get_tag_display }}</div>
-              <div class="col-3">{{ obj.message }}</div>
+              <div class="col-2">{{ obj.date }}</div>
+              <div class="col-1">{{ obj.time }}</div>
+              <div class="col-2">{{ obj.system.name }}</div>
+              <div class="col-2">{{ obj.get_tag_display }}</div>
+              <div class="col-5">{{ obj.message }}</div>
             </div>
           </div>
         </button>
