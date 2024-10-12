@@ -42,8 +42,8 @@ def logs(request, pk):
         page_number = request.GET.get("page")
         page_logs = paginator.get_page(page_number)
         for log in page_logs:
-            if len(log.message) > 90:
-                log.short_message = log.message[:90] + "..."
+            if len(log.message) > 50:
+                log.short_message = log.message[:50] + "..."
             else:
                 log.short_message = log.message
         return render(request, 'system_logs.html', {'host': host, 'logs': page_logs})
@@ -64,8 +64,8 @@ def label(request, pk, label):
         page_number = request.GET.get("page")
         page_logs = paginator.get_page(page_number)
         for log in page_logs:
-            if len(log.message) > 90:
-                log.short_message = log.message[:90] + "..."
+            if len(log.message) > 50:
+                log.short_message = log.message[:50] + "..."
             else:
                 log.short_message = log.message
         return render(request, 'system_logs.html', {'host': host, 'logs': page_logs})

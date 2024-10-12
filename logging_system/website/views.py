@@ -95,9 +95,12 @@ def logs(request):
         paginator = Paginator(logs, items_per_page)
         page_number = request.GET.get("page")
         page_logs = paginator.get_page(page_number)
+        id = 0
         for log in page_logs:
-            if len(log.message) > 90:
-                log.short_message = log.message[:90] + "..."
+            log.id = id
+            id += 1
+            if len(log.message) > 50:
+                log.short_message = log.message[:50] + "..."
             else:
                 log.short_message = log.message
         return render(request, 'logs.html', {'logs': page_logs})
@@ -115,9 +118,12 @@ def label(request, label):
         paginator = Paginator(logs, items_per_page)
         page_number = request.GET.get("page")
         page_logs = paginator.get_page(page_number)
+        id = 0
         for log in page_logs:
-            if len(log.message) > 90:
-                log.short_message = log.message[:90] + "..."
+            log.id = id
+            id += 1
+            if len(log.message) > 50:
+                log.short_message = log.message[:50] + "..."
             else:
                 log.short_message = log.message
         return render(request, 'logs.html', {'logs': page_logs})
