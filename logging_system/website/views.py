@@ -111,7 +111,7 @@ def label(request, label):
     if request.user.is_authenticated:
         query = request.GET.get('q', '')  # Get the search query from the request
         logs = Log.objects.filter(label=label, message__icontains=query)  # Filter items by name
-        if logs.count() is 0:
+        if logs.count() == 0:
             messages.warning(request, f"Label '{label}' is empty!")
             return redirect('logs')
         items_per_page = Settings.load().items_per_page
