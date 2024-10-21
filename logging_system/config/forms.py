@@ -26,6 +26,7 @@ class SettingsPage(forms.ModelForm):
             "email_from_address",
             "on_model_change_reset_labels",
             "ml_model",
+            "ml_model_args",
             "ml_train",
             "ml_classify"
         ]
@@ -87,6 +88,11 @@ class SettingsPage(forms.ModelForm):
             "ml_model": Select(attrs={
                 'class': "form-control",
             }),
+            "ml_model_args": TextInput(attrs={
+                'class': "form-control",
+                'label': 'ML model arguments',
+                'placeholder': '',                
+            }),
             "ml_train": NumberInput(attrs={
                 'class': "form-control",
                 'placeholder': '10000'
@@ -96,3 +102,7 @@ class SettingsPage(forms.ModelForm):
                 'placeholder': '2000'
             }),
         }
+
+    def __init__(self, *args, **kwargs):
+        super(SettingsPage, self).__init__(*args, **kwargs)
+        self.fields['ml_model_args'].required = False

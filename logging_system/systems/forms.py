@@ -1,30 +1,13 @@
 from django import forms
+from django.forms import TextInput, NumberInput, Select
 
 from .models import System, Log
 
 class SystemForm(forms.ModelForm):
 
-    BOOL_CHOICES = [
-        (True, 'Yes'),
-        (False, 'No'),
-    ]
-    SYSTEM_TYPE_CHOICES = [
-    (0, 'Device'),
-    (1, 'Service'),
-    ]
-
-    name            = forms.CharField(label="System name", max_length="32", widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':'System name'}))
-    ip              = forms.CharField(label="IP address", max_length="32", widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':'System IP'}))
-    system_type     = forms.ChoiceField(choices=SYSTEM_TYPE_CHOICES,widget=forms.RadioSelect,label="Is your system device or service?")
-    to_ping         = forms.ChoiceField(choices=BOOL_CHOICES,widget=forms.RadioSelect,label="Do you wish to monitor latency of this system?") 
-    email_notify    = forms.ChoiceField(choices=BOOL_CHOICES,widget=forms.RadioSelect,label="Do you wish to receive email notifications for abnormalities?") 
-    port            = forms.CharField(label="Http port", max_length="32", widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':'System HTTP Port'}), required=False)
-    model           = forms.CharField(label="System model", max_length="32", widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':'System model'}), required=False)
-    location        = forms.CharField(label="Location", max_length="32", widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':'System location'}), required=False)
-
     class Meta:
         model = System
-        fields = (
+        fields = [
             "name",
             "ip",
             "system_type",
@@ -32,5 +15,41 @@ class SystemForm(forms.ModelForm):
             "email_notify",
             "port",
             "model",
-            "location")
+            "location"
+        ]
+        widgets = {
+            "name": TextInput(attrs={
+                'class': "form-control",
+                'label': "System's name",
+                'placeholder': "Your system's name",                
+            }),
+            "ip":  TextInput(attrs={
+                'class': "form-control",
+                'label': "IP address",
+                'placeholder': "Your system's ip address",                
+            }),
+            "system_type": Select(attrs={
+                'class': "form-control",
+            }),
+            "to_ping": Select(attrs={
+                'class': "form-control",
+            }),
+            "email_notify": Select(attrs={
+                'class': "form-control",
+            }),
+            "port": NumberInput(attrs={
+                'class': "form-control",
+                'placeholder': ''
+            }),
+            "model":  TextInput(attrs={
+                'class': "form-control",
+                'label': "System's model",
+                'placeholder': "Your system's model",                
+            }),
+            "location":  TextInput(attrs={
+                'class': "form-control",
+                'label': "System's location",
+                'placeholder': "Your system's location",                
+            }),
+        }
 

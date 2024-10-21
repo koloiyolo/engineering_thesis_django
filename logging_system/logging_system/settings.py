@@ -83,7 +83,7 @@ DATABASES = {
         'NAME': os.getenv('MYSQL_DATABASE', 'logging_system'),
         'USER': 'root',
         'PASSWORD': os.getenv('MYSQL_ROOT_PASSWORD', 'password'),
-        'HOST': os.getenv('MYSQL_HOST', 'localhost'),
+        'HOST': os.getenv('MYSQL_HOST', '127.0.0.1'),
         'PORT': '3306'
 
     }

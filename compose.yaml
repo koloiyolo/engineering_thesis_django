@@ -9,8 +9,8 @@ services:
       - 3306:3306
     env_file:
       - config.env
-    # volumes: 
-    #   - ./db:/var/lib/mysql
+    volumes: 
+      - ./db:/var/lib/mysql
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
       interval: 30s

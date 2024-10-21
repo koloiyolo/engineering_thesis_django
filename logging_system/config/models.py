@@ -48,6 +48,7 @@ class Settings(models.Model):
     on_model_change_reset_labels = models.BooleanField(choices=BOOL_CHOICES, default=False)
     ml_model = models.IntegerField(default=0, choices=ML_MODEL_CHOICES)
     last_ml_model = models.IntegerField(default=0, choices=ML_MODEL_CHOICES)
+    ml_model_args = models.TextField(default='')
     ml_train = models.IntegerField(default=10000)
     ml_classify = models.IntegerField(default = 2000)
 

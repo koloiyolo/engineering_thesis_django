@@ -19,7 +19,7 @@ class System(models.Model):
     last_ping           = models.TextField(max_length=50, null=True)
     last_log            = models.TextField(max_length=50)
     d_count             = models.IntegerField(default=0)
-    email_notify        = models.BooleanField(default=False)
+    email_notify        = models.BooleanField(choices=BOOL_CHOICES, default=False)
     graph               = None
     location            = models.TextField(max_length=50)
     service_type        = models.TextField(max_length=50)
