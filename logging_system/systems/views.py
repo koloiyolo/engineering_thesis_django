@@ -41,12 +41,13 @@ def logs(request, pk):
         paginator = Paginator(logs, items_per_page)
         page_number = request.GET.get("page")
         page_logs = paginator.get_page(page_number)
+        clusters = Log.objects.values_list('label', flat=True).distinct()
         for log in page_logs:
             if len(log.message) > 50:
                 log.short_message = log.message[:50] + "..."
             else:
                 log.short_message = log.message
-        return render(request, 'system_logs.html', {'host': host, 'logs': page_logs})
+        return render(request, 'system_logs.html', {'host': host, 'logs': page_logs, 'clusters': clusters})
         pass
     else:
         return redirect('home')
@@ -63,12 +64,13 @@ def label(request, pk, label):
         paginator = Paginator(logs, items_per_page)
         page_number = request.GET.get("page")
         page_logs = paginator.get_page(page_number)
+        clusters = Log.objects.values_list('label', flat=True).distinct()
         for log in page_logs:
             if len(log.message) > 50:
                 log.short_message = log.message[:50] + "..."
             else:
                 log.short_message = log.message
-        return render(request, 'system_logs.html', {'host': host, 'logs': page_logs})
+        return render(request, 'system_logs.html', {'host': host, 'logs': page_logs, 'clusters': clusters})
         pass
     else:
         return redirect('home')

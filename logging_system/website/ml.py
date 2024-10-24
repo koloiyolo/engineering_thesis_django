@@ -23,12 +23,13 @@ from config.models import Settings
 # sklearn ML train function prototype
 def train(model=KMeans(2, random_state=42), file_prefix='kmeans'):
     data = get_logs(Settings.load().ml_train)
+
     if data is not None:
         features = [obj.get_features() for obj in data]
         encoder = TfidfVectorizer()
         encoded_features = encoder.fit_transform(features).toarray()
 
-        clf = KMeans(10, random_state=42)
+        clf = model
         X = np.array(encoded_features)
         clf.fit(X)
 
@@ -76,8 +77,9 @@ def classify(file_prefix = 'kmeans'):
 
 # K-Means
 def train_kmeans():
+    clusters = Settings.load().ml_clusters
     return train(
-        model = KMeans(2, random_state=42),
+        model = KMeans(clusters, random_state=42),
         file_prefix = 'kmeans'
     )
 
@@ -88,8 +90,9 @@ def classify_kmeans():
 
 # AHC
 def train_ahc():
+    clusters = Settings.load().ml_clusters
     return train(
-        model = AgglomerativeClustering(n_clusters=2),
+        model = AgglomerativeClustering(n_clusters=clusters),
         file_prefix = 'ahc'
     )
 
@@ -101,6 +104,7 @@ def classify_ahc():
 # SOM
 def train_som():
     data = get_logs(Settings.load().ml_train)
+    clusters = Settings.load().ml_clusters
     if data is not None:
         file_prefix = 'som'
         features = [obj.get_features() for obj in data]
@@ -108,7 +112,7 @@ def train_som():
         encoded_features = encoder.fit_transform(features).toarray()
         input_len = encoded_features.shape[1]
 
-        som = MiniSom(x=20, y=2, input_len=input_len, sigma=1, learning_rate=0.5)
+        som = MiniSom(x=20, y=clusters, input_len=input_len, sigma=1, learning_rate=0.5)
         X = np.array(encoded_features)
         som.random_weights_init(encoded_features)
         som.train_random(encoded_features, 1000)
@@ -165,3 +169,6 @@ def classify_som():
             return False
 
     return False
+
+#######################################################################################################
+# 

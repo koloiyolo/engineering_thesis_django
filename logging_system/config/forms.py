@@ -24,9 +24,9 @@ class SettingsPage(forms.ModelForm):
             "email_host_password",
             "email_use_ssl",
             "email_from_address",
-            "on_model_change_reset_labels",
             "ml_model",
-            "ml_model_args",
+            "on_model_change_reset_labels",
+            "ml_clusters",
             "ml_train",
             "ml_classify"
         ]
@@ -82,16 +82,15 @@ class SettingsPage(forms.ModelForm):
                 'label': 'Email address',
                 'placeholder': 'user@example.com',                
             }),
-            "on_model_change_reset_labels": Select(attrs={
-                'class': "form-control",
-            }),
             "ml_model": Select(attrs={
                 'class': "form-control",
             }),
-            "ml_model_args": TextInput(attrs={
+            "on_model_change_reset_labels": Select(attrs={
                 'class': "form-control",
-                'label': 'ML model arguments',
-                'placeholder': '',                
+            }),
+            "ml_clusters": NumberInput(attrs={
+                'class': "form-control",
+                'placeholder': '2'
             }),
             "ml_train": NumberInput(attrs={
                 'class': "form-control",
@@ -102,7 +101,3 @@ class SettingsPage(forms.ModelForm):
                 'placeholder': '2000'
             }),
         }
-
-    def __init__(self, *args, **kwargs):
-        super(SettingsPage, self).__init__(*args, **kwargs)
-        self.fields['ml_model_args'].required = False

@@ -27,16 +27,9 @@
                                 </a>
                                 <ul class="dropdown-menu">
                                     <li><a class="dropdown-item" href="{% url 'systems:logs'  host.id %}">All</a></li>
-                                    <li><a class="dropdown-item" href="{% url 'systems:label' host.id 0 %}">0</a></li>
-                                    <li><a class="dropdown-item" href="{% url 'systems:label' host.id 1 %}">1</a></li>
-                                    <li><a class="dropdown-item" href="{% url 'systems:label' host.id 2 %}">2</a></li>
-                                    <li><a class="dropdown-item" href="{% url 'systems:label' host.id 3 %}">3</a></li>
-                                    <li><a class="dropdown-item" href="{% url 'systems:label' host.id 4 %}">4</a></li>
-                                    <li><a class="dropdown-item" href="{% url 'systems:label' host.id 5 %}">5</a></li>
-                                    <li><a class="dropdown-item" href="{% url 'systems:label' host.id 6 %}">6</a></li>
-                                    <li><a class="dropdown-item" href="{% url 'systems:label' host.id 7 %}">7</a></li>
-                                    <li><a class="dropdown-item" href="{% url 'systems:label' host.id 8 %}">8</a></li>
-                                    <li><a class="dropdown-item" href="{% url 'systems:label' host.id 9 %}">9</a></li>
+                                    {% for cluster in clusters %}
+                                        <li><a class="dropdown-item" href="{% url 'systems:label' host.id cluster %}"> {{ cluster }} </a></li>
+                                    {% endfor %}
                                 </ul>
                             </div>
                         </div>

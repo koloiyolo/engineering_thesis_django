@@ -7,7 +7,7 @@ from .models import Incident
 
 def create_incident(ip=None, system=None, tag=0):
     # case "System is down"
-    if tag is 0:
+    if tag == 0:
         Incident.objects.create(
             system=system,
             tag=tag,
@@ -20,7 +20,7 @@ def create_incident(ip=None, system=None, tag=0):
             return True
 
     # case "Log anomaly detected"
-    elif tag is 1:
+    elif tag == 1:
         system = System.objects.filter(ip=ip)
         incident = Incident.objects.create(
             system=system,
@@ -39,10 +39,10 @@ def send_email_notifications(incident=None):
     send_email_notifications = Settings.load().send_email_notifications
     if send_email_notifications:
         notifications_mode = Settings.load().notifications_mode 
-        if incident.tag is 0 and (notifications_mode is 1 or 3):
+        if incident.tag == 0 and (notifications_mode == 1 or notifications_mode == 3):
 
             return True
-        elif incident.tag is 1 and (notifications_mode is 2 or 3):
+        elif incident.tag == 1 and (notifications_mode == 2 or notifications_mode == 3):
 
             return True
         else:

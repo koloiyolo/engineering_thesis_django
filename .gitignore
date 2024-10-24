@@ -39,3 +39,4 @@ logging_system/website/migrations/__pycache__/
 logging_system/systems/forms copy.py
 logging_system/website/templates/edit_system copy.html
 logging_system/website/templates/add_system copy.html
+logging_system.zip
