@@ -16,7 +16,7 @@
             <li class="list-group-item"><strong>Incident time: </strong>{{incident.time}}</li>
             <li class="list-group-item"><strong>Incident tag: </strong>{{incident.get_tag_display}}</li>
             <li class="list-group-item"><strong>System IP address: </strong>{{incident.system.ip}}</li>
-            <li class="list-group-item"><strong>Incident message: </strong>{{incident.message}}</li>
+            <li class="list-group-item"><strong>Incident message: </strong>{{incident.message|linebreaksbr}}</li>
         </ul>
         <div class="card-body">
             <div class="input-group mb-3">
