@@ -65,7 +65,7 @@ def create_email(incident=None, log=None):
                     send_to)
         elif incident.tag == 1 and (notifications_mode == 2 or notifications_mode == 3):
             return (
-                    f"Abnormal record detected in {inciudent.system.name}'s logs",
+                    f"Abnormal record detected in {incident.system.name}'s logs",
                     incident.message,
                     'from@example.com',
                     send_to)
