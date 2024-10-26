@@ -48,16 +48,8 @@
                     <div class="form-group">
                         <br />
                         <h5>Email settings</h5>
-                        <div class="row">
-                            <div class="col">
-                                {{ form.send_email_notifications.label_tag }}
-                                {{ form.send_email_notifications }}
-                            </div>
-                            <div class="col">
-                                {{ form.notifications_mode.label_tag }}
-                                {{ form.notifications_mode }}
-                            </div>
-                        </div>
+                        {{ form.notifications_mode.label_tag }}
+                        {{ form.notifications_mode }}
                         {{ form.email_host.label_tag }}
                         {{ form.email_host }}
                         <div class="row">

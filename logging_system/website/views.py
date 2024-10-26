@@ -90,12 +90,12 @@ def register_user(request):
 def logs(request):
     if request.user.is_authenticated:
         query = request.GET.get('q', '')  # Get the search query from the request
-        logs = Log.objects.filter(message__icontains=query)  # Filter items by name
+        logs = Log.objects.filter(message__icontains=query).order_by('-id')  # Filter items by name
         items_per_page = Settings.load().items_per_page
         paginator = Paginator(logs, items_per_page)
         page_number = request.GET.get("page")
         page_logs = paginator.get_page(page_number)
-        clusters = Log.objects.values_list('label', flat=True).distinct()
+        clusters = Log.objects.filter(label__isnull=False).values_list('label', flat=True).distinct()
         id = 0
         for log in page_logs:
             log.id = id
@@ -111,7 +111,7 @@ def logs(request):
 def label(request, label):
     if request.user.is_authenticated:
         query = request.GET.get('q', '')  # Get the search query from the request
-        logs = Log.objects.filter(label=label, message__icontains=query)  # Filter items by name
+        logs = Log.objects.filter(label=label, message__icontains=query).order_by('-id')  # Filter items by name
         if logs.count() == 0:
             messages.warning(request, f"Label '{label}' is empty!")
             return redirect('logs')
@@ -119,7 +119,7 @@ def label(request, label):
         paginator = Paginator(logs, items_per_page)
         page_number = request.GET.get("page")
         page_logs = paginator.get_page(page_number)
-        clusters = Log.objects.values_list('label', flat=True).distinct()
+        clusters = Log.objects.filter(label__isnull=False).values_list('label', flat=True).distinct()
         id = 0
         for log in page_logs:
             log.id = id
@@ -161,5 +161,4 @@ def label(request, label):
 # def function(request):
 #     if request.user.is_authenticated:
 #         pass
-#     else:
-#         return redirect('home')
+#     

@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.core.mail import send_mass_mail
 
 from sklearn.cluster import KMeans, AgglomerativeClustering
 # from sklearn.preprocessing import OneHotEncoder
@@ -17,6 +18,7 @@ from .functions import get_logs
 
 from .models import Log
 from config.models import Settings
+from incidents.functions import create_incident
 # from .functions import get_logs, send_anomaly_emails
 
 
@@ -45,6 +47,7 @@ def train(model=KMeans(2, random_state=42), file_prefix='kmeans'):
 
 # sklearn ML classify function prototype
 def classify(file_prefix = 'kmeans'):
+    emails = []
     clf_file = file_prefix + '.joblib'
     encoder_file = file_prefix + '_encoder.joblib'
     if os.path.exists(clf_file) and os.path.exists(encoder_file):
@@ -62,9 +65,19 @@ def classify(file_prefix = 'kmeans'):
         clf = joblib.load(clf_file)
         clf.fit(X)
         labels = clf.labels_
+        clusters = Settings.load().ml_clusters
         for log, label in zip(data, labels):
             log.label = label
             log.save()
+            if log.label == clusters - 1:  # to be changeable in config
+                email = create_incident(log=log)
+                if email is not False:
+                    emails.append(email)
+
+
+
+        if len(emails) != 0:
+            send_mass_mail(emails)
 
         # send_anomaly_emails(data, debug=True)
 
@@ -156,8 +169,13 @@ def classify_som():
         for log, label in zip(data, labels):
             log.label = label
             log.save()
+            if log.label == clusters - 1:  # to be changeable in config
+                email = create_incident(log=log)
+                if email is not False:
+                    emails.append(email)
 
-        send_anomaly_emails(data, debug=True)
+        if len(emails) != 0:
+            send_mass_mail(emails)
 
         return True
 

@@ -14,6 +14,17 @@ class Settings(models.Model):
         (1, 'AHC'),
         (2, 'SOM'),
     ]
+    ML_CLUSTER_CHOICES = [
+        (2, '2'),
+        (3, '3'),
+        (4, '4'),
+        (5, '5'),
+        (6, '6'),
+        (7, '7'),
+        (8, '8'),
+        (9, '9'),
+        (10, '10'),
+    ]
     BOOL_CHOICES = [
         (True, 'Yes'),
         (False, 'No'),
@@ -35,7 +46,6 @@ class Settings(models.Model):
     ping_retries = models.IntegerField(default=5)
 
     # Email settings
-    send_email_notifications = models.BooleanField(choices=BOOL_CHOICES, default=False)
     notifications_mode = models.IntegerField(choices=NOTIFICATION_CHOICES, default=0)
     email_host = models.CharField(max_length=200, default='smtp.example.com')
     email_port = models.IntegerField(default=465)
@@ -47,8 +57,7 @@ class Settings(models.Model):
     # ML settings
     ml_model = models.IntegerField(default=0, choices=ML_MODEL_CHOICES)
     on_model_change_reset_labels = models.BooleanField(choices=BOOL_CHOICES, default=False)
-    last_ml_model = models.IntegerField(default=0, choices=ML_MODEL_CHOICES)
-    ml_clusters = models.TextField(default=2)
+    ml_clusters = models.IntegerField(default=2, choices=ML_CLUSTER_CHOICES)
     ml_train = models.IntegerField(default=10000)
     ml_classify = models.IntegerField(default = 2000)
 
@@ -63,9 +72,14 @@ class Settings(models.Model):
         if not self.pk and AppSettings.objects.exists():
             raise ValidationError("There can be only one Settings instance.")
         
-        if self.on_model_change_reset_labels and self.ml_model is not self.last_ml_model:
-            Log.objects.update(label=None)
-            self.last_ml_model = self.ml_model
+        if self.pk:
+            current = Settings.load().ml_model
+            if self.on_model_change_reset_labels and self.ml_model != current:
+                Log.objects.update(label=None)
+
+            current = Settings.load().ml_clusters
+            if self.on_model_change_reset_labels and self.ml_clusters !=  current:
+                Log.objects.update(label=None)
         
         super().save(*args, **kwargs)
 

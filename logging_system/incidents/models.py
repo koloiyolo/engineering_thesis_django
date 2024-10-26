@@ -15,7 +15,8 @@ class Incident(models.Model):
     system                  = models.ForeignKey(System, on_delete=models.CASCADE, null=True)
     ip                      = models.TextField(max_length=50)
     tag                     = models.IntegerField(choices=TAG_CHOICES, default=0)
-    message                 = models.TextField(max_length=250)
+    title                   = models.TextField(max_length=250)
+    message                 = models.TextField(max_length=500)
 
 class Comment(models.Model):
     incident                = models.ForeignKey(Incident, on_delete=models.CASCADE)

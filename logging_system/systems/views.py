@@ -33,7 +33,7 @@ def logs(request, pk):
 
         host = System.objects.get(id=pk)
         query = request.GET.get('q', '')  # Get the search query from the request
-        logs = Log.objects.filter(host=host.ip, message__icontains=query)  # Filter items by name
+        logs = Log.objects.filter(host=host.ip, message__icontains=query).order_by('-id')  # Filter items by name
         if logs.count() == 0:
             messages.warning(request, f"Label '{label}' is empty!")
             return redirect('logs')
@@ -41,7 +41,7 @@ def logs(request, pk):
         paginator = Paginator(logs, items_per_page)
         page_number = request.GET.get("page")
         page_logs = paginator.get_page(page_number)
-        clusters = Log.objects.values_list('label', flat=True).distinct()
+        clusters = Log.objects.filter(label__isnull=False).values_list('label', flat=True).distinct()
         for log in page_logs:
             if len(log.message) > 50:
                 log.short_message = log.message[:50] + "..."
@@ -56,7 +56,7 @@ def label(request, pk, label):
     if request.user.is_authenticated:
         host = System.objects.get(id=pk)
         query = request.GET.get('q', '')  # Get the search query from the request
-        logs = Log.objects.filter(host=host.ip, label=label, message__icontains=query)  # Filter items by name
+        logs = Log.objects.filter(host=host.ip, label=label, message__icontains=query).order_by('-id')  # Filter items by name
         if logs.count() == 0:
             messages.warning(request, f"Label '{label}' is empty!")
             return redirect('systems:logs', host.id)
@@ -64,7 +64,7 @@ def label(request, pk, label):
         paginator = Paginator(logs, items_per_page)
         page_number = request.GET.get("page")
         page_logs = paginator.get_page(page_number)
-        clusters = Log.objects.values_list('label', flat=True).distinct()
+        clusters = Log.objects.filter(label__isnull=False).values_list('label', flat=True).distinct()
         for log in page_logs:
             if len(log.message) > 50:
                 log.short_message = log.message[:50] + "..."
