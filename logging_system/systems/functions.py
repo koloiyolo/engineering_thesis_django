@@ -26,6 +26,6 @@ def ping_systems(systems, debug=True):
             Ping.objects.create(system=system, ping=None)
         
         system.save()
-    if emails.count() != 0:
+    if len(emails) != 0:
         send_mass_mail(emails)
     return True

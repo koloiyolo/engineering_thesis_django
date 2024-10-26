@@ -76,7 +76,7 @@ def classify(file_prefix = 'kmeans'):
 
 
 
-        if emails.count() != 0:
+        if len(emails) != 0:
             send_mass_mail(emails)
 
         # send_anomaly_emails(data, debug=True)
@@ -174,7 +174,7 @@ def classify_som():
                 if email is not False:
                     emails.append(email)
 
-        if emails.count() != 0:
+        if len(emails) != 0:
             send_mass_mail(emails)
 
         return True
