@@ -16,7 +16,6 @@ class SettingsPage(forms.ModelForm):
             "contact_email",
             "items_per_page",
             "ping_retries",
-            "send_email_notifications",
             "notifications_mode",
             "email_host",
             "email_port",
@@ -46,9 +45,6 @@ class SettingsPage(forms.ModelForm):
             "ping_retries": NumberInput(attrs={
                 'class': "form-control",
                 'placeholder': '20'
-            }),
-            "send_email_notifications": Select(attrs={
-                'class': "form-control",
             }),
             "notifications_mode": Select(attrs={
                 'class': "form-control",
@@ -88,9 +84,8 @@ class SettingsPage(forms.ModelForm):
             "on_model_change_reset_labels": Select(attrs={
                 'class': "form-control",
             }),
-            "ml_clusters": NumberInput(attrs={
+            "ml_clusters": Select(attrs={
                 'class': "form-control",
-                'placeholder': '2'
             }),
             "ml_train": NumberInput(attrs={
                 'class': "form-control",

@@ -1,12 +1,13 @@
+from django.core.mail import send_mass_mail
+
 from ping3 import ping
 
 from incidents.functions import create_incident
-
 from .models import System, Ping
 from config.models import Settings
 
 def ping_systems(systems, debug=True):
-
+    emails = []
     for system in systems:
         ip = system.ip
         response_time = ping(ip, unit='ms')
@@ -19,9 +20,12 @@ def ping_systems(systems, debug=True):
             system.last_ping = None
             system.d_count += 1
             if system.d_count == Settings.load().ping_retries:
-                create_incident(system=system, tag=0)
+                email = create_incident(system=system)
+                if email is not False:
+                    emails.append(email)
             Ping.objects.create(system=system, ping=None)
         
         system.save()
-
+    if emails.count() != 0:
+        send_mass_mail(emails)
     return True
