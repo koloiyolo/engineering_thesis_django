@@ -25,6 +25,18 @@ class Settings(models.Model):
         (9, '9'),
         (10, '10'),
     ]
+    ML_ANOMALY_CHOICES = [
+        (0, '0'),
+        (1, '1'),    
+        (2, '2'),
+        (3, '3'),
+        (4, '4'),
+        (5, '5'),
+        (6, '6'),
+        (7, '7'),
+        (8, '8'),
+        (9, '9'),
+    ]
     BOOL_CHOICES = [
         (True, 'Yes'),
         (False, 'No'),
@@ -58,6 +70,7 @@ class Settings(models.Model):
     ml_model = models.IntegerField(default=0, choices=ML_MODEL_CHOICES)
     on_model_change_reset_labels = models.BooleanField(choices=BOOL_CHOICES, default=False)
     ml_clusters = models.IntegerField(default=2, choices=ML_CLUSTER_CHOICES)
+    ml_anomaly_cluster = models.IntegerField(default=0, choices=ML_ANOMALY_CHOICES)
     ml_train = models.IntegerField(default=10000)
     ml_classify = models.IntegerField(default = 2000)
 

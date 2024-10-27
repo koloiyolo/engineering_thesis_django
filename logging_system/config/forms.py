@@ -26,6 +26,7 @@ class SettingsPage(forms.ModelForm):
             "ml_model",
             "on_model_change_reset_labels",
             "ml_clusters",
+            "ml_anomaly_cluster",
             "ml_train",
             "ml_classify"
         ]
@@ -85,6 +86,10 @@ class SettingsPage(forms.ModelForm):
                 'class': "form-control",
             }),
             "ml_clusters": Select(attrs={
+                'class': "form-control",
+            }),
+
+            "ml_anomaly_cluster": Select(attrs={
                 'class': "form-control",
             }),
             "ml_train": NumberInput(attrs={

@@ -75,16 +75,24 @@
                     <div class="form-group">
                         <br />
                         <h5>Machine Learning Settings</h5>
-                        {{ form.ml_model.label_tag }}
-                        {{ form.ml_model }}
                         <div class="row">
+                            <div class="col">
+                                {{ form.ml_model.label_tag }}
+                                {{ form.ml_model }}
+                            </div>
                             <div class="col">
                                 {{ form.on_model_change_reset_labels.label_tag }}
                                 {{ form.on_model_change_reset_labels }}
                             </div>
+                        </div>
+                        <div class="row">
                             <div class="col">
                                 {{ form.ml_clusters.label_tag }}
                                 {{ form.ml_clusters }}
+                            </div>
+                            <div class="col">
+                                {{ form.ml_anomaly_cluster.label_tag }}
+                                {{ form.ml_anomaly_cluster }}
                             </div>
                         </div>
                         <div class="row">

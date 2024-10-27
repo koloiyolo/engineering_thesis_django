@@ -152,7 +152,7 @@ CELERY_BEAT_SCHEDULE = {
     'train-every-week': {
         'task': 'website.tasks.ml_train_task',
         # 'schedule': crontab(hour=0, minute=0, day_of_week='sunday'),
-        'schedule': 3600.0,
+        'schedule': 360.0,
         'args':()
     },
     'ping-every-3-minutes': {

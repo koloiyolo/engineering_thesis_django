@@ -41,7 +41,7 @@ def train(model=KMeans(2, random_state=42), file_prefix='kmeans'):
         return True
 
     else:
-        return True
+        return False
 
     return False
 
@@ -65,11 +65,11 @@ def classify(file_prefix = 'kmeans'):
         clf = joblib.load(clf_file)
         clf.fit(X)
         labels = clf.labels_
-        clusters = Settings.load().ml_clusters
+        anomaly = Settings.load().ml_anomaly_cluster
         for log, label in zip(data, labels):
             log.label = label
             log.save()
-            if log.label == clusters - 1:  # to be changeable in config
+            if log.label == anomaly:
                 email = create_incident(log=log)
                 if email is not False:
                     emails.append(email)
@@ -83,7 +83,7 @@ def classify(file_prefix = 'kmeans'):
 
         return True
     else:
-        return True
+        return False
     return False
 
 #######################################################################################################
@@ -141,6 +141,7 @@ def train_som():
     return False
 
 def classify_som():
+    emails = []
     som_file = 'som.joblib'
     encoder_file = 'som_encoder.joblib'
 
@@ -161,15 +162,15 @@ def classify_som():
         for feat in encoded_features:
             winner = som.winner(feat)
             if winner == (0, 0):
-                labels.append(0)  # Normal
+                labels.append(0)  # Anomaly
             else:
-                labels.append(1)  # Anomaly
+                labels.append(1)  # Normal
 
-
+        anomaly = Settings.load().ml_anomaly_cluster
         for log, label in zip(data, labels):
             log.label = label
             log.save()
-            if log.label == clusters - 1:  # to be changeable in config
+            if log.label == anomaly:
                 email = create_incident(log=log)
                 if email is not False:
                     emails.append(email)

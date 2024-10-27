@@ -30,6 +30,7 @@ class Migration(migrations.Migration):
                 ('on_model_change_reset_labels', models.BooleanField(choices=[(True, 'Yes'), (False, 'No')], default=False)),
                 ('ml_model', models.IntegerField(choices=[(0, 'K-Means'), (1, 'AHC'), (2, 'SOM')], default=0)),
                 ('ml_clusters', models.IntegerField(choices=[(2, '2'), (3, '3'), (4, '4'), (5, '5'), (6, '6'), (7, '7'), (8, '8'), (9, '9'), (10, '10')], default=2)),
+                ('ml_anomaly_cluster', models.IntegerField(choices=[(0, '0'), (1, '1'), (2, '2'), (3, '3'), (4, '4'), (5, '5'), (6, '6'), (7, '7'), (8, '8'), (9, '9')], default=0)),
                 ('ml_train', models.IntegerField(default=10000)),
                 ('ml_classify', models.IntegerField(default=2000)),
                 ('last_changed_at', models.DateField(auto_now=True)),
