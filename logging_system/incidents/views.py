@@ -23,6 +23,22 @@ def incidents(request):
     else:
         return redirect('home')
 
+def tag_incidents(request, tag):
+    if request.user.is_authenticated:
+        query = request.GET.get('q', '')
+        incidents = Incident.objects.filter(tag=tag, ip__icontains=query).order_by("-id")
+        if not incidents.exists():
+            messages.warning(request, f"Label '{tag}' is empty!")
+            return redirect('incidents:list')
+        items_per_page = Settings.load().items_per_page
+        paginator = Paginator(incidents, items_per_page)
+        page_number = request.GET.get("page")
+        page_incidents = paginator.get_page(page_number)
+
+        return render(request, 'incidents.html', {'incidents': page_incidents})
+    else:
+        return redirect('home')    
+
 def view(request, pk):
     if request.user.is_authenticated:
         incident = Incident.objects.get(id=pk)

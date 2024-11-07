@@ -1,0 +1,150 @@
+{% extends 'base.html' %} {% block content %}
+<div class="col-md-12">
+    <div class="input-group mb-3">
+        <a class="btn btn-secondary" href="{% url 'systems:list' %}">&laquo; Back</a>
+        <a class="btn btn-outline-dark disabled" > {{ system.name }} </a>
+    </div>
+    <div class="card">
+        <div class="card-body">
+            <!-- System Header Section -->
+            <h4 class="card-title text-center"><strong>Name: </strong>{{ system.name }}</h4>
+        </div>
+        <ul class="list-group list-group-flush">
+            <!-- System Details Section -->
+            <li class="list-group-item">
+                <div class="row">
+                    <div class="col">
+                    <h5 class="mb-3">System Details:</h5>
+                    <p><strong><i class="fas fa-desktop"></i> System Type:</strong> {{ system.get_system_type_display }}</p>
+                    <p><strong><i class="fas fa-cogs"></i> System Model:</strong> {{ system.model }}</p>
+                    <p><strong><i class="fas fa-map-marker-alt"></i> Location:</strong> {{ system.location }}</p>
+                    <!-- Network Information Section -->
+                    <br/>
+                    <p><strong><i class="fas fa-network-wired"></i> IP Address:</strong> {{ system.ip }}</p>
+                    <p><strong><i class="fas fa-plug"></i> Network Port:</strong> {{ system.port }}</p>
+                    </div>
+                    <div class="col">
+                    <h5 class="mb-3 text-center">Latency Graph:</h5>
+                    <div id="ping-plot" class="text-center">{{ system.graph|safe }}</div>
+                    </div>
+                </div>
+            </li>
+        </ul>
+        <!-- Action Buttons in Card Footer -->
+        <div class="card-footer">
+            <div class="btn-group" role="group">
+                {% if system.port %}
+                <a href="http://{{system.ip}}:{{system.port}}" class="btn btn-primary">
+                    <i class="fas fa-link"></i> Connect
+                </a>
+                {% endif %}
+                {% if system.last_log %}
+                <a href="{% url 'systems:logs' system.id %}" class="btn btn-secondary">
+                    <i class="fas fa-file-alt"></i> Logs
+                </a>
+                {% endif %}
+                <a href="{% url 'systems:incidents' system.id %}" class="btn btn-secondary">
+                    <i class="fas fa-exclamation-triangle"></i> Incidents
+                </a>
+                <a href="{% url 'systems:edit' system.id %}" class="btn btn-secondary">
+                    <i class="fas fa-edit"></i> Edit
+                </a>
+                <a href="{% url 'systems:remove' system.id %}" class="btn btn-danger">
+                    <i class="fas fa-trash-alt"></i> Remove
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    {% comment %} Tu będzie karta systemu {% endcomment %}
+    <br/>
+
+    <div class="col-12">
+        {% if incidents %}
+        <div class="accordion" id="accordionServices">
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                    <button class="accordion-button collapsed">
+                        <div class="container text-start">
+                            <div class="row text-center">
+                                <h5> Last 5 incidents </h5>
+                            </div>
+                            <br/>
+                            <div class="row">
+                                <div class="col-1">ID:</div>
+                                <div class="col-2">Date:</div>
+                                <div class="col-1">Time:</div>
+                                <div class="col-2">System name:</div>
+                                <div class="col-2">
+                                    <a
+                                        class="nav-link dropdown-toggle"
+                                        href="#"
+                                        role="button"
+                                        data-bs-toggle="dropdown"
+                                        aria-expanded="false"
+                                        >
+                                    Tag:
+                                    </a>
+                                    <ul class="dropdown-menu">
+                                        <li><a class="dropdown-item" href="{% url 'incidents:list' %}">All</a></li>
+                                        <li><a class="dropdown-item" href="{% url 'incidents:tag' 0 %}">System down</a></li>
+                                        <li><a class="dropdown-item" href="{% url 'incidents:tag' 1 %}">Log anomaly detected</a></li>
+                                    </ul>
+                                </div>
+                                <div class="col-4">Title:</div>
+                            </div>
+                        </div>
+                    </button>
+                </h2>
+            </div>
+            {% include 'datatables/incidents.html' with incidents=incidents %}
+        </div>
+        {% endif %}
+
+        <br/>
+
+        {% if logs %}
+        <div class="accordion" id="accordionServices">
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                    <button class="accordion-button collapsed">
+                        <div class="container text-start">
+                            <div class="row text-center">
+                                <h5> Last 10 logs </h5>
+                            </div>
+                            <br/>
+                            <div class="row">
+                                <div class="col-2">Datetime</div>
+                                <div class="col-2">IP Address</div>
+                                <div class="col-2">Program</div>
+                                <div class="col-1">
+                                    <a
+                                        class="nav-link dropdown-toggle"
+                                        href="#"
+                                        role="button"
+                                        data-bs-toggle="dropdown"
+                                        aria-expanded="false"
+                                        >
+                                    Label
+                                    </a>
+                                    <ul class="dropdown-menu">
+                                        <li><a class="dropdown-item" href="{% url 'systems:logs'  system.id %}">All</a></li>
+                                        {% for cluster in clusters %}
+                                        <li><a class="dropdown-item" href="{% url 'systems:label' system.id cluster %}"> {{ cluster }} </a></li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                                <div class="col-5">Message:</div>
+                            </div>
+                        </div>
+                    </button>
+                </h2>
+            </div>
+            {% include 'datatables/logs.html' with logs=logs %}
+        </div>
+        {% endif %}
+
+        <br/>    
+    </div>
+</div>
+{% endblock %}

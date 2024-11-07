@@ -29,7 +29,7 @@ def list_to_numpy_array(obj):
 
 
 
-def get_ping_graph(system, height=300, width=1200, range=144):
+def get_ping_graph(system, height=300, width=900, range=144):
     pings = Ping.objects.filter(system=system).order_by('-id')[:range]
     n = 0
     timestamps = [n + i/12 for i,_ in enumerate(pings)]

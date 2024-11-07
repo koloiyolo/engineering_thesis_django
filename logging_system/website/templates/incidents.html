@@ -15,56 +15,32 @@
                 <button class="accordion-button collapsed">
                     <div class="container text-start">
                         <div class="row">
+                            <div class="col-1">ID:</div>
                             <div class="col-2">Date:</div>
                             <div class="col-1">Time:</div>
                             <div class="col-2">System name:</div>
-                            <div class="col-2">Tag:</div>
-                            <div class="col-5">Title:</div>
+                            <div class="col-2"><a
+                                class="nav-link dropdown-toggle"
+                                href="#"
+                                role="button"
+                                data-bs-toggle="dropdown"
+                                aria-expanded="false"
+                                >
+                                Tag:
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" href="{% url 'incidents:list' %}">All</a></li>
+                                    <li><a class="dropdown-item" href="{% url 'incidents:tag' 0 %}">System down</a></li>
+                                    <li><a class="dropdown-item" href="{% url 'incidents:tag' 1 %}">Log anomaly detected</a></li>
+                                </ul>
+                            </div>
+                            <div class="col-4">Title:</div>
                         </div>
                     </div>
                 </button>
             </h2>
         </div>
-        {% for obj in incidents %}
-        <div class="accordion-item">
-            <h2 class="accordion-header" id="heading{{ obj.id }}">
-                <button
-                    class="accordion-button collapsed"
-                    type="button"
-                    data-bs-toggle="collapse"
-                    data-bs-target="#collapse{{ obj.id }}"
-                    aria-expanded="false"
-                    >
-                    <div class="container text-start">
-                        <div class="row">
-                            <div class="col-2">{{ obj.date }}</div>
-                            <div class="col-1">{{ obj.time }}</div>
-                            <div class="col-2">{{ obj.system.name }}</div>
-                            <div class="col-2">{{ obj.get_tag_display }}</div>
-                            <div class="col-5">{{ obj.title }}</div>
-                        </div>
-                    </div>
-                </button>
-            </h2>
-            <div
-                id="collapse{{ obj.id }}"
-                class="accordion-collapse collapse"
-                data-bs-parent="#accordionServices"
-                >
-                <div class="accordion-body">
-                    <div id="ping-plot">{{ obj.graph|safe }}</div>
-                    <div class="btn-group" role="group">
-                        <a href="{% url 'incidents:view' obj.id %}" class="btn btn-primary">
-                        View
-                        </a>
-                        <a href="{% url 'incidents:remove' obj.id %}" class="btn btn-danger"
-                            >Remove</a
-                            >
-                    </div>
-                </div>
-            </div>
-        </div>
-        {% endfor %}
+        {% include 'datatables/incidents.html' with incidents=incidents %}
     </div>
     <br />
     <nav>

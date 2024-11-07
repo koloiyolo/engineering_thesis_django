@@ -55,15 +55,21 @@
                 data-bs-parent="#accordionServices"
                 >
                 <div class="accordion-body">
-                    <div id="ping-plot">{{ obj.graph|safe }}</div>
                     <div class="btn-group" role="group">
                         {% if obj.port %}
                         <a href="http://{{obj.ip}}:{{obj.port}}" class="btn btn-primary">
                         Connect
                         </a>
-                        {% endif %} {% if obj.last_log %}
-                        <a href="{% url 'systems:logs' obj.id %}" class="btn btn-dark">
+                        {% endif %} 
+                        <a href="{% url 'systems:view' obj.id %}" class="btn btn-dark">
+                        View
+                        </a>
+                        {% if obj.last_log %}
+                        <a href="{% url 'systems:logs' obj.id %}" class="btn btn-secondary">
                         Logs
+                        </a>
+                        <a href="{% url 'systems:logs' obj.id %}" class="btn btn-secondary">
+                        Incidents
                         </a>
                         {% endif %}
                         <a href="{% url 'systems:edit' obj.id %}" class="btn btn-secondary">

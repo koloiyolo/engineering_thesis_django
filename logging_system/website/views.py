@@ -8,6 +8,7 @@ from requests import get
 
 from config.models import Settings
 from systems.models import System
+from incidents.models import Incident
 from .models import Log
 from .forms import SignUpForm
 from .functions import get_ping_graph, get_labels_graph, get_uptime_graph
@@ -22,7 +23,21 @@ def home(request):
     
     response = None
     ip = None
-    logs = Log.objects.all().order_by("-id")[:5]
+
+    incidents = Incident.objects.all().order_by("-id")[:5]
+
+    # logs 
+    logs = Log.objects.all().order_by("-id")[:10]
+    id = 0
+    for log in logs:
+        log.id = id
+        id += 1
+        if len(log.message) > 50:
+            log.short_message = log.message[:50] + "..."
+        else:
+            log.short_message = log.message
+    # -----
+
     try:
         response = f"{ping('8.8.8.8', unit='ms'):.3} ms"
         ip = get('https://api.ipify.org').content.decode('utf8')
@@ -30,9 +45,9 @@ def home(request):
         response = None
         ip = None
         
-    systems_d = System.objects.filter(last_ping=None)
-    for system in systems_d:
-        system.graph = get_ping_graph(system, width=490)
+    # systems_d = System.objects.filter(last_ping=None)
+    # for system in systems_d:
+    #     system.graph = get_ping_graph(system, width=490)
 
 
     labels_graph = get_labels_graph()
@@ -41,8 +56,8 @@ def home(request):
     
     data = {'ip': ip,
             'ping': response,
+            'incidents': incidents,
             'logs': logs,
-            'systems_d': systems_d, 
             'labels_graph': labels_graph,
             'uptime_graph': uptime_graph}
 
@@ -112,7 +127,7 @@ def label(request, label):
     if request.user.is_authenticated:
         query = request.GET.get('q', '')  # Get the search query from the request
         logs = Log.objects.filter(label=label, message__icontains=query).order_by('-id')  # Filter items by name
-        if logs.count() == 0:
+        if not logs.exists():
             messages.warning(request, f"Label '{label}' is empty!")
             return redirect('logs')
         items_per_page = Settings.load().items_per_page

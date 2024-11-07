@@ -20,7 +20,7 @@
         </ul>
         <div class="card-body">
             <div class="input-group mb-3">
-                <a class="btn btn-dark" href="{% url 'systems:list' %}"> View System </a>
+                <a class="btn btn-dark" href="{% url 'systems:view' incident.system.id%}"> View System </a>
                 <a class="btn btn-danger" href="{% url 'incidents:remove' incident.id %}"> Remove </a>
             </div>
         </div>
