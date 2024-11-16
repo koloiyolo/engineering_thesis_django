@@ -82,17 +82,18 @@ class Settings(models.Model):
     # Add more fields as needed
 
     def save(self, *args, **kwargs):
-        if not self.pk and AppSettings.objects.exists():
-            raise ValidationError("There can be only one Settings instance.")
-        
-        if self.pk:
-            current = Settings.load().ml_model
-            if self.on_model_change_reset_labels and self.ml_model != current:
-                Log.objects.update(label=None)
-
-            current = Settings.load().ml_clusters
-            if self.on_model_change_reset_labels and self.ml_clusters !=  current:
-                Log.objects.update(label=None)
+        if Settings.objects.exists():
+            if not self.pk and AppSettings.objects.exists():
+                raise ValidationError("There can be only one Settings instance.")
+            
+            if self.pk:
+                current = Settings.load().ml_model
+                if self.on_model_change_reset_labels and self.ml_model != current:
+                    Log.objects.update(label=None)
+    
+                current = Settings.load().ml_clusters
+                if self.on_model_change_reset_labels and self.ml_clusters !=  current:
+                    Log.objects.update(label=None)
         
         super().save(*args, **kwargs)
 
