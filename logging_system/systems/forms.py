@@ -1,7 +1,7 @@
 from django import forms
 from django.forms import TextInput, NumberInput, Select
 
-from .models import System, Log
+from .models import System, Log, Location
 
 class SystemForm(forms.ModelForm):
 
@@ -15,7 +15,8 @@ class SystemForm(forms.ModelForm):
             "email_notify",
             "port",
             "model",
-            "location"
+            "location",
+            "notes"
         ]
         widgets = {
             "name": TextInput(attrs={
@@ -46,10 +47,12 @@ class SystemForm(forms.ModelForm):
                 'label': "System's model",
                 'placeholder': "Your system's model",                
             }),
-            "location":  TextInput(attrs={
+            "location":  Select(attrs={
                 'class': "form-control",
-                'label': "System's location",
-                'placeholder': "Your system's location",                
+            }),
+            "notes":  TextInput(attrs={
+                'class': "form-control",
+                'label': "Additional notes",
+                'placeholder': "...",                
             }),
         }
-

@@ -51,8 +51,17 @@
                         {{ form.port }}
                         {{ form.model.label_tag }}
                         {{ form.model }}
-                        {{ form.location.label_tag }}
-                        {{ form.location }}
+                        <div class="row">
+                            <div class="col">
+                                {{ form.location.label_tag }}
+                                {{ form.location }}
+                            </div>
+                            <div class="col">
+                                <a href="{% url 'systems:list' %}" class="btn btn-secondary"> Add Location </a>
+                            </div>
+                        </div>
+                        {{ form.notes.label_tag }}
+                        {{ form.notes }}
                         <br />
                     </div>
                 </li>

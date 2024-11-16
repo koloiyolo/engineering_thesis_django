@@ -188,8 +188,6 @@ def remove(request, pk):
     else:
         return redirect('home')
 
-# validated function
-
 # def function(request):
 #     if request.user.is_authenticated:
 #         pass
