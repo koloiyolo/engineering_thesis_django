@@ -23,5 +23,6 @@ urlpatterns = [
     path('settings/', include('config.urls')),
     path('systems/', include('systems.urls')),
     path('incidents/', include('incidents.urls')),
+    path('locations/', include('locations.urls')),
     # path('incidents/', include('incidents.urls')),
 ]

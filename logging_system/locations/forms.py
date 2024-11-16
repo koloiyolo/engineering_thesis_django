@@ -19,23 +19,23 @@ class LocationForm(forms.ModelForm):
         widgets = {
             "name": TextInput(attrs={
                 'class': "form-control",
-                'label': "System's name",
-                'placeholder': "Your system's name",                
+                'label': "Location's name",
+                'placeholder': "Your location's name",                
             }),
             "address": TextInput(attrs={
                 'class': "form-control",
-                'label': "System's name",
-                'placeholder': "Your system's name",                
+                'label': "Location's address",
+                'placeholder': "Your location's address",                
             }),
             "room": TextInput(attrs={
                 'class': "form-control",
-                'label': "System's name",
-                'placeholder': "Your system's name",                
+                'label': "Location's room",
+                'placeholder': "Your location's notes",                
             }),
             "notes": TextInput(attrs={
                 'class': "form-control",
-                'label': "System's name",
-                'placeholder': "Your system's name",                
+                'label': "Additional notes",
+                'placeholder': "...",                
             }),
 
         }

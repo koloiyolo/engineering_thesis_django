@@ -56,8 +56,9 @@
                                 {{ form.location.label_tag }}
                                 {{ form.location }}
                             </div>
-                            <div class="col">
-                                <a href="{% url 'systems:list' %}" class="btn btn-secondary"> Add Location </a>
+                            <div class="col ">
+                                <br/>
+                                <a href="{% url 'locations:add' %}" class="btn btn-dark"> Add Location </a>
                             </div>
                         </div>
                         {{ form.notes.label_tag }}
