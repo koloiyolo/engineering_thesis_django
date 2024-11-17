@@ -2,7 +2,7 @@
 {% block content %}
 <div class="col-md-8 offset-md-2">
     <div class="input-group mb-3">
-        <a class="btn btn-secondary" href="{% url 'incidents:list' %}">&laquo; Back</a>
+        <a class="btn btn-secondary" href="{{ request.META.HTTP_REFERER|default:'/' }}">&laquo; Back</a>
         <a class="btn btn-outline-dark disabled" > Incident {{ incident.id }} </a>
     </div>
     {% if incident %}

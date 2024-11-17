@@ -42,7 +42,7 @@
         </div>
         <br />
         <button type="submit" class="btn btn-dark"> Save </button>
-        <a href="{% url 'systems:add' %}" class="btn btn-secondary"> Back </a>
+        <a href="{{ request.META.HTTP_REFERER|default:'/' }}" class="btn btn-secondary"> Back </a>
     </form>
 </div>
 <br />
