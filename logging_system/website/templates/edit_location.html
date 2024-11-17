@@ -27,6 +27,8 @@
                     <div class="form-group">
                         {{ form.name.label_tag }}
                         {{ form.name }}
+                        {{ form.town.label_tag }}
+                        {{ form.town }}
                         {{ form.address.label_tag }}
                         {{ form.address }}
                         {{ form.room.label_tag }}
@@ -40,7 +42,7 @@
         </div>
         <br />
         <button type="submit" class="btn btn-dark"> Add </button>
-        <a href="{% url 'systems:list' %}" class="btn btn-secondary"> Back </a>
+        <a href="{% url 'locations:list' %}" class="btn btn-secondary"> Back </a>
     </form>
 </div>
 <br />

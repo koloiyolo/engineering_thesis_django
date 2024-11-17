@@ -13,12 +13,28 @@
                 <button class="accordion-button collapsed">
                     <div class="container text-start">
                         <div class="row">
-                            <div class="col">ID</div>
+                            <div class="col">ID:</div>
                             <div class="col">Name:</div>
                             <div class="col">IP Address:</div>
                             <div class="col">Model:</div>
                             <div class="col">Status:</div>
-                            <div class="col">Last log:</div>
+                            <div class="col">
+                                <a
+                                    class="nav-link dropdown-toggle"
+                                    href="#"
+                                    role="button"
+                                    data-bs-toggle="dropdown"
+                                    aria-expanded="false"
+                                    >
+                                    Location
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" href="{% url 'systems:list' %}">All</a></li>
+                                    {% for location in locations %}
+                                        <li><a class="dropdown-item" href="{% url 'systems:location' location.id %}"> {{ location }} </a></li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
                         </div>
                     </div>
                 </button>
@@ -45,7 +61,7 @@
                             {% else %}
                             <div class="col text-danger">Device down</div>
                             {% endif %}
-                            <div class="col">{{ obj.last_log }}</div>
+                            <div class="col">{{ obj.location }}</div>
                         </div>
                     </div>
                 </button>

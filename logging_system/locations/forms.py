@@ -11,6 +11,7 @@ class LocationForm(forms.ModelForm):
         model = Location
         fields = [
             "name",
+            "town",
             "address",
             "room",
             "notes"
@@ -21,6 +22,11 @@ class LocationForm(forms.ModelForm):
                 'class': "form-control",
                 'label': "Location's name",
                 'placeholder': "Your location's name",                
+            }),
+            "town": TextInput(attrs={
+                'class': "form-control",
+                'label': "Location's town and post code",
+                'placeholder': "Your location's town and post code",                
             }),
             "address": TextInput(attrs={
                 'class': "form-control",

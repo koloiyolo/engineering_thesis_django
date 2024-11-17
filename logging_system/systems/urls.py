@@ -5,6 +5,7 @@ app_name = 'systems'
 
 urlpatterns = [
     path('', views.systems, name='list'),
+    path('location/<int:location>', views.location, name='location'),
     path('view/<int:pk>', views.system, name='view'),
     path('logs/<int:pk>', views.logs, name='logs'),
     path('logs/<int:pk>/<int:label>', views.label, name='label'),
