@@ -7,6 +7,7 @@ from website.functions import get_ping_graph
 from .models import System
 from incidents.models import Incident
 from website.models import Log
+from locations.models import Location
 from config.models import Settings
 from .forms import SystemForm
 # Create your views here.
@@ -25,10 +26,33 @@ def systems(request):
         paginator = Paginator(systems, items_per_page)
         page_number = request.GET.get("page")
         page_systems = paginator.get_page(page_number)
-        
-        return render(request, 'systems.html', {'systems': page_systems})
+        locations = Location.objects.all()
+        data = {
+            'systems': page_systems,
+            'locations': locations
+        }
+        return render(request, 'systems.html', data)
     else:
         return redirect('home')
+
+def location(request, location):
+    if request.user.is_authenticated:
+        systems = System.objects.filter(location=location)
+        if not systems.exists():
+            messages.warning(request, f"There are no systems located in {location}!")
+            return redirect('systems')
+        items_per_page = Settings.load().items_per_page
+        paginator = Paginator(systems, items_per_page)
+        page_number = request.GET.get("page")
+        page_systems = paginator.get_page(page_number)
+        locations = Location.objects.all()
+        data = {
+            'systems': page_systems,
+            'locations': locations
+        }
+        return render(request, 'systems.html', data)
+    else:
+        return redirect('home')   
 
 def system(request, pk):
     if request.user.is_authenticated:
@@ -187,8 +211,6 @@ def remove(request, pk):
         return redirect('systems:list')
     else:
         return redirect('home')
-
-# validated function
 
 # def function(request):
 #     if request.user.is_authenticated:

@@ -1,0 +1,49 @@
+{% extends 'base.html' %} {% block content %}
+<div class="col-md-6 offset-md-3">
+    <form method="POST" action="{% url 'locations:add' %}">
+        {% csrf_token %} {% if form.errors %}
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <strong>Your form has Errors</strong>
+            {% for field in form %} 
+            {% if field.errors %} 
+            {{ field.errors }} 
+            {% endif %} {% endfor %}
+            <button
+                type="button"
+                class="btn-close"
+                data-bs-dismiss="alert"
+                aria-label="Close"
+                ></button>
+        </div>
+        {% endif %} 
+        <br />
+        <h1>
+            Add location
+        </h1>
+        <br />
+        <div class="card">
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item">
+                    <div class="form-group">
+                        {{ form.name.label_tag }}
+                        {{ form.name }}
+                        {{ form.town.label_tag }}
+                        {{ form.town }}
+                        {{ form.address.label_tag }}
+                        {{ form.address }}
+                        {{ form.room.label_tag }}
+                        {{ form.room }}
+                        {{ form.notes.label_tag }}
+                        {{ form.notes }}
+                        <br />
+                    </div>
+                </li>
+            </ul>
+        </div>
+        <br />
+        <button type="submit" class="btn btn-dark"> Save </button>
+        <a href="{% url 'systems:add' %}" class="btn btn-secondary"> Back </a>
+    </form>
+</div>
+<br />
+{% endblock %}

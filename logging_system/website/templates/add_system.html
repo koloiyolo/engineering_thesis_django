@@ -51,15 +51,25 @@
                         {{ form.port }}
                         {{ form.model.label_tag }}
                         {{ form.model }}
-                        {{ form.location.label_tag }}
-                        {{ form.location }}
+                        <div class="row">
+                            <div class="col">
+                                {{ form.location.label_tag }}
+                                {{ form.location }}
+                            </div>
+                            <div class="col ">
+                                <br/>
+                                <a href="{% url 'locations:add' %}" class="btn btn-dark"> Add Location </a>
+                            </div>
+                        </div>
+                        {{ form.notes.label_tag }}
+                        {{ form.notes }}
                         <br />
                     </div>
                 </li>
             </ul>
         </div>
         <br />
-        <button type="submit" class="btn btn-dark"> Add </button>
+        <button type="submit" class="btn btn-dark"> Save </button>
         <a href="{% url 'systems:list' %}" class="btn btn-secondary"> Back </a>
     </form>
 </div>

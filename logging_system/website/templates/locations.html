@@ -1,0 +1,115 @@
+{% extends 'base.html' %} {% block content %}
+<div class="col-md-12">
+    <div class="input-group mb-3">
+        <a class="btn btn-secondary" href="{% url 'home' %}">&laquo; Back</a>
+        <a class="btn btn-outline-dark disabled" > Locations </a>
+        <a class="btn btn-dark" href="{% url 'locations:add' %}"> Add Location </a>
+    </div>
+    {% if locations %}
+    <div class="accordion" id="accordionServices">
+        <div class="accordion-item">
+            <h2 class="accordion-header">
+                <button class="accordion-button collapsed">
+                    <div class="container text-start">
+                        <div class="row">
+                            <div class="col-1">ID:</div>
+                            <div class="col-2">Name:</div>
+                            <div class="col-3">Town:</div>
+                            <div class="col-4">Address:</div>
+                            <div class="col-1">Room:</div>
+                            <div class="col-1">System count:</div>
+                        </div>
+                    </div>
+                </button>
+            </h2>
+        </div>
+        {% for obj in locations %}
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="heading{{ obj.id }}">
+                <button
+                    class="accordion-button collapsed"
+                    type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#collapse{{ obj.id }}"
+                    aria-expanded="false"
+                    >
+                    <div class="container text-start">
+                        <div class="row">
+                            <div class="col-1">{{ obj.id }}</div>
+                            <div class="col-2">{{ obj.name }}</div>
+                            <div class="col-3">{{ obj.town }}</div>
+                            <div class="col-4">{{ obj.address }}</div>
+                            <div class="col-1">{{ obj.room }}</div>
+                            <div class="col-1">{{ obj.systems }}</div>
+                        </div>
+                    </div>
+                </button>
+            </h2>
+            <div
+                id="collapse{{ obj.id }}"
+                class="accordion-collapse collapse"
+                data-bs-parent="#accordionServices"
+                >
+                <div class="accordion-body">
+                    <p><strong>Notes: </strong> {{obj.notes}} </p>
+                    <div class="btn-group" role="group">
+                        <a href="{% url 'systems:location' obj.id %}" class="btn btn-dark">
+                         View Systems
+                        </a>
+                        <a href="{% url 'locations:edit' obj.id %}" class="btn btn-secondary">
+                         Edit 
+                        </a>
+                        <a href="{% url 'locations:remove' obj.id %}" class="btn btn-danger">
+                         Remove 
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    <br />
+    <nav>
+        <ul class="pagination">
+            {% if locations.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?page=1" aria-label="Previous">
+                <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" href="?page={{ locations.previous_page_number }}"
+                    >Previous</a
+                    >
+            </li>
+            {% endif %}
+            <li class="page-item disabled">
+                <a class="page-link" href="#"
+                    >{{ locations.number }} of {{ locations.paginator.num_pages }}</a
+                    >
+            </li>
+            {% if locations.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ locations.next_page_number }}"
+                    >Next</a
+                    >
+            </li>
+            <li class="page-item">
+                <a
+                    class="page-link"
+                    href="?page={{ locations.paginator.num_pages }}"
+                    aria-label="Next"
+                    >
+                <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+            {% endif %}
+        </ul>
+    </nav>
+    {% else %}
+    <br />
+    <h3>No locations yet <a href="{% url 'locations:add' %}">add new one</a></h3>
+    <br />
+    {% endif %}
+</div>
+{% endblock %}
