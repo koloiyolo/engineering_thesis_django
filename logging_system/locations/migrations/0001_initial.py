@@ -16,10 +16,10 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('name', models.TextField(max_length=50)),
-                ('town', models.TextField(max_length=100, null=True)),
-                ('address', models.TextField(max_length=100, null=True)),
-                ('room', models.TextField(max_length=5, null=True)),
-                ('notes', models.TextField(max_length=256, null=True)),
+                ('town', models.TextField(blank=True, max_length=100, null=True)),
+                ('address', models.TextField(blank=True, max_length=100, null=True)),
+                ('room', models.TextField(blank=True, max_length=5, null=True)),
+                ('notes', models.TextField(blank=True, max_length=256, null=True)),
             ],
         ),
     ]
