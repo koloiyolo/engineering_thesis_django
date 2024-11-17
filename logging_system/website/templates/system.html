@@ -16,7 +16,9 @@
                     <div class="col">
                     <h5 class="mb-3">System Details:</h5>
                     <p><strong><i class="fas fa-desktop"></i> System Type:</strong> {{ system.get_system_type_display }}</p>
+                    {% if system.model %}
                     <p><strong><i class="fas fa-cogs"></i> System Model:</strong> {{ system.model }}</p>
+                    {% endif %}
                     <!-- Network Information Section -->
                     <br/>
                     <p><strong><i class="fas fa-network-wired"></i> IP Address:</strong> {{ system.ip }}</p>

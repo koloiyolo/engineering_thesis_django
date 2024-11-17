@@ -1,7 +1,7 @@
 {% extends 'base.html' %} {% block content %}
 <div class="col-md-12">
     <div class="input-group mb-3">
-        <a class="btn btn-secondary" href="{% url 'home' %}">&laquo; Back</a>
+        <a class="btn btn-secondary" href="{{ request.META.HTTP_REFERER|default:'/' }}">&laquo; Back</a>
         <a class="btn btn-outline-dark disabled" > Logs </a>
     </div>
     {% if logs %}
