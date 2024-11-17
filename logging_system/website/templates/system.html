@@ -20,13 +20,17 @@
                     <!-- Network Information Section -->
                     <br/>
                     <p><strong><i class="fas fa-network-wired"></i> IP Address:</strong> {{ system.ip }}</p>
+                    {% if system.port %}
                     <p><strong><i class="fas fa-plug"></i> Network Port:</strong> {{ system.port }}</p>
+                    {% endif %}
                     <br/>
                     <!-- Network Information Section -->
-                    <p><strong><i class="fas fa-map-marker-alt"></i> Location:</strong> {{ system.location }}</p>
-                    <p><strong><i class="fas fa-map-marker-alt"></i> Town:</strong> {{ system.location.town }}</p>
-                    <p><strong><i class="fas fa-map-marker-alt"></i> Address:</strong> {{ system.location.address }}</p>
-                    <p><strong><i class="fas fa-map-marker-alt"></i> Room:</strong> {{ system.location.room }}</p>
+                    {% if system.location %}
+                        <p><strong><i class="fas fa-map-marker-alt"></i> Location:</strong> {{ system.location }}</p>
+                        <p><strong><i class="fas fa-map-marker-alt"></i> Town:</strong> {{ system.location.town }}</p>
+                        <p><strong><i class="fas fa-map-marker-alt"></i> Address:</strong> {{ system.location.address }}</p>
+                        <p><strong><i class="fas fa-map-marker-alt"></i> Room:</strong> {{ system.location.room }}</p>
+                    {% endif %}
                     </div>
                     <div class="col">
                     <h5 class="mb-3 text-center">Latency Graph:</h5>

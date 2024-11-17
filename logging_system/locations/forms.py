@@ -26,22 +26,22 @@ class LocationForm(forms.ModelForm):
             "town": TextInput(attrs={
                 'class': "form-control",
                 'label': "Location's town and post code",
-                'placeholder': "Your location's town and post code",                
+                'placeholder': "Your location's town and post code",
             }),
             "address": TextInput(attrs={
                 'class': "form-control",
                 'label': "Location's address",
-                'placeholder': "Your location's address",                
+                'placeholder': "Your location's address",
             }),
             "room": TextInput(attrs={
                 'class': "form-control",
                 'label': "Location's room",
-                'placeholder': "Your location's notes",                
+                'placeholder': "Your location's room number",
             }),
             "notes": TextInput(attrs={
                 'class': "form-control",
                 'label': "Additional notes",
-                'placeholder': "...",                
+                'placeholder': "...",
             }),
 
         }

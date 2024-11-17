@@ -42,7 +42,7 @@ class Migration(migrations.Migration):
                 ('d_count', models.IntegerField(default=0)),
                 ('email_notify', models.BooleanField(choices=[(True, 'Yes'), (False, 'No')], default=False)),
                 ('service_type', models.TextField(max_length=50)),
-                ('model', models.TextField(max_length=50)),
+                ('model', models.TextField(max_length=50, null=True)),
                 ('notes', models.TextField(max_length=256, null=True)),
                 ('location', models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, to='locations.location')),
             ],
