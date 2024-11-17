@@ -53,12 +53,15 @@
                 <div class="accordion-body">
                     <p><strong>Notes: </strong> {{obj.notes}} </p>
                     <div class="btn-group" role="group">
-                        <a href="{% url 'locations:edit' obj.id %}" class="btn btn-secondary">
-                        Edit
+                        <a href="{% url 'systems:location' obj.id %}" class="btn btn-dark">
+                         View Systems
                         </a>
-                        <a href="{% url 'locations:remove' obj.id %}" class="btn btn-danger"
-                            >Remove</a
-                            >
+                        <a href="{% url 'locations:edit' obj.id %}" class="btn btn-secondary">
+                         Edit 
+                        </a>
+                        <a href="{% url 'locations:remove' obj.id %}" class="btn btn-danger">
+                         Remove 
+                        </a>
                     </div>
                 </div>
             </div>
