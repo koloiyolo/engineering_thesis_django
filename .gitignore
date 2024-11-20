@@ -42,3 +42,8 @@ logging_system/website/templates/add_system copy.html
 logging_system.zip
 logging_system/locations/__pycache__/
 logging_system/locations/migrations/__pycache__/
+logging_system/config/migrations/0001_initial.py
+logging_system/incidents/migrations/0001_initial.py
+logging_system/locations/migrations/0001_initial.py
+logging_system/systems/migrations/0001_initial.py
+logging_system/website/migrations/0001_initial.py
