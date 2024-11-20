@@ -101,3 +101,11 @@ services:
         condition: service_healthy
     env_file:
       - config.env
+
+  mailhog:
+    container_name: mailhog
+    image: mailhog/mailhog
+    restart: always
+    ports:
+      - "1025:1025"  # SMTP
+      - "8025:8025"  # Web UI

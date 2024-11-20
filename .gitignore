@@ -50,3 +50,6 @@ logging_system/website/migrations/
 logging_system/home/__pycache__/
 logging_system/home/migrations/
 logging_system/home/migrations/__pycache__/
+logging_system/logs/__pycache__/
+logging_system/logs/migrations/0001_initial.py
+logging_system/logs/migrations/__pycache__/

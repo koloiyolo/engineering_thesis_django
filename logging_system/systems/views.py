@@ -6,7 +6,7 @@ from .functions import get_ping_graph
 
 from .models import System
 from incidents.models import Incident
-from .models import Log
+from logs.models import Log
 from locations.models import Location
 from config.models import Settings
 from .forms import SystemForm

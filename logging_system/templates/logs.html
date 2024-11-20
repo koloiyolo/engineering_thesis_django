@@ -25,9 +25,9 @@
                                 Label:
                                 </a>
                                 <ul class="dropdown-menu">
-                                    <li><a class="dropdown-item" href="{% url 'logs' %}">All</a></li>
+                                    <li><a class="dropdown-item" href="{% url 'logs:list' %}">All</a></li>
                                     {% for cluster in clusters %}
-                                        <li><a class="dropdown-item" href="{% url 'label' cluster %}"> {{ cluster }} </a></li>
+                                        <li><a class="dropdown-item" href="{% url 'logs:label' cluster %}"> {{ cluster }} </a></li>
                                     {% endfor %}
                                 </ul>
                             </div>

@@ -56,7 +56,8 @@ def create_email(incident=None, log=None):
     notifications_mode = Settings.load().notifications_mode
     send_to = User.objects.values_list('email', flat=True).distinct()
 
-    if notifications_mode != 0: 
+    if notifications_mode != 0:
+        print("Notifications enabled") 
         if incident.tag == 0 and (notifications_mode == 1 or notifications_mode == 3):
             return (
                     incident.title,

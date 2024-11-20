@@ -1,5 +1,5 @@
 from django.db import models
-from systems.models import Log
+from logs.models import Log
 # from django.contrib.auth.models import User
 
 # Create your models here.
@@ -91,14 +91,14 @@ class Settings(models.Model):
                 if self.on_model_change_reset_labels and self.ml_model != current:
                     Log.objects.update(label=None)
 
-                    from home.tasks import ml_train_task
+                    from logs.tasks import ml_train_task
                     ml_train_task.delay(ml_model=current)
 
                 current = Settings.load().ml_clusters
                 if self.on_model_change_reset_labels and self.ml_clusters !=  current:
                     Log.objects.update(label=None)
 
-                    from home.tasks import ml_train_task
+                    from logs.tasks import ml_train_task
                     ml_train_task.delay()
         
         super().save(*args, **kwargs)

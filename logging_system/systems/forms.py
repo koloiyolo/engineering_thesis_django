@@ -1,7 +1,7 @@
 from django import forms
 from django.forms import TextInput, NumberInput, Select
 
-from .models import System, Log, Location
+from .models import System, Location
 
 class SystemForm(forms.ModelForm):
 

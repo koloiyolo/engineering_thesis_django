@@ -10,16 +10,34 @@ from sklearn.utils import Bunch
 from minisom import MiniSom
 
 import numpy as np
-import time
+import random
 import joblib
+import time
 import os
 
-from .functions import get_logs
 
-from systems.models import Log
+from .models import Log
 from config.models import Settings
 from incidents.functions import create_incident
 # from .functions import get_logs, send_anomaly_emails
+
+# get logs from database
+def get_logs(get_count):
+    data = None
+    count = Log.objects.all().count()
+    if count > get_count:
+        offset = random.randint(0, (count - get_count))
+        data = Log.objects.all()[offset:offset + get_count]
+    else:
+        data = Log.objects.all()
+    
+    data = Log.objects.all().filter(label=None)[:2500]
+
+    if data.count() == 0:
+        data = None
+        return data
+
+    return data
 
 
 # sklearn ML train function prototype
@@ -75,7 +93,7 @@ def classify(file_prefix = 'kmeans'):
                     emails.append(email)
 
 
-
+        print(emails)
         if len(emails) != 0:
             send_mass_mail(emails)
 

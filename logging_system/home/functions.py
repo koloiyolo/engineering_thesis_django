@@ -1,7 +1,7 @@
 from django.contrib.auth.models import User
 import numpy as np
 import plotly.graph_objs as go
-from systems.models import Log
+from logs.models import Log
 from systems.models import System, Ping
 
 
@@ -86,41 +86,3 @@ def get_labels_graph():
     plot_div = figure.to_html(full_html=True, )
 
     return plot_div
-
-
-def get_logs(get_count):
-    data = None
-    count = Log.objects.all().count()
-    if count > get_count:
-        offset = random.randint(0, (count - get_count))
-        data = Log.objects.all()[offset:offset + get_count]
-    else:
-        data = Log.objects.all()
-    
-    data = Log.objects.all().filter(label=None)[:2500]
-
-    if data.count() == 0:
-        data = None
-        return data
-
-    return data
-
-def send_anomaly_emails(data, debug = True):
-    emails = []
-    send_to = User.objects.values_list('email', flat=True).distinct()
-
-    for obj in data:
-        if obj.label == 6 or obj.label == 9:
-            if debug:
-                print(f'{obj.datetime} {obj.host} {obj.tags} {obj.message}')
-            else:
-                emails.append((
-                    f'Abnormal record detected, label: {label}',
-                    f'{obj.host} {obj.tags} {obj.message} {obj.datetime}',
-                    'from@example.com',
-                    send_to))
-
-    if emails:       
-        send_mass_mail(emails)
-
-    return True
