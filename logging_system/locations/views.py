@@ -2,8 +2,6 @@ from django.shortcuts import render, redirect, reverse
 from django.core.paginator import Paginator
 from django.contrib import messages
 
-from website.functions import get_ping_graph
-
 from config.models import Settings
 from .models import Location
 from .forms import LocationForm

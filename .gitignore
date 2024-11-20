@@ -47,3 +47,6 @@ logging_system/incidents/migrations/
 logging_system/locations/migrations/
 logging_system/systems/migrations/
 logging_system/website/migrations/
+logging_system/home/__pycache__/
+logging_system/home/migrations/
+logging_system/home/migrations/__pycache__/

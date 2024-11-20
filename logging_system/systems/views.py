@@ -2,11 +2,11 @@ from django.shortcuts import render, redirect, reverse
 from django.core.paginator import Paginator
 from django.contrib import messages
 
-from website.functions import get_ping_graph
+from .functions import get_ping_graph
 
 from .models import System
 from incidents.models import Incident
-from website.models import Log
+from .models import Log
 from locations.models import Location
 from config.models import Settings
 from .forms import SystemForm

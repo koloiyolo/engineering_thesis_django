@@ -1,7 +1,7 @@
 from django.contrib.auth.models import User
 import numpy as np
 import plotly.graph_objs as go
-from .models import Log
+from systems.models import Log
 from systems.models import System, Ping
 
 

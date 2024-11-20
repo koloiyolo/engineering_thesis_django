@@ -37,7 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'website',
+    'home',
     'config',
     'systems',
     'incidents',
@@ -59,7 +59,7 @@ ROOT_URLCONF = 'logging_system.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -180,11 +180,19 @@ CELERY_BEAT_SCHEDULE = {
 
 # Update EMAIL settings
 
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = os.getenv('EMAIL_HOST', 'smtp.example.com')
-EMAIL_PORT = os.getenv('EMAIL_PORT', 465)
-EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER', 'from@example.com')
-EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD', 'password')
-EMAIL_USE_SSL = os.getenv('EMAIL_USE_SSL', 'True').lower() in ('true', '1', 't')
-DEFAULT_FROM_EMAIL = os.getenv('EMAIL_ADDRESS', 'from@example.com')
+# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+# EMAIL_HOST = os.getenv('EMAIL_HOST', 'smtp.example.com')
+# EMAIL_PORT = os.getenv('EMAIL_PORT', 465)
+# EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER', 'from@example.com')
+# EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD', 'password')
+# EMAIL_USE_SSL = os.getenv('EMAIL_USE_SSL', 'True').lower() in ('true', '1', 't')
+# DEFAULT_FROM_EMAIL = os.getenv('EMAIL_ADDRESS', 'from@example.com')
+
+# Email configuration
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST = "mailhog"  # Match the service name in Docker Compose
+EMAIL_PORT = 1025
+EMAIL_USE_TLS = False
+EMAIL_USE_SSL = False
+DEFAULT_FROM_EMAIL = "logging_system@localhost"
 

@@ -56,23 +56,10 @@ services:
       timeout: 10s
       retries: 5
 
-  migration:
-    build: "./logging_system"
-    command: python manage.py migrate --noinput
-    volumes:
-      - ./logging_system:/app
-    depends_on:
-      db:
-        condition: service_healthy
-    env_file:
-      - config.env
-
   logging_system:
     container_name: logging_system
     restart: always
     depends_on:
-      migration:
-        condition: service_started
       db:
         condition: service_healthy
     build: "./logging_system"

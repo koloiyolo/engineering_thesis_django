@@ -9,9 +9,9 @@ from requests import get
 from config.models import Settings
 from systems.models import System
 from incidents.models import Incident
-from .models import Log
+from systems.models import Log
 from .forms import SignUpForm
-from .functions import get_ping_graph, get_labels_graph, get_uptime_graph
+from .functions import get_labels_graph, get_uptime_graph
 
 # docker compose health check
 def health_check(request):

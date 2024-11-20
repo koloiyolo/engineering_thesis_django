@@ -4,7 +4,6 @@ from django.contrib import messages
 
 from .forms import SettingsPage
 from .models import Settings
-from website.models import Log
 
 # Create your views here.
 

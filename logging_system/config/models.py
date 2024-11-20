@@ -4,7 +4,6 @@ from django.db import models
 # Create your models here.
 
 from django.core.exceptions import ValidationError
-from website.models import Log
 
 class Settings(models.Model):
 
@@ -90,7 +89,10 @@ class Settings(models.Model):
                 current = Settings.load().ml_model
                 if self.on_model_change_reset_labels and self.ml_model != current:
                     Log.objects.update(label=None)
-    
+
+                    from website.tasks import ml_train_task
+                    ml_train_task(ml_model=current).delay()
+
                 current = Settings.load().ml_clusters
                 if self.on_model_change_reset_labels and self.ml_clusters !=  current:
                     Log.objects.update(label=None)

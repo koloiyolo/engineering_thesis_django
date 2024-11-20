@@ -16,7 +16,7 @@ import os
 
 from .functions import get_logs
 
-from .models import Log
+from systems.models import Log
 from config.models import Settings
 from incidents.functions import create_incident
 # from .functions import get_logs, send_anomaly_emails

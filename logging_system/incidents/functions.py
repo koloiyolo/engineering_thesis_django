@@ -61,11 +61,13 @@ def create_email(incident=None, log=None):
             return (
                     incident.title,
                     incident.message,
+                    "logging_system@localhost",
                     send_to)
         elif incident.tag == 1 and (notifications_mode == 2 or notifications_mode == 3):
             return (
                     incident.title,
                     incident.message,
+                    "logging_system@localhost",
                     send_to)
         else:
             print("Email disabled for this type of incidents")
