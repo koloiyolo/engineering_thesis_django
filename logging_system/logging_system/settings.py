@@ -146,12 +146,12 @@ from celery.schedules import crontab
 
 CELERY_BEAT_SCHEDULE = {
     'classify-every-minute': {
-        'task': 'website.tasks.ml_classify_task',
+        'task': 'home.tasks.ml_classify_task',
         'schedule': 60.0,
         'args': (),
     },
     'train-every-week': {
-        'task': 'website.tasks.ml_train_task',
+        'task': 'home.tasks.ml_train_task',
         # 'schedule': crontab(hour=0, minute=0, day_of_week='sunday'),
         'schedule': 360.0,
         'args':()
