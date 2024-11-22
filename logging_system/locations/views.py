@@ -20,7 +20,7 @@ def locations(request):
         page_number = request.GET.get("page")
         page_locations = paginator.get_page(page_number)
         
-        return render(request, 'locations.html', {'locations': page_locations})
+        return render(request, 'location/list.html', {'locations': page_locations})
     else:
         return redirect('home')
 
@@ -36,7 +36,7 @@ def edit(request, pk):
                 return redirect('home')
                     
         else:
-            return render(request, 'edit_location.html', {'form': form})
+            return render(request, 'location/edit.html', {'form': form})
     else:
         return redirect('home')
 
@@ -50,8 +50,8 @@ def add(request):
                 messages.success(request, "Location added successfully")
                 return redirect('systems:add')
         else:
-            return render(request, 'add_location.html', {'form': form})
-        return render(request, 'add_location.html', {'form': form})
+            return render(request, 'location/add.html', {'form': form})
+        return render(request, 'location/add.html', {'form': form})
     else:
         return redirect('home')
 

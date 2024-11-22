@@ -18,7 +18,7 @@ def incidents(request):
         page_number = request.GET.get("page")
         page_incidents = paginator.get_page(page_number)
 
-        return render(request, 'incidents.html', {'incidents': page_incidents})
+        return render(request, 'incident/list.html', {'incidents': page_incidents})
     else:
         return redirect('home')
 
@@ -34,7 +34,7 @@ def tag_incidents(request, tag):
         page_number = request.GET.get("page")
         page_incidents = paginator.get_page(page_number)
 
-        return render(request, 'incidents.html', {'incidents': page_incidents})
+        return render(request, 'incident/list.html', {'incidents': page_incidents})
     else:
         return redirect('home')    
 
@@ -49,7 +49,7 @@ def view(request, pk):
                 comment.user = request.user
                 comment.incident = incident
                 comment.save()
-                return render(request, 'incident.html', {
+                return render(request, 'incident/view.html', {
                     'incident': incident,
                     'comments': comments, 
                     'form': form,    
@@ -60,7 +60,7 @@ def view(request, pk):
         incident = Incident.objects.get(id=pk)
         comments = Comment.objects.filter(incident=incident)
         
-        return render(request, 'incident.html', {
+        return render(request, 'incident/view.html', {
             'incident': incident,
             'comments': comments,
             'form': form

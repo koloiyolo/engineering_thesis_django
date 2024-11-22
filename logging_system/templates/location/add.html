@@ -1,6 +1,6 @@
-{% extends 'base.html' %} {% block content %}
+{% extends 'elements/base.html' %} {% block content %}
 <div class="col-md-6 offset-md-3">
-    <form method="POST">
+    <form method="POST" action="{% url 'locations:add' %}">
         {% csrf_token %} {% if form.errors %}
         <div class="alert alert-danger alert-dismissible fade show" role="alert">
             <strong>Your form has Errors</strong>
@@ -18,7 +18,7 @@
         {% endif %} 
         <br />
         <h1>
-            Edit location
+            Add location
         </h1>
         <br />
         <div class="card">
@@ -42,7 +42,7 @@
         </div>
         <br />
         <button type="submit" class="btn btn-dark"> Save </button>
-        <a href="{% url 'locations:list' %}" class="btn btn-secondary"> Back </a>
+        <a href="{{ request.META.HTTP_REFERER|default:'/' }}" class="btn btn-secondary"> Back </a>
     </form>
 </div>
 <br />

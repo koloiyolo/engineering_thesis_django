@@ -74,8 +74,8 @@ def home(request):
             return redirect('home')
 
     else:
-        return render(request, 'home.html', data)
-    return render(request, 'home.html', data)
+        return render(request, 'misc/home.html', data)
+    return render(request, 'misc/home.html', data)
 
 
 def logout_user(request):
@@ -98,54 +98,9 @@ def register_user(request):
         pass
     else:
         form = SignUpForm()
-        return render(request, 'register.html', {'form': form})
+        return render(request, 'auth/register.html', {'form': form})
         
-    return render(request, 'register.html', {'form': form})
-
-def logs(request):
-    if request.user.is_authenticated:
-        query = request.GET.get('q', '')  # Get the search query from the request
-        logs = Log.objects.filter(message__icontains=query).order_by('-id')  # Filter items by name
-        items_per_page = Settings.load().items_per_page
-        paginator = Paginator(logs, items_per_page)
-        page_number = request.GET.get("page")
-        page_logs = paginator.get_page(page_number)
-        clusters = Log.objects.filter(label__isnull=False).values_list('label', flat=True).distinct()
-        id = 0
-        for log in page_logs:
-            log.id = id
-            id += 1
-            if len(log.message) > 50:
-                log.short_message = log.message[:50] + "..."
-            else:
-                log.short_message = log.message
-        return render(request, 'logs.html', {'logs': page_logs, 'clusters': clusters})
-    else:
-        return redirect('home')
-
-def label(request, label):
-    if request.user.is_authenticated:
-        query = request.GET.get('q', '')  # Get the search query from the request
-        logs = Log.objects.filter(label=label, message__icontains=query).order_by('-id')  # Filter items by name
-        if not logs.exists():
-            messages.warning(request, f"Label '{label}' is empty!")
-            return redirect('logs')
-        items_per_page = Settings.load().items_per_page
-        paginator = Paginator(logs, items_per_page)
-        page_number = request.GET.get("page")
-        page_logs = paginator.get_page(page_number)
-        clusters = Log.objects.filter(label__isnull=False).values_list('label', flat=True).distinct()
-        id = 0
-        for log in page_logs:
-            log.id = id
-            id += 1
-            if len(log.message) > 50:
-                log.short_message = log.message[:50] + "..."
-            else:
-                log.short_message = log.message
-        return render(request, 'logs.html', {'logs': page_logs, 'clusters': clusters})
-    else:
-        return redirect('home')
+    return render(request, 'auth/register.html', {'form': form})
 
 # def logs(request):
 #     if request.user.is_authenticated:

@@ -1,4 +1,4 @@
-{% extends 'base.html' %} {% block content %}
+{% extends 'elements/base.html' %} {% block content %}
 <div class="col-md-12">
     <div class="input-group mb-3">
         <a class="btn btn-secondary" href="{% url 'systems:list' %}">&laquo; Back</a>
@@ -69,43 +69,7 @@
         {% endfor %}
     </div>
     <br />
-    <nav>
-        <ul class="pagination">
-            {% if locations.has_previous %}
-            <li class="page-item">
-                <a class="page-link" href="?page=1" aria-label="Previous">
-                <span aria-hidden="true">&laquo;</span>
-                </a>
-            </li>
-            <li class="page-item">
-                <a class="page-link" href="?page={{ locations.previous_page_number }}"
-                    >Previous</a
-                    >
-            </li>
-            {% endif %}
-            <li class="page-item disabled">
-                <a class="page-link" href="#"
-                    >{{ locations.number }} of {{ locations.paginator.num_pages }}</a
-                    >
-            </li>
-            {% if locations.has_next %}
-            <li class="page-item">
-                <a class="page-link" href="?page={{ locations.next_page_number }}"
-                    >Next</a
-                    >
-            </li>
-            <li class="page-item">
-                <a
-                    class="page-link"
-                    href="?page={{ locations.paginator.num_pages }}"
-                    aria-label="Next"
-                    >
-                <span aria-hidden="true">&raquo;</span>
-                </a>
-            </li>
-            {% endif %}
-        </ul>
-    </nav>
+    {% include 'elements/pagination.html' with objs=locations %}
     {% else %}
     <br />
     <h3>No locations yet <a href="{% url 'locations:add' %}">add new one</a></h3>

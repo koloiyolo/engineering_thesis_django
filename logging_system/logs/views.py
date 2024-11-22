@@ -25,7 +25,7 @@ def logs(request):
                 log.short_message = log.message[:50] + "..."
             else:
                 log.short_message = log.message
-        return render(request, 'logs.html', {'logs': page_logs, 'clusters': clusters})
+        return render(request, 'misc/logs.html', {'logs': page_logs, 'clusters': clusters})
     else:
         return redirect('home')
 
@@ -49,7 +49,7 @@ def label(request, label):
                 log.short_message = log.message[:50] + "..."
             else:
                 log.short_message = log.message
-        return render(request, 'logs.html', {'logs': page_logs, 'clusters': clusters})
+        return render(request, 'misc/logs.html', {'logs': page_logs, 'clusters': clusters})
     else:
         return redirect('home')
 

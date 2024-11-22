@@ -1,4 +1,4 @@
-{% extends 'base.html' %} {% block content %}
+{% extends 'elements/base.html' %} {% block content %}
 <div class="col-md-12">
     <div class="input-group mb-3">
         <a class="btn btn-secondary" href="{% url 'home' %}">&laquo; Back</a>
@@ -102,43 +102,7 @@
         {% endfor %}
     </div>
     <br />
-    <nav>
-        <ul class="pagination">
-            {% if systems.has_previous %}
-            <li class="page-item">
-                <a class="page-link" href="?page=1" aria-label="Previous">
-                <span aria-hidden="true">&laquo;</span>
-                </a>
-            </li>
-            <li class="page-item">
-                <a class="page-link" href="?page={{ systems.previous_page_number }}"
-                    >Previous</a
-                    >
-            </li>
-            {% endif %}
-            <li class="page-item disabled">
-                <a class="page-link" href="#"
-                    >{{ systems.number }} of {{ systems.paginator.num_pages }}</a
-                    >
-            </li>
-            {% if systems.has_next %}
-            <li class="page-item">
-                <a class="page-link" href="?page={{ systems.next_page_number }}"
-                    >Next</a
-                    >
-            </li>
-            <li class="page-item">
-                <a
-                    class="page-link"
-                    href="?page={{ systems.paginator.num_pages }}"
-                    aria-label="Next"
-                    >
-                <span aria-hidden="true">&raquo;</span>
-                </a>
-            </li>
-            {% endif %}
-        </ul>
-    </nav>
+    {% include 'elements/pagination.html' with objs=systems %}
     {% else %}
     <br />
     <h3>No systems yet <a href="{% url 'systems:add' %}">add new one</a></h3>

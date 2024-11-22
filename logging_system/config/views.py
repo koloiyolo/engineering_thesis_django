@@ -17,7 +17,7 @@ def settings(request):
             messages.success(request, "Settings updated successfully")
             return redirect('home')
         else:
-            return render(request, 'settings.html', {'form': form})
+            return render(request, 'misc/settings.html', {'form': form})
     else:
         return redirect('home')
 

@@ -31,7 +31,7 @@ def systems(request):
             'systems': page_systems,
             'locations': locations
         }
-        return render(request, 'systems.html', data)
+        return render(request, 'system/list.html', data)
     else:
         return redirect('home')
 
@@ -50,7 +50,7 @@ def location(request, location):
             'systems': page_systems,
             'locations': locations
         }
-        return render(request, 'systems.html', data)
+        return render(request, 'system/list.html', data)
     else:
         return redirect('home')   
 
@@ -83,7 +83,7 @@ def system(request, pk):
             'clusters': clusters,
             'incidents': incidents
         }
-        return render(request, 'system.html', data)
+        return render(request, 'system/view.html', data)
     else:
         return redirect('home')
 
@@ -106,7 +106,7 @@ def logs(request, pk):
                 log.short_message = log.message[:50] + "..."
             else:
                 log.short_message = log.message
-        return render(request, 'system_logs.html', {'system': system, 'logs': page_logs, 'clusters': clusters})
+        return render(request, 'system/logs.html', {'system': system, 'logs': page_logs, 'clusters': clusters})
         pass
     else:
         return redirect('home')
@@ -130,7 +130,7 @@ def label(request, pk, label):
                 log.short_message = log.message[:50] + "..."
             else:
                 log.short_message = log.message
-        return render(request, 'system_logs.html', {'system': system, 'logs': page_logs, 'clusters': clusters})
+        return render(request, 'system/logs.html', {'system': system, 'logs': page_logs, 'clusters': clusters})
         pass
     else:
         return redirect('home')
@@ -147,7 +147,7 @@ def incidents(request, pk):
         paginator = Paginator(incidents, items_per_page)
         page_number = request.GET.get("page")
         page_incidents = paginator.get_page(page_number)
-        return render(request, 'system_incidents.html', {'system': system, 'incidents': page_incidents})
+        return render(request, 'system/incidents.html', {'system': system, 'incidents': page_incidents})
         pass
     else:
         return redirect('home')
@@ -166,7 +166,7 @@ def tag_incidents(request, pk, tag):
         page_number = request.GET.get("page")
         page_incidents = paginator.get_page(page_number)
 
-        return render(request, 'system_incidents.html', {'system': system, 'incidents': page_incidents})
+        return render(request, 'system/incidents.html', {'system': system, 'incidents': page_incidents})
     else:
         return redirect('home')   
 
@@ -185,8 +185,8 @@ def add(request):
                 messages.success(request, "System added successfully")
                 return redirect('systems:list')
         else:
-            return render(request, 'add_system.html', {'form': form})
-        return render(request, 'add_system.html', {'form': form})
+            return render(request, 'system/add.html', {'form': form})
+        return render(request, 'system/add.html', {'form': form})
     else:
         return redirect('home')
 
@@ -199,7 +199,7 @@ def edit(request, pk):
             messages.success(request, "System updated successfully")
             return redirect('systems:list')
         else:
-            return render(request, 'edit_system.html', {'form': form})
+            return render(request, 'system/edit.html', {'form': form})
     else:
         return redirect('home')
 
