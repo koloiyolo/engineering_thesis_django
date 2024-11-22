@@ -8,8 +8,7 @@ from .ml import classify_som, train_som, classify_ahc, train_ahc, classify_kmean
 
 @shared_task
 def ml_classify_task (ml_model=None):
-    if ml_model is None:
-        ml_model = Settings.load().ml_model
+    ml_model = Settings.load().ml_model
     if ml_model == 0:
         if classify_kmeans():
             return "KMeans classification complete."
@@ -25,8 +24,9 @@ def ml_classify_task (ml_model=None):
         return "SOM classification complete."
 
 @shared_task
-def ml_train_task ():
-    ml_model = Settings.load().ml_model
+def ml_train_task (ml_model=None):
+    if ml_model is None:
+        ml_model = Settings.load().ml_model
     if ml_model == 0:
         if train_kmeans():
             return "KMeans training complete."

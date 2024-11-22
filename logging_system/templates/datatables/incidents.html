@@ -28,7 +28,7 @@
         <div class="accordion-body">
             <div id="ping-plot">{{ incident.graph|safe }}</div>
             <div class="btn-group" role="group">
-                <a href="{% url 'incidents:view' incident.id %}" class="btn btn-primary">
+                <a href="{% url 'incidents:view' incident.id %}" class="btn btn-dark">
                 View
                 </a>
                 <a href="{% url 'incidents:remove' incident.id %}" class="btn btn-danger"
