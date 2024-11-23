@@ -1,8 +1,20 @@
 {% extends 'elements/base.html' %} {% block content %}
 <div class="col-md-12">
-    <div class="input-group mb-3">
-        <a class="btn btn-secondary" href="{% url 'systems:list' %}">&laquo; Back</a>
-        <a class="btn btn-outline-dark disabled" > {{ system.ip }}'s logs </a>
+    <div class="btn-group mb-3">
+        <button class="btn btn-secondary"> <a class="text-decoration-none text-white"  href="{{ request.META.HTTP_REFERER|default:'/' }}">&laquo; Back</a></button>
+        <button type="button" class="btn btn-outline-dark dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+            {% if system %}
+            {{ system }}'s logs
+            {% else %}
+            All logs
+            {% endif %}
+        </button>
+        <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="{% url 'logs:list' %}">All</a></li>
+            {% for system in systems %}
+                <li><a class="dropdown-item" href="{% url 'systems:logs' system.id %}"> {{ system }} </a></li>
+            {% endfor %}
+        </ul>
     </div>
     {% if logs %}
     <div class="accordion" id="accordionServices">

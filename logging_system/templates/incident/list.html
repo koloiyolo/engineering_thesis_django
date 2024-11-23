@@ -1,8 +1,23 @@
 {% extends 'elements/base.html' %} {% block content %}
 <div class="col-md-12">
     {% if incidents %}
+    <div class="btn-group mb-3">
+        <button class="btn btn-secondary"> <a class="text-decoration-none text-white"  href="{{ request.META.HTTP_REFERER|default:'/' }}">&laquo; Back</a></button>
+        <button type="button" class="btn btn-outline-dark dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+            {% if system %}
+            {{ system }}'s incidents
+            {% else %}
+            All incidents
+            {% endif %}
+        </button>
+        <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="{% url 'incidents:list' %}">All</a></li>
+            {% for obj in systems %}
+                <li><a class="dropdown-item" href="{% url 'systems:incidents' obj.id%}"> {{ obj }} </a></li>
+            {% endfor %}
+        </ul>
+    </div>
     <div class="input-group mb-3">
-        <a class="btn btn-secondary" href="{{ request.META.HTTP_REFERER|default:'/' }}">&laquo; Back</a>
         <a class="btn btn-outline-dark disabled" > Create analysis </a>
         <a class="btn btn-dark">Today</a>
         <a class="btn btn-dark">Last Week</a>

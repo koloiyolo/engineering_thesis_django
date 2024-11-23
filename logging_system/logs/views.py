@@ -7,6 +7,8 @@ from requests import get
 from config.models import Settings
 from .models import Log
 
+from systems.models import System
+
 
 def logs(request):
     if request.user.is_authenticated:
@@ -25,7 +27,16 @@ def logs(request):
                 log.short_message = log.message[:50] + "..."
             else:
                 log.short_message = log.message
-        return render(request, 'misc/logs.html', {'logs': page_logs, 'clusters': clusters})
+
+        hosts = Log.objects.all().values_list('host', flat=True).distinct()
+        systems = []
+        for host in hosts:
+            systems.append(System.objects.filter(ip=host).first())
+        data = {
+            'systems': systems,
+            'logs': page_logs,
+            'clusters': clusters}
+        return render(request, 'misc/logs.html', data)
     else:
         return redirect('home')
 
@@ -49,7 +60,16 @@ def label(request, label):
                 log.short_message = log.message[:50] + "..."
             else:
                 log.short_message = log.message
-        return render(request, 'misc/logs.html', {'logs': page_logs, 'clusters': clusters})
+
+        hosts = Log.objects.all().values_list('host', flat=True).distinct()
+        systems = []
+        for host in hosts:
+            systems.append(System.objects.filter(ip=host).first())
+        data = {
+            'systems': systems,
+            'logs': page_logs,
+            'clusters': clusters}
+        return render(request, 'misc/logs.html', data)
     else:
         return redirect('home')
 

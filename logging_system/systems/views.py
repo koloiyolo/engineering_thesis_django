@@ -106,7 +106,18 @@ def logs(request, pk):
                 log.short_message = log.message[:50] + "..."
             else:
                 log.short_message = log.message
-        return render(request, 'system/logs.html', {'system': system, 'logs': page_logs, 'clusters': clusters})
+        hosts = Log.objects.all().values_list('host', flat=True).distinct()
+
+        systems = []
+        for host in hosts:
+            systems.append(System.objects.filter(ip=host).first())
+
+        data = {
+            'system': system,
+            'systems': systems,
+            'logs': page_logs,
+            'clusters': clusters}
+        return render(request, 'system/logs.html', data)
         pass
     else:
         return redirect('home')
@@ -130,7 +141,18 @@ def label(request, pk, label):
                 log.short_message = log.message[:50] + "..."
             else:
                 log.short_message = log.message
-        return render(request, 'system/logs.html', {'system': system, 'logs': page_logs, 'clusters': clusters})
+
+        hosts = Log.objects.all().values_list('host', flat=True).distinct()
+        systems = []
+        for host in hosts:
+            systems.append(System.objects.filter(ip=host).first())
+
+        data = {
+            'system': system,
+            'systems': systems,
+            'logs': page_logs,
+            'clusters': clusters}
+        return render(request, 'system/logs.html', data)
         pass
     else:
         return redirect('home')
@@ -147,8 +169,11 @@ def incidents(request, pk):
         paginator = Paginator(incidents, items_per_page)
         page_number = request.GET.get("page")
         page_incidents = paginator.get_page(page_number)
-        return render(request, 'system/incidents.html', {'system': system, 'incidents': page_incidents})
-        pass
+        systems = System.objects.filter(id__in=Incident.objects.values_list('system', flat=True).distinct())
+        return render(request, 'system/incidents.html', {
+            'system': system,
+            'systems': systems,
+            'incidents': page_incidents})
     else:
         return redirect('home')
 
@@ -165,8 +190,11 @@ def tag_incidents(request, pk, tag):
         paginator = Paginator(incidents, items_per_page)
         page_number = request.GET.get("page")
         page_incidents = paginator.get_page(page_number)
-
-        return render(request, 'system/incidents.html', {'system': system, 'incidents': page_incidents})
+        systems = System.objects.filter(id__in=Incident.objects.values_list('system', flat=True).distinct())
+        return render(request, 'system/incidents.html', {
+            'system': system,
+            'systems': systems,
+            'incidents': page_incidents})
     else:
         return redirect('home')   
 

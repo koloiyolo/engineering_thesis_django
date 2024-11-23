@@ -17,8 +17,10 @@ def incidents(request):
         paginator = Paginator(incidents, items_per_page)
         page_number = request.GET.get("page")
         page_incidents = paginator.get_page(page_number)
-
-        return render(request, 'incident/list.html', {'incidents': page_incidents})
+        systems = System.objects.filter(id__in=Incident.objects.values_list('system', flat=True).distinct())
+        return render(request, 'incident/list.html', {
+            'incidents': page_incidents,
+            'systems': systems})
     else:
         return redirect('home')
 
@@ -34,7 +36,10 @@ def tag_incidents(request, tag):
         page_number = request.GET.get("page")
         page_incidents = paginator.get_page(page_number)
 
-        return render(request, 'incident/list.html', {'incidents': page_incidents})
+        systems = System.objects.filter(id__in=Incident.objects.values_list('system', flat=True).distinct())
+        return render(request, 'incident/list.html', {
+            'incidents': page_incidents,
+            'systems': systems})
     else:
         return redirect('home')    
 
@@ -49,11 +54,7 @@ def view(request, pk):
                 comment.user = request.user
                 comment.incident = incident
                 comment.save()
-                return render(request, 'incident/view.html', {
-                    'incident': incident,
-                    'comments': comments, 
-                    'form': form,    
-                })
+                return redirect('incidents:view', incident.id)
             else:
                 form = CommentForm()
 
