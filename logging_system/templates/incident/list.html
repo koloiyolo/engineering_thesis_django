@@ -1,21 +1,31 @@
 {% extends 'elements/base.html' %} {% block content %}
 <div class="col-md-12">
     {% if incidents %}
-    <div class="btn-group mb-3">
-        <button class="btn btn-secondary"> <a class="text-decoration-none text-white"  href="{{ request.META.HTTP_REFERER|default:'/' }}">&laquo; Back</a></button>
-        <button type="button" class="btn btn-outline-dark dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-            {% if system %}
-            {{ system }}'s incidents
-            {% else %}
-            All incidents
-            {% endif %}
-        </button>
-        <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href="{% url 'incidents:list' %}">All</a></li>
-            {% for obj in systems %}
-                <li><a class="dropdown-item" href="{% url 'systems:incidents' obj.id%}"> {{ obj }} </a></li>
-            {% endfor %}
-        </ul>
+    <div class="d-flex justify-content-between">
+        <div class="btn-group mb-3">
+            <button class="btn btn-secondary">
+                <a class="text-decoration-none text-white" href="{{ request.META.HTTP_REFERER|default:'/' }}">&laquo; Back</a>
+            </button>
+            <button type="button" class="btn btn-outline-dark dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                {% if system %}
+                    {{ system }}'s incidents
+                {% else %}
+                    All incidents
+                {% endif %}
+            </button>
+            <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="{% url 'incidents:list' %}">All</a></li>
+                {% for obj in systems %}
+                    <li><a class="dropdown-item" href="{% url 'systems:incidents' obj.id %}">{{ obj }}</a></li>
+                {% endfor %}
+            </ul>
+        </div>
+        <form method="get" class="align-self-center">
+            <div class="input-group">
+                <input class="form-control" type="text" name="search" value="{{ q }}" placeholder="Your query">
+                <button class="btn btn-dark" type="submit">Search</button>
+            </div>
+        </form>
     </div>
     <div class="input-group mb-3">
         <a class="btn btn-outline-dark disabled" > Create analysis </a>

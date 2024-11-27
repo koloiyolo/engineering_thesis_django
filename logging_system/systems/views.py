@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect, reverse
 from django.core.paginator import Paginator
 from django.contrib import messages
+from django.db.models import Q
 
 from .functions import get_ping_graph
 
@@ -15,7 +16,17 @@ from .forms import SystemForm
 def systems(request):
     if request.user.is_authenticated:
         systems = System.objects.all().order_by("id")
-
+        q = request.GET.get('search', '')
+        if q:
+            systems = systems.filter(
+                Q(name__icontains=q) |
+                Q(ip__icontains=q) |
+                Q(service_type__icontains=q) |
+                Q(model__icontains=q) |
+                Q(location__name__icontains=q) |
+                Q(location__town__icontains=q) |
+                Q(location__address__icontains=q)
+            )
         # update system last_log
         for system in systems:
             last_log = Log.objects.filter(host= system.ip).last()
@@ -38,6 +49,14 @@ def systems(request):
 def location(request, location):
     if request.user.is_authenticated:
         systems = System.objects.filter(location=location)
+        q = request.GET.get('search', '')
+        if q:
+            systems = systems.filter(
+                Q(name__icontains=q) |
+                Q(ip__icontains=q) |
+                Q(service_type__icontains=q) |
+                Q(model__icontains=q)
+            )
         if not systems.exists():
             messages.warning(request, f"There are no systems located in {location}!")
             return redirect('systems')
@@ -91,8 +110,15 @@ def logs(request, pk):
     if request.user.is_authenticated:
 
         system = System.objects.get(id=pk)
-        query = request.GET.get('q', '')  # Get the search query from the request
-        logs = Log.objects.filter(host=system.ip, message__icontains=query).order_by('-id')  # Filter items by name
+        logs = Log.objects.filter(host=system.ip).order_by('-id')
+        q = request.GET.get('search', '')
+        if q:
+            logs = logs.filter(
+                Q(host__icontains=q) |
+                Q(program__icontains=q) |
+                Q(message__icontains=q)
+            )
+
         if not logs.exists():
             messages.warning(request, f"Label '{label}' is empty!")
             return redirect('logs')
@@ -117,7 +143,7 @@ def logs(request, pk):
             'systems': systems,
             'logs': page_logs,
             'clusters': clusters}
-        return render(request, 'system/logs.html', data)
+        return render(request, 'misc/logs.html', data)
         pass
     else:
         return redirect('home')
@@ -126,8 +152,14 @@ def logs(request, pk):
 def label(request, pk, label):
     if request.user.is_authenticated:
         system = System.objects.get(id=pk)
-        query = request.GET.get('q', '')  # Get the search query from the request
-        logs = Log.objects.filter(host=system.ip, label=label, message__icontains=query).order_by('-id')  # Filter items by name
+        logs = Log.objects.filter(host=system.ip, label=label).order_by('-id')
+        q = request.GET.get('search', '')
+        if q:
+            logs = logs.filter(
+                Q(host__icontains=q) |
+                Q(program__icontains=q) |
+                Q(message__icontains=q)
+            )
         if logs.count() == 0:
             messages.warning(request, f"Label '{label}' is empty!")
             return redirect('systems:logs', system.id)
@@ -152,7 +184,7 @@ def label(request, pk, label):
             'systems': systems,
             'logs': page_logs,
             'clusters': clusters}
-        return render(request, 'system/logs.html', data)
+        return render(request, 'misc/logs.html', data)
         pass
     else:
         return redirect('home')
@@ -160,8 +192,15 @@ def label(request, pk, label):
 def incidents(request, pk):
     if request.user.is_authenticated:
         system = System.objects.get(id=pk)
-
         incidents = Incident.objects.filter(system=system).order_by("-id")
+        q = request.GET.get('search', '')
+        if q:
+            incidents = incidents.filter(
+                Q(message__icontains=q) |
+                Q(ip__icontains=q) |
+                Q(title__icontains=q) |
+                Q(tag__icontains=q)
+            )
         if not incidents.exists():
             messages.warning(request, f"There are no incidents for {system.name}")
             return redirect(reverse('systems:view', args=[system.id]))
@@ -170,7 +209,7 @@ def incidents(request, pk):
         page_number = request.GET.get("page")
         page_incidents = paginator.get_page(page_number)
         systems = System.objects.filter(id__in=Incident.objects.values_list('system', flat=True).distinct())
-        return render(request, 'system/incidents.html', {
+        return render(request, 'incident/list.html', {
             'system': system,
             'systems': systems,
             'incidents': page_incidents})
@@ -181,8 +220,13 @@ def tag_incidents(request, pk, tag):
     if request.user.is_authenticated:
         system = System.objects.get(id=pk)
 
-        query = request.GET.get('q', '')
-        incidents = Incident.objects.filter(system=system, tag=tag, ip__icontains=query).order_by("-id")
+        incidents = Incident.objects.filter(system=system, tag=tag).order_by("-id")
+        if q:
+            incidents = incidents.filter(
+                Q(message__icontains=q) |
+                Q(ip__icontains=q) |
+                Q(title__icontains=q)
+            )
         if not incidents.exists():
             messages.warning(request, f"Label '{tag}' is empty!")
             return redirect(reverse('systems:view', args=[system.id]))
@@ -191,7 +235,7 @@ def tag_incidents(request, pk, tag):
         page_number = request.GET.get("page")
         page_incidents = paginator.get_page(page_number)
         systems = System.objects.filter(id__in=Incident.objects.values_list('system', flat=True).distinct())
-        return render(request, 'system/incidents.html', {
+        return render(request, 'incident/list.html', {
             'system': system,
             'systems': systems,
             'incidents': page_incidents})

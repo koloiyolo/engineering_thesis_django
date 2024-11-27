@@ -3,6 +3,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.core.paginator import Paginator
 from requests import get
+from django.db.models import Q
 
 from config.models import Settings
 from .models import Log
@@ -12,8 +13,14 @@ from systems.models import System
 
 def logs(request):
     if request.user.is_authenticated:
-        query = request.GET.get('q', '')  # Get the search query from the request
-        logs = Log.objects.filter(message__icontains=query).order_by('-id')  # Filter items by name
+        logs = Log.objects.all().order_by('-id')
+        q = request.GET.get('search', '')
+        if q:
+            logs = logs.filter(
+                Q(host__icontains=q) |
+                Q(program__icontains=q) |
+                Q(message__icontains=q)
+            )
         items_per_page = Settings.load().items_per_page
         paginator = Paginator(logs, items_per_page)
         page_number = request.GET.get("page")
@@ -42,8 +49,14 @@ def logs(request):
 
 def label(request, label):
     if request.user.is_authenticated:
-        query = request.GET.get('q', '')  # Get the search query from the request
-        logs = Log.objects.filter(label=label, message__icontains=query).order_by('-id')  # Filter items by name
+        logs = Log.objects.filter(label=label).order_by('-id')  # Filter items by name
+        q = request.GET.get('search', '')
+        if q:
+            logs = logs.filter(
+                Q(host__icontains=q) |
+                Q(program__icontains=q) |
+                Q(message__icontains=q)
+            )
         if not logs.exists():
             messages.warning(request, f"Label '{label}' is empty!")
             return redirect('logs')
