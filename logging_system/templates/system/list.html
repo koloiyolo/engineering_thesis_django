@@ -41,7 +41,9 @@
                                     <li><a class="dropdown-item" href="{% url 'systems:list' %}">All</a></li>
                                     {% if locations %}
                                     {% for location in locations %}
+                                        {% if location.id %}
                                         <li><a class="dropdown-item" href="{% url 'systems:location' location.id %}"> {{ location }} </a></li>
+                                        {% endif %}
                                     {% endfor %}
                                     {% endif %}
                                 </ul>

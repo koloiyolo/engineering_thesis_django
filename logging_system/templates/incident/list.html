@@ -17,7 +17,9 @@
                 <li><a class="dropdown-item" href="{% url 'incidents:list' %}">All</a></li>
                 {% if systems %}
                 {% for obj in systems %}
+                    {% if obj.id %}
                     <li><a class="dropdown-item" href="{% url 'systems:incidents' obj.id %}">{{ obj }}</a></li>
+                    {% endif %}
                 {% endfor %}
                 {% endif %}
             </ul>
