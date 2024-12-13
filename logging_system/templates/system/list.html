@@ -5,6 +5,7 @@
             <a class="btn btn-secondary" href="{{ request.META.HTTP_REFERER|default:'/' }}">&laquo; Back</a>
             <a class="btn btn-outline-dark disabled" > Systems </a>
             <a class="btn btn-dark" href="{% url 'systems:add' %}"> Add System </a>
+            <a class="btn btn-dark" href="{% url 'systems:discover' %}"> System Discovery </a>
             <a class="btn btn-dark" href="{% url 'locations:list' %}"> Manage Locations </a>
         </div>
         <form method="get" class="align-self-center">

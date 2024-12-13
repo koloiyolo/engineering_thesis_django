@@ -24,7 +24,7 @@ class System(models.Model):
     email_notify        = models.BooleanField(choices=BOOL_CHOICES, default=False)
     graph               = None
     location            = models.ForeignKey(Location, on_delete=models.SET_NULL, null=True, blank=True)
-    service_type        = models.TextField(max_length=50)
+    service_type        = models.TextField(max_length=50, null=True, blank=True)
     model               = models.TextField(max_length=50, null=True, blank=True)
     notes               = models.TextField(max_length=256, null=True, blank=True)
 

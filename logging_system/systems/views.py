@@ -10,7 +10,9 @@ from incidents.models import Incident
 from logs.models import Log
 from locations.models import Location
 from config.models import Settings
-from .forms import SystemForm
+from .forms import SystemForm, DiscoverSystemsForm
+
+from .tasks import discover_systems_task
 # Create your views here.
 
 def systems(request):
@@ -261,6 +263,29 @@ def add(request):
         return render(request, 'system/add.html', {'form': form})
     else:
         return redirect('home')
+
+def discover(request):
+    if request.user.is_authenticated:
+        form = DiscoverSystemsForm(request.POST or None)
+        if request.method == 'POST':
+            if form.is_valid():
+
+                ip_range = form.cleaned_data.get("ip_range")
+                system_type = form.cleaned_data.get("system_type")
+                prefix = form.cleaned_data.get("prefix") if form.cleaned_data.get("prefix") else ""
+                discover_systems_task.delay(ip_range, system_type=system_type, prefix=prefix)
+                messages.success(request, "System discovery sheluded")
+                return redirect('systems:list')
+
+        else:
+            return render(request, 'system/discover.html', {'form': form})
+        return render(request, 'system/discover.html', {'form': form})
+
+
+    else:
+        return redirect('home')
+
+
 
 def edit(request, pk):
     if request.user.is_authenticated:
