@@ -39,9 +39,11 @@
                                 </a>
                                 <ul class="dropdown-menu">
                                     <li><a class="dropdown-item" href="{% url 'systems:list' %}">All</a></li>
+                                    {% if locations %}
                                     {% for location in locations %}
                                         <li><a class="dropdown-item" href="{% url 'systems:location' location.id %}"> {{ location }} </a></li>
                                     {% endfor %}
+                                    {% endif %}
                                 </ul>
                             </div>
                         </div>

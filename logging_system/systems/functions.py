@@ -72,7 +72,7 @@ def discover_systems(ip_range, system_type=None, prefix=""):
         ip=f"{ip_prefix}.{i}"
         response_time = ping(ip, unit='ms')
         if response_time in (None, False):
-            print(f"{ip}: host not found. Response: None")
+            print(f"{ip}: host not found. Response: {response_time}")
         else:
             print(f"{ip}: host found")
             system = System.objects.create(

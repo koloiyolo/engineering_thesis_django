@@ -15,9 +15,11 @@
             </button>
             <ul class="dropdown-menu">
                 <li><a class="dropdown-item" href="{% url 'incidents:list' %}">All</a></li>
+                {% if systems %}
                 {% for obj in systems %}
                     <li><a class="dropdown-item" href="{% url 'systems:incidents' obj.id %}">{{ obj }}</a></li>
                 {% endfor %}
+                {% endif %}
             </ul>
         </div>
         <form method="get" class="align-self-center">
