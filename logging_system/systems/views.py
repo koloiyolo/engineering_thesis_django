@@ -17,6 +17,7 @@ from .tasks import discover_systems_task
 
 def systems(request):
     if request.user.is_authenticated:
+        
         systems = None
         q = request.GET.get('search', '')
         if q:
@@ -53,6 +54,7 @@ def systems(request):
 
 def location(request, location):
     if request.user.is_authenticated:
+
         systems = None
         q = request.GET.get('search', '')
         if q:

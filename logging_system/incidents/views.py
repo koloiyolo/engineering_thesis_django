@@ -13,6 +13,7 @@ from django.db.models import Q
 
 def incidents(request):
     if request.user.is_authenticated:
+
         incidents = None
         q = request.GET.get('search', '')
         if q:
@@ -39,7 +40,8 @@ def incidents(request):
 
 def tag_incidents(request, tag):
     if request.user.is_authenticated:
-        incidents = []
+
+        incidents = None
         q = request.GET.get('search', '')
         if q:
             incidents = Incidents.objects.filter(

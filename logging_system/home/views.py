@@ -12,6 +12,7 @@ from incidents.models import Incident
 from logs.models import Log
 from .forms import SignUpForm
 from .functions import get_labels_graph, get_uptime_graph
+from audit_log.models import AuditLog
 
 # docker compose health check
 def health_check(request):
@@ -67,6 +68,7 @@ def home(request):
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
+            AuditLog.objects.create(user=user, text=f"{user} logged in.")
             return redirect('home')
 
         else:
@@ -93,6 +95,7 @@ def register_user(request):
             password = form.cleaned_data['password1']
             user = authenticate(request, username=username, password=password)
             login(request, user)
+            AuditLog.objects.create(user=user, text=f"{user} created account successfuly.")
             messages.success(request, "You have successfuly created an account!")
             return redirect('home')
         pass
