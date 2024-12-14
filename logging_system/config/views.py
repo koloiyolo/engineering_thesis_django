@@ -22,15 +22,7 @@ def settings(request):
             return render(request, 'misc/settings.html', {'form': form})
     else:
         return redirect('home')
-
-def reset_labels(request):
-    if request.user.is_authenticated:
-        AuditLog.objects.create(user=None, text=f"System removed log labels.")
-        Log.objects.update(label=None)
-        return redirect('settings')
-    else:
-        return redirect('settings')
-
+        
 # validated function
 
 # def function(request):

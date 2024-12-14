@@ -5,6 +5,7 @@ import plotly.graph_objs as go
 from incidents.functions import create_incident
 from .models import System, Ping
 from config.models import Settings
+from audit_log.models import AuditLog
 
 def ping_systems(systems, debug=True):
     emails = []
@@ -28,6 +29,8 @@ def ping_systems(systems, debug=True):
         system.save()
     if len(emails) != 0:
         send_mass_mail(emails)
+
+    AuditLog.objects.create(user=None, text=f"All systems pinged.")
     return True
 
 def get_ping_graph(system, height=300, width=900, range=144):
@@ -86,4 +89,5 @@ def discover_systems(ip_range, system_type=None, prefix=""):
     for system in systems:
         print(f"{system}")
 
+    AuditLog.objects.create(user=None, text=f"New systems discovered {systems}.")
     return True
