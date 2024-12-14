@@ -15,7 +15,7 @@ def ml_classify_task (ml_model=None):
             AuditLog.objects.create(user=None, text=f"KMeans classification complete.")
             return "KMeans classification complete."
             
-            AuditLog.objects.create(user=None, text=f"KMeans classification failed.")
+        AuditLog.objects.create(user=None, text=f"KMeans classification failed.")
         return "KMeans classification failed."
     elif ml_model == 1:
         if classify_ahc():
