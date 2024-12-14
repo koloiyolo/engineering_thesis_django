@@ -89,5 +89,5 @@ def discover_systems(ip_range, system_type=None, prefix=""):
     for system in systems:
         print(f"{system}")
 
-    AuditLog.objects.create(user=None, text=f"New systems discovered {systems}.")
+    AuditLog.objects.create(user=None, text=f"New systems discovered prefix {prefix}.")
     return True
