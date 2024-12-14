@@ -11,13 +11,13 @@ from logs.models import Log
 from locations.models import Location
 from config.models import Settings
 from .forms import SystemForm, DiscoverSystemsForm
-
+from audit_log.models import AuditLog
 from .tasks import discover_systems_task
 # Create your views here.
 
 def systems(request):
     if request.user.is_authenticated:
-        
+
         systems = None
         q = request.GET.get('search', '')
         if q:
@@ -282,6 +282,7 @@ def add(request):
         if request.method == 'POST':
             if form.is_valid():
                 add_record = form.save()
+                AuditLog.objects.create(user=request.user, text=f"{request.user} created system {add_record} successfully.")
                 messages.success(request, "System added successfully")
                 return redirect('systems:list')
         else:
@@ -300,6 +301,7 @@ def discover(request):
                 system_type = form.cleaned_data.get("system_type")
                 prefix = form.cleaned_data.get("prefix") if form.cleaned_data.get("prefix") else ""
                 discover_systems_task.delay(ip_range, system_type=system_type, prefix=prefix)
+                AuditLog.objects.create(user=request.user, text=f"{request.user} scheluded discovery task on {ip_range} ip range.")
                 messages.success(request, "System discovery sheluded")
                 return redirect('systems:list')
 
@@ -319,6 +321,7 @@ def edit(request, pk):
         form = SystemForm(request.POST or None, instance=update_it)
         if form.is_valid():
             form.save()
+            AuditLog.objects.create(user=request.user, text=f"{request.user} updated system {update_it} successfully.")
             messages.success(request, "System updated successfully")
             return redirect('systems:list')
         else:
@@ -329,6 +332,7 @@ def edit(request, pk):
 def remove(request, pk):
     if request.user.is_authenticated:
         delete_it = System.objects.get(id=pk)
+        AuditLog.objects.create(user=request.user, text=f"{request.user} removed system {delete_it} successfully.")
         delete_it.delete()
         messages.success(request, "System removed successfully")
         return redirect('systems:list')
