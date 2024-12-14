@@ -21,7 +21,7 @@ def systems(request):
         systems = None
         q = request.GET.get('search', '')
         if q:
-            systems = systems.filter(
+            systems = System.objects.filter(
                 Q(name__icontains=q) |
                 Q(ip__icontains=q) |
                 Q(service_type__icontains=q) |
@@ -58,7 +58,7 @@ def location(request, location):
         systems = None
         q = request.GET.get('search', '')
         if q:
-            systems = systems.filter(
+            systems = System.objects.filter(
                 Q(name__icontains=q) |
                 Q(ip__icontains=q) |
                 Q(service_type__icontains=q) |
