@@ -1,6 +1,13 @@
 # Device Management and log analysis system
-Simple system designed for log analysis and network devices monitoring.
+Simple system designed for log analysis and network devices monitoring.\
 Jakub Kołodziej's engineering thesis project.
+
+## Table of contents:
+- [Features](#features)
+- [Requirements](#requirements)
+- [Installation](#installation)
+- [Stack](#stack)
+
 
 ## Features
 * Log collection(using Syslog-ng)
@@ -16,7 +23,7 @@ Jakub Kołodziej's engineering thesis project.
 ### To Do:
 * Report generation
 
-## Requirments
+## Requirements
 Dependencies:
   * any system supporting Docker
   * git
