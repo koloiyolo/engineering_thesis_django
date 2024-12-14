@@ -15,7 +15,7 @@ def logs(request):
         audit_logs = None
         q = request.GET.get('search', '')
         if q:
-            audit_logs = auditLog.filter(
+            audit_logs = AuditLog.objects.filter(
                 Q(text__icontains=q) |
                 Q(user__username__icontains=q)
             ).order_by("-id")

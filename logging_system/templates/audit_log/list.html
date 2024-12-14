@@ -1,8 +1,16 @@
 {% extends 'elements/base.html' %} {% block content %}
 <div class="col-md-12">
-    <div class="input-group mb-3">
-        <a class="btn btn-secondary" href="{{ request.META.HTTP_REFERER|default:'/' }}">&laquo; Back</a>
-        <a class="btn btn-outline-dark disabled" > Audit Log </a>
+    <div class="d-flex justify-content-between">
+        <div class="input-group mb-3">
+            <a class="btn btn-secondary" href="{{ request.META.HTTP_REFERER|default:'/' }}">&laquo; Back</a>
+            <a class="btn btn-outline-dark disabled" > Audit Log </a>
+        </div>
+        <form method="get" class="align-self-center">
+            <div class="input-group">
+                <input class="form-control" type="text" name="search" value="{{ q }}" placeholder="Your query">
+                <button class="btn btn-dark" type="submit">Search</button>
+            </div>
+        </form>
     </div>
     {% if audit_logs %}
     <div class="accordion" id="accordionServices">
