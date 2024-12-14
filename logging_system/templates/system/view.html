@@ -140,9 +140,11 @@
                                     </a>
                                     <ul class="dropdown-menu">
                                         <li><a class="dropdown-item" href="{% url 'systems:logs'  system.id %}">All</a></li>
+                                        {% if clusters %}
                                         {% for cluster in clusters %}
                                         <li><a class="dropdown-item" href="{% url 'systems:label' system.id cluster %}"> {{ cluster }} </a></li>
                                         {% endfor %}
+                                        {% endif %}
                                     </ul>
                                 </div>
                                 <div class="col-5">Message:</div>

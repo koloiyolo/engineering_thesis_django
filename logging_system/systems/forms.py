@@ -1,7 +1,8 @@
 from django import forms
 from django.forms import TextInput, NumberInput, Select
 
-from .models import System, Location
+from .models import System, SYSTEM_TYPE_CHOICES
+from locations.models import Location
 
 class SystemForm(forms.ModelForm):
 
@@ -56,3 +57,48 @@ class SystemForm(forms.ModelForm):
                 'placeholder': "...",                
             }),
         }
+
+
+class DiscoverSystemsForm(forms.Form):
+    """Form to initiate the discover_systems_task."""
+
+    ip_range = forms.CharField(
+        max_length=50, 
+        required=True,
+        widget=forms.TextInput(attrs={
+            'placeholder': '192.168.1.1-254',
+            'label': 'IP Address Range',
+            'class': "form-control"})
+    )
+    system_type = forms.ChoiceField(
+        choices=SYSTEM_TYPE_CHOICES,  # Dynamically get choices from the model
+        required=True,
+        widget=forms.Select(attrs={
+            'label': 'Type of found systems',
+            'class': "form-control"})
+    )
+    prefix = forms.CharField(
+        max_length=50, 
+        required=False,
+        widget=forms.TextInput(attrs={
+            'placeholder': 'Your optional prefix. Leave empty if none',
+            'label': 'Prefix',
+            'class': "form-control"})
+    )
+
+    # widgets = {
+    #     'ip_range': forms.TextInput(attrs={
+    #         'class': "form-control",
+    #         'placeholder': "192.168.1.1-254",
+    #         'label': "IP Range",
+    #     }),
+    #     'system_type': forms.Select(attrs={
+    #         'class': "form-control",
+    #         'label': "Type of the systems",
+    #     }),
+    #     'prefix': forms.TextInput(attrs={
+    #         'class': "form-control",
+    #         'placeholder': "Optional Prefix",
+    #         'label': "Prefix",
+    #     })
+    # }
