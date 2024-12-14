@@ -13,14 +13,17 @@ from systems.models import System
 
 def logs(request):
     if request.user.is_authenticated:
-        logs = Log.objects.all().order_by('-id')
+        logs = None
         q = request.GET.get('search', '')
         if q:
             logs = logs.filter(
                 Q(host__icontains=q) |
                 Q(program__icontains=q) |
                 Q(message__icontains=q)
-            )
+            ).order_by('-id')
+        else:
+            logs = Log.objects.order_by('-id')
+
         items_per_page = Settings.load().items_per_page
         paginator = Paginator(logs, items_per_page)
         page_number = request.GET.get("page")
@@ -49,14 +52,18 @@ def logs(request):
 
 def label(request, label):
     if request.user.is_authenticated:
-        logs = Log.objects.filter(label=label).order_by('-id')  # Filter items by name
+        logs = None
         q = request.GET.get('search', '')
         if q:
             logs = logs.filter(
                 Q(host__icontains=q) |
                 Q(program__icontains=q) |
-                Q(message__icontains=q)
-            )
+                Q(message__icontains=q),
+                label=label
+            ).order_by('-id')
+        else:
+            logs = Log.objects.filter(label=label).order_by('-id')
+
         if not logs.exists():
             messages.warning(request, f"Label '{label}' is empty!")
             return redirect('logs')

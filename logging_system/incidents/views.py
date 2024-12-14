@@ -13,16 +13,19 @@ from django.db.models import Q
 
 def incidents(request):
     if request.user.is_authenticated:
-        incidents = Incident.objects.all().order_by("-id")
+        incidents = None
         q = request.GET.get('search', '')
         if q:
-            incidents = incidents.filter(
+            incidents = Incidents.objects.filter(
                 Q(system__name__icontains=q) |
                 Q(ip__icontains=q) |
                 Q(title__icontains=q) |
                 Q(message__icontains=q) |
                 Q(tag__icontains=q)
-            )
+            ).order_by("-id")
+        else:
+            incidents = Incident.objects.order_by("-id")
+        
         items_per_page = Settings.load().items_per_page
         paginator = Paginator(incidents, items_per_page)
         page_number = request.GET.get("page")
@@ -36,15 +39,19 @@ def incidents(request):
 
 def tag_incidents(request, tag):
     if request.user.is_authenticated:
-        incidents = Incident.objects.filter(tag=tag).order_by("-id")
+        incidents = []
         q = request.GET.get('search', '')
         if q:
-            incidents = incidents.filter(
+            incidents = Incidents.objects.filter(
                 Q(system__name__icontains=q) |
                 Q(ip__icontains=q) |
                 Q(title__icontains=q) |
-                Q(message__icontains=q)
-            )
+                Q(message__icontains=q),
+                tag=tag,
+            ).order_by("-id")
+        else:
+            incidents = Incident.objects.filter(tag=tag).order_by("-id")
+
         if not incidents.exists():
             messages.warning(request, f"Label '{tag}' is empty!")
             return redirect('incidents:list')

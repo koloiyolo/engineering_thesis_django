@@ -17,7 +17,7 @@ from .tasks import discover_systems_task
 
 def systems(request):
     if request.user.is_authenticated:
-        systems = System.objects.all().order_by("id")
+        systems = None
         q = request.GET.get('search', '')
         if q:
             systems = systems.filter(
@@ -28,7 +28,10 @@ def systems(request):
                 Q(location__name__icontains=q) |
                 Q(location__town__icontains=q) |
                 Q(location__address__icontains=q)
-            )
+            ).order_by("id")
+        else:
+            systems = System.objects.order_by("id")
+
         # update system last_log
         for system in systems:
             last_log = Log.objects.filter(host= system.ip).last()
@@ -50,15 +53,22 @@ def systems(request):
 
 def location(request, location):
     if request.user.is_authenticated:
-        systems = System.objects.filter(location=location)
+        systems = None
         q = request.GET.get('search', '')
         if q:
             systems = systems.filter(
                 Q(name__icontains=q) |
                 Q(ip__icontains=q) |
                 Q(service_type__icontains=q) |
-                Q(model__icontains=q)
-            )
+                Q(model__icontains=q) |
+                Q(location__name__icontains=q) |
+                Q(location__town__icontains=q) |
+                Q(location__address__icontains=q),
+                location=location
+            ).order_by("id")
+        else:
+            systems = System.objects.filter(location=location).order_by("id")
+
         if not systems.exists():
             messages.warning(request, f"There are no systems located in {location}!")
             return redirect('systems')
@@ -110,16 +120,19 @@ def system(request, pk):
 
 def logs(request, pk):
     if request.user.is_authenticated:
-
         system = System.objects.get(id=pk)
-        logs = Log.objects.filter(host=system.ip).order_by('-id')
+
+        logs = None
         q = request.GET.get('search', '')
         if q:
-            logs = logs.filter(
+            logs = logs.objects.filter(
                 Q(host__icontains=q) |
                 Q(program__icontains=q) |
-                Q(message__icontains=q)
-            )
+                Q(message__icontains=q),
+                host=system.ip
+            ).order_by("-id")
+        else:
+            logs = Log.objects.filter(host=system.ip).order_by('-id')
 
         if not logs.exists():
             messages.warning(request, f"Label '{label}' is empty!")
@@ -154,14 +167,20 @@ def logs(request, pk):
 def label(request, pk, label):
     if request.user.is_authenticated:
         system = System.objects.get(id=pk)
-        logs = Log.objects.filter(host=system.ip, label=label).order_by('-id')
+
+        logs = None
         q = request.GET.get('search', '')
         if q:
-            logs = logs.filter(
+            logs = logs.objects.filter(
                 Q(host__icontains=q) |
                 Q(program__icontains=q) |
-                Q(message__icontains=q)
-            )
+                Q(message__icontains=q),
+                host=system.ip,
+                label=label
+            ).order_by("-id")
+        else:
+            logs = Log.objects.filter(host=system.ip, label=label).order_by('-id')
+
         if logs.count() == 0:
             messages.warning(request, f"Label '{label}' is empty!")
             return redirect('systems:logs', system.id)
@@ -194,15 +213,20 @@ def label(request, pk, label):
 def incidents(request, pk):
     if request.user.is_authenticated:
         system = System.objects.get(id=pk)
-        incidents = Incident.objects.filter(system=system).order_by("-id")
+
+        incidents = None
         q = request.GET.get('search', '')
         if q:
             incidents = incidents.filter(
                 Q(message__icontains=q) |
                 Q(ip__icontains=q) |
                 Q(title__icontains=q) |
-                Q(tag__icontains=q)
-            )
+                Q(tag__icontains=q),
+                system=system
+            ).order_by("-id")
+        else:
+            incidents = Incident.objects.filter(system=system).order_by("-id")   
+
         if not incidents.exists():
             messages.warning(request, f"There are no incidents for {system.name}")
             return redirect(reverse('systems:view', args=[system.id]))
