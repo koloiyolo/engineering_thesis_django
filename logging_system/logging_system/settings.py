@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'systems',
     'incidents',
     'locations',
+    'audit_log',
 ]
 
 MIDDLEWARE = [

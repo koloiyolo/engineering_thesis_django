@@ -4,6 +4,7 @@ from django.contrib import messages
 
 from .forms import SettingsPage
 from .models import Settings
+from audit_log.models import AuditLog
 
 # Create your views here.
 
@@ -14,20 +15,14 @@ def settings(request):
         form = SettingsPage(request.POST or None, instance=settings)
         if form.is_valid():
             form.save()
+            AuditLog.objects.create(user=request.user, text=f"{request.user} updated settings.")
             messages.success(request, "Settings updated successfully")
             return redirect('home')
         else:
             return render(request, 'misc/settings.html', {'form': form})
     else:
         return redirect('home')
-
-def reset_labels(request):
-    if request.user.is_authenticated:
-        Log.objects.update(label=None)
-        return redirect('settings')
-    else:
-        return redirect('settings')
-
+        
 # validated function
 
 # def function(request):

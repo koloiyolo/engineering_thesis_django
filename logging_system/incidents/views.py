@@ -7,12 +7,15 @@ from .models import Incident, Comment
 from .forms import CommentForm
 from django.db.models import Q
 
+from audit_log.models import AuditLog
+
 # Create your views here.
 
 # validated function
 
 def incidents(request):
     if request.user.is_authenticated:
+
         incidents = None
         q = request.GET.get('search', '')
         if q:
@@ -39,7 +42,8 @@ def incidents(request):
 
 def tag_incidents(request, tag):
     if request.user.is_authenticated:
-        incidents = []
+
+        incidents = None
         q = request.GET.get('search', '')
         if q:
             incidents = Incidents.objects.filter(
@@ -78,6 +82,7 @@ def view(request, pk):
                 comment.user = request.user
                 comment.incident = incident
                 comment.save()
+                AuditLog.objects.create(user=request.user, text=f"{request.user} commented on incident '{incident}': {comment}")
                 return redirect('incidents:view', incident.id)
             else:
                 form = CommentForm()
@@ -97,6 +102,7 @@ def view(request, pk):
 def remove(request, pk):
     if request.user.is_authenticated:
         delete_it = Incident.objects.get(id=pk)
+        AuditLog.objects.create(user=request.user, text=f"{request.user} removed incident {delete_it} successfully.")
         delete_it.delete()
         messages.success(request, "System removed successfully")
         return redirect('incidents:list')

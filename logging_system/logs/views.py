@@ -13,6 +13,7 @@ from systems.models import System
 
 def logs(request):
     if request.user.is_authenticated:
+        
         logs = None
         q = request.GET.get('search', '')
         if q:
@@ -52,6 +53,7 @@ def logs(request):
 
 def label(request, label):
     if request.user.is_authenticated:
+
         logs = None
         q = request.GET.get('search', '')
         if q:

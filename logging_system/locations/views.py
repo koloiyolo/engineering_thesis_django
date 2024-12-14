@@ -6,6 +6,7 @@ from config.models import Settings
 from .models import Location
 from .forms import LocationForm
 from systems.models import System
+from audit_log.models import AuditLog
 
 # Create your views here.
 
@@ -31,6 +32,7 @@ def edit(request, pk):
         if request.method == 'POST':
             if form.is_valid():
                 form.save()
+                AuditLog.objects.create(user=request.user, text=f"{request.user} updated location {update_it} successfully.")
                 messages.success(request, "Location edited successfully")
                 # return redirect('locations:list')
                 return redirect('home')
@@ -47,6 +49,7 @@ def add(request):
         if request.method == 'POST':
             if form.is_valid():
                 add_record = form.save()
+                AuditLog.objects.create(user=request.user, text=f"{request.user} created location {add_record} successfully.")
                 messages.success(request, "Location added successfully")
                 return redirect('systems:add')
         else:
@@ -58,6 +61,7 @@ def add(request):
 def remove(request, pk):
     if request.user.is_authenticated:
         delete_it = Location.objects.get(id=pk)
+        AuditLog.objects.create(user=request.user, text=f"{request.user} removed location {delete_it} successfully.")
         delete_it.delete()
         messages.success(request, "Location removed successfully")
         referer = request.META.get('HTTP_REFERER', '/')

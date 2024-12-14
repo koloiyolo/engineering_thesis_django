@@ -18,9 +18,15 @@ class Incident(models.Model):
     title                   = models.TextField(max_length=250)
     message                 = models.TextField(max_length=500)
 
+    def __str__(self):
+        return self.title
+
 class Comment(models.Model):
     incident                = models.ForeignKey(Incident, on_delete=models.CASCADE)
     date                    = models.DateField(auto_now_add=True)
     time                    = models.TimeField(auto_now_add=True)
     user                    = models.ForeignKey(User, on_delete=models.CASCADE)
-    message                 = models.TextField(max_length=250)    
+    message                 = models.TextField(max_length=250)
+
+    def __str__(self):
+        return self.message

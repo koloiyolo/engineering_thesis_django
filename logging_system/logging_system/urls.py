@@ -25,5 +25,6 @@ urlpatterns = [
     path('systems/', include('systems.urls')),
     path('incidents/', include('incidents.urls')),
     path('locations/', include('locations.urls')),
+    path('audit_log/', include('audit_log.urls')),
     # path('incidents/', include('incidents.urls')),
 ]
