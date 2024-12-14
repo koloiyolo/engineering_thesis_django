@@ -15,10 +15,11 @@ Jakub Kołodziej's engineering thesis project.
   * K-Means,
   * AHC Clustering,
   * SOM (Self-organizing Map).
-* System discovery (based on IP Ranges).
+* System discovery (based on IP Ranges). [#4](https://github.com/koloiyolo/engineering_thesis_django/pull/4)
 * Managed system automatic health checks (Using ICMP Ping).
 * Mail notifications on incidents.
 * Basic CRUD operations regarding system, location and incident management.
+* Audit Log. [#5](https://github.com/koloiyolo/engineering_thesis_django/pull/5)
 
 ### To Do:
 * Report generation
