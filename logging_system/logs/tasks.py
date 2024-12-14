@@ -13,7 +13,7 @@ def ml_classify_task (ml_model=None):
     if ml_model == 0:
         if classify_kmeans():
             AuditLog.objects.create(user=None, text=f"KMeans classification complete.")
-            return "KMeans classification complete."
+            return "KMeans classification complete."    
             
         AuditLog.objects.create(user=None, text=f"KMeans classification failed.")
         return "KMeans classification failed."
@@ -46,11 +46,18 @@ def ml_train_task (ml_model=None):
         if train_ahc():
             AuditLog.objects.create(user=None, text=f"AHC training complete.")
             return "AHC training complete."
+
         AuditLog.objects.create(user=None, text=f"AHC training failed.")
+        return "AHC training failed."
     else:
-        train_som()
-        AuditLog.objects.create(user=None, text=f"SOM training complete.")
+        if train_som():
+            AuditLog.objects.create(user=None, text=f"SOM training complete.")
+            return "SOM training complete."
+
+        AuditLog.objects.create(user=None, text=f"SOM training failed.")
         return "SOM training complete."
 
-    AuditLog.objects.create(user=None, text=f"SOM training failed.")
+    AuditLog.objects.create(user=None, text=f"Training failed.")
+    return "Training failed."
+    
     
