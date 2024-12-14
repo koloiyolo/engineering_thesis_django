@@ -42,6 +42,8 @@ def user(request, pk):
     if request.user.is_authenticated:
 
         audit_logs = None
+        if pk == 0:
+            pk = None
         q = request.GET.get('search', '')
         if q:
             audit_logs = auditLog.filter(

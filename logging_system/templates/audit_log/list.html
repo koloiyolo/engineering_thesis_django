@@ -30,6 +30,7 @@
                             </a>
                             <ul class="dropdown-menu">
                                 <li><a class="dropdown-item" href="{% url 'audit_log:list' %}">All</a></li>
+                                <li><a class="dropdown-item" href="{% url 'audit_log:user' 0 %}">System</a></li>
                                 {% for user in users %}
                                 {% if user.id %}
                                 <li><a class="dropdown-item" href="{% url 'audit_log:user' user.id %}">{{user.username}}</a></li>

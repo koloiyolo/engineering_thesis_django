@@ -9,7 +9,11 @@
         <div class="container text-start">
             <div class="row">
                 <div class="col-2">{{ audit_log.datetime }}</div>
+                {% if user %}
                 <div class="col-2">{{ audit_log.user }}</div>
+                {% else %}
+                <div class="col-2">System</div>
+                {% endif %}
                 <div class="col-2">{{ audit_log.text }}</div>
             </div>
         </div>
