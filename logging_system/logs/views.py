@@ -16,7 +16,7 @@ def logs(request, label=None):
         
         logs = None
         q = request.GET.get('search', '')
-        if label:
+        if label is not None:
             if q:
                 logs = logs.filter(
                     Q(host__icontains=q) |

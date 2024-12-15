@@ -18,7 +18,7 @@ def incidents(request, tag=None, system=None):
 
         incidents = None
         q = request.GET.get('search', '')
-        if tag:
+        if tag is not None:
             if q:
                 incidents = Incidents.objects.filter(
                     Q(system__name__icontains=q) |
@@ -29,6 +29,8 @@ def incidents(request, tag=None, system=None):
                 ).order_by("-id")
             else:
                 incidents = Incident.objects.filter(tag=tag).order_by("-id")
+            if incidents.count() == 0:
+                return redirect('incidents:list') 
         else:
             if q:
                 incidents = Incidents.objects.filter(

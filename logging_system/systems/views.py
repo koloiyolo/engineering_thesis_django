@@ -21,7 +21,7 @@ def systems(request, location=None, system_type=None):
         systems = None
         q = request.GET.get('search', '')
 
-        if location:
+        if location is not None:
             if q:
                 systems = System.objects.filter(
                     Q(name__icontains=q) |
@@ -35,7 +35,7 @@ def systems(request, location=None, system_type=None):
                 ).order_by("id")
             else:
                 systems = System.objects.filter(location=location).order_by("id")
-        elif system_type:
+        elif system_type is not None:
             if q:
                 systems = System.objects.filter(
                     Q(name__icontains=q) |

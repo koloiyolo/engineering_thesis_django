@@ -14,7 +14,7 @@ def logs(request, user=None):
 
         audit_logs = None
         q = request.GET.get('search', '')
-        if user:
+        if user is not None:
             if q:
                 audit_logs = auditLog.filter(
                     Q(text__icontains=q) |
