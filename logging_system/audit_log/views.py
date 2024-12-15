@@ -15,8 +15,13 @@ def logs(request, user=None):
         audit_logs = None
         q = request.GET.get('search', '')
         if user is not None:
+
+            # Fix to display system audit logs
+            if user == 0:
+                user = None
+
             if q:
-                audit_logs = auditLog.filter(
+                audit_logs = AuditLog.objects.filter(
                     Q(text__icontains=q) |
                     Q(user__username__icontains=q),
                     user = user

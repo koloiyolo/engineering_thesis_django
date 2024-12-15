@@ -20,7 +20,7 @@ def incidents(request, tag=None, system=None):
         q = request.GET.get('search', '')
         if tag is not None:
             if q:
-                incidents = Incidents.objects.filter(
+                incidents = Incident.objects.filter(
                     Q(system__name__icontains=q) |
                     Q(ip__icontains=q) |
                     Q(title__icontains=q) |
@@ -33,7 +33,7 @@ def incidents(request, tag=None, system=None):
                 return redirect('incidents:list') 
         else:
             if q:
-                incidents = Incidents.objects.filter(
+                incidents = Incident.objects.filter(
                     Q(system__name__icontains=q) |
                     Q(ip__icontains=q) |
                     Q(title__icontains=q) |

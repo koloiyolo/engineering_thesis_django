@@ -18,7 +18,7 @@ def logs(request, label=None):
         q = request.GET.get('search', '')
         if label is not None:
             if q:
-                logs = logs.filter(
+                logs = Log.objects.filter(
                     Q(host__icontains=q) |
                     Q(program__icontains=q) |
                     Q(message__icontains=q),
@@ -28,7 +28,7 @@ def logs(request, label=None):
                 logs = Log.objects.filter(label=label).order_by('-id')
         else:
             if q:
-                logs = logs.filter(
+                logs = Log.objects.filter(
                     Q(host__icontains=q) |
                     Q(program__icontains=q) |
                     Q(message__icontains=q)

@@ -30,9 +30,7 @@
                     {% else %}
                     <p><strong><i class="fas fa-plug text-success"></i> Last Response Time:</strong> Device Down</p>
                     {% endif %}
-                    {% if system.loss %}
                     <p><strong><i class="fas fa-plug text-success"></i> Average Packet Loss</strong> {{ system.loss}} &percnt;</p>
-                    {% endif %}
                     <br/>
                     <!-- Network Information Section -->
                     {% if system.location %}
