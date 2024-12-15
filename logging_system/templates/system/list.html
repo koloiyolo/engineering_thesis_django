@@ -25,7 +25,22 @@
                             <div class="col">ID:</div>
                             <div class="col">Name:</div>
                             <div class="col">IP Address:</div>
-                            <div class="col">System Type:</div>
+                            <div class="col">
+                                <a
+                                    class="nav-link dropdown-toggle"
+                                    href="#"
+                                    role="button"
+                                    data-bs-toggle="dropdown"
+                                    aria-expanded="false"
+                                    >
+                                    System Type:
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" href="{% url 'systems:list' %}">All</a></li>
+                                    <li><a class="dropdown-item" href="{% url 'systems:type' 0 %}"> Device </a></li>
+                                    <li><a class="dropdown-item" href="{% url 'systems:type' 1 %}"> Service </a></li>
+                                </ul>
+                            </div>
                             <div class="col">Status:</div>
                             <div class="col">Packet Loss:</div>
                             <div class="col">

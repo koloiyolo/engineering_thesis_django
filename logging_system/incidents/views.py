@@ -13,21 +13,33 @@ from .forms import CommentForm
 
 # validated function
 
-def incidents(request):
+def incidents(request, tag=None, system=None):
     if request.user.is_authenticated:
 
         incidents = None
         q = request.GET.get('search', '')
-        if q:
-            incidents = Incidents.objects.filter(
-                Q(system__name__icontains=q) |
-                Q(ip__icontains=q) |
-                Q(title__icontains=q) |
-                Q(message__icontains=q) |
-                Q(tag__icontains=q)
-            ).order_by("-id")
+        if tag:
+            if q:
+                incidents = Incidents.objects.filter(
+                    Q(system__name__icontains=q) |
+                    Q(ip__icontains=q) |
+                    Q(title__icontains=q) |
+                    Q(message__icontains=q),
+                    tag=tag,
+                ).order_by("-id")
+            else:
+                incidents = Incident.objects.filter(tag=tag).order_by("-id")
         else:
-            incidents = Incident.objects.order_by("-id")
+            if q:
+                incidents = Incidents.objects.filter(
+                    Q(system__name__icontains=q) |
+                    Q(ip__icontains=q) |
+                    Q(title__icontains=q) |
+                    Q(message__icontains=q) |
+                    Q(tag__icontains=q)
+                ).order_by("-id")
+            else:
+                incidents = Incident.objects.order_by("-id")
         
         page = pagination(incidents, request.GET.get("page"))
 
@@ -36,36 +48,7 @@ def incidents(request):
             'incidents': page,
             'systems': systems})
     else:
-        return redirect('home')
-
-def tag_incidents(request, tag):
-    if request.user.is_authenticated:
-
-        incidents = None
-        q = request.GET.get('search', '')
-        if q:
-            incidents = Incidents.objects.filter(
-                Q(system__name__icontains=q) |
-                Q(ip__icontains=q) |
-                Q(title__icontains=q) |
-                Q(message__icontains=q),
-                tag=tag,
-            ).order_by("-id")
-        else:
-            incidents = Incident.objects.filter(tag=tag).order_by("-id")
-
-        if not incidents.exists():
-            messages.warning(request, f"Label '{tag}' is empty!")
-            return redirect('incidents:list')
-        
-        page = pagination(incidents, request.GET.get("page"))
-
-        systems = System.objects.filter(id__in=Incident.objects.values_list('system', flat=True).distinct())
-        return render(request, 'incident/list.html', {
-            'incidents': page,
-            'systems': systems})
-    else:
-        return redirect('home')    
+        return redirect('home') 
 
 def view(request, pk):
     if request.user.is_authenticated:

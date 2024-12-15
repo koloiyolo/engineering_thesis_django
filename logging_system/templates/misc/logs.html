@@ -52,7 +52,7 @@
                                     <li><a class="dropdown-item" href="{% url 'logs:list' %}">All</a></li>
                                     {% if clusters %}
                                     {% for cluster in clusters %}
-                                        <li><a class="dropdown-item" href="{% url 'logs:label' cluster %}"> {{ cluster }} </a></li>
+                                        <li><a class="dropdown-item" href="{% url 'logs:list' cluster %}"> {{ cluster }} </a></li>
                                     {% endfor %}
                                     {% endif %}
                                 </ul>

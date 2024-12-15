@@ -15,23 +15,53 @@ from audit_log.models import AuditLog
 from .tasks import discover_systems_task
 # Create your views here.
 
-def systems(request):
+def systems(request, location=None, system_type=None):
     if request.user.is_authenticated:
 
         systems = None
         q = request.GET.get('search', '')
-        if q:
-            systems = System.objects.filter(
-                Q(name__icontains=q) |
-                Q(ip__icontains=q) |
-                Q(service_type__icontains=q) |
-                Q(model__icontains=q) |
-                Q(location__name__icontains=q) |
-                Q(location__town__icontains=q) |
-                Q(location__address__icontains=q)
-            ).order_by("id")
+
+        if location:
+            if q:
+                systems = System.objects.filter(
+                    Q(name__icontains=q) |
+                    Q(ip__icontains=q) |
+                    Q(service_type__icontains=q) |
+                    Q(model__icontains=q) |
+                    Q(location__name__icontains=q) |
+                    Q(location__town__icontains=q) |
+                    Q(location__address__icontains=q),
+                    location=location
+                ).order_by("id")
+            else:
+                systems = System.objects.filter(location=location).order_by("id")
+        elif system_type:
+            if q:
+                systems = System.objects.filter(
+                    Q(name__icontains=q) |
+                    Q(ip__icontains=q) |
+                    Q(service_type__icontains=q) |
+                    Q(model__icontains=q) |
+                    Q(location__name__icontains=q) |
+                    Q(location__town__icontains=q) |
+                    Q(location__address__icontains=q),
+                    system_type=system_type
+                ).order_by("id")
+            else:
+                systems = System.objects.filter(system_type=system_type).order_by("id")
         else:
-            systems = System.objects.order_by("id")
+            if q:
+                systems = System.objects.filter(
+                    Q(name__icontains=q) |
+                    Q(ip__icontains=q) |
+                    Q(service_type__icontains=q) |
+                    Q(model__icontains=q) |
+                    Q(location__name__icontains=q) |
+                    Q(location__town__icontains=q) |
+                    Q(location__address__icontains=q)
+                ).order_by("id")
+            else:
+                systems = System.objects.order_by("id")
 
         # update system last_log
         for system in systems:
@@ -56,43 +86,7 @@ def systems(request):
     else:
         return redirect('home')
 
-def location(request, location):
-    if request.user.is_authenticated:
 
-        systems = None
-        q = request.GET.get('search', '')
-        if q:
-            systems = System.objects.filter(
-                Q(name__icontains=q) |
-                Q(ip__icontains=q) |
-                Q(service_type__icontains=q) |
-                Q(model__icontains=q) |
-                Q(location__name__icontains=q) |
-                Q(location__town__icontains=q) |
-                Q(location__address__icontains=q),
-                location=location
-            ).order_by("id")
-        else:
-            systems = System.objects.filter(location=location).order_by("id")
-
-        if not systems.exists():
-            messages.warning(request, f"There are no systems located in {location}!")
-            return redirect('systems')
-        
-        page = pagination(systems, request.GET.get("page"))
-
-        # calculate packet loss
-        for system in page:
-            system.loss = get_packet_loss(system)
-
-        locations = Location.objects.all()
-        data = {
-            'systems': page,
-            'locations': locations
-        }
-        return render(request, 'system/list.html', data)
-    else:
-        return redirect('home')   
 
 def system(request, pk):
     if request.user.is_authenticated:
@@ -126,21 +120,34 @@ def system(request, pk):
     else:
         return redirect('home')
 
-def logs(request, pk):
+def logs(request, pk, label=None):
     if request.user.is_authenticated:
         system = System.objects.get(id=pk)
 
         logs = None
         q = request.GET.get('search', '')
-        if q:
-            logs = logs.objects.filter(
-                Q(host__icontains=q) |
-                Q(program__icontains=q) |
-                Q(message__icontains=q),
-                host=system.ip
-            ).order_by("-id")
+
+        if label:
+            if q:
+                logs = logs.objects.filter(
+                    Q(host__icontains=q) |
+                    Q(program__icontains=q) |
+                    Q(message__icontains=q),
+                    host=system.ip,
+                    label=label
+                ).order_by("-id")
+            else:
+                logs = Log.objects.filter(host=system.ip, label=label).order_by('-id')
         else:
-            logs = Log.objects.filter(host=system.ip).order_by('-id')
+            if q:
+                logs = logs.objects.filter(
+                    Q(host__icontains=q) |
+                    Q(program__icontains=q) |
+                    Q(message__icontains=q),
+                    host=system.ip
+                ).order_by("-id")
+            else:
+                logs = Log.objects.filter(host=system.ip).order_by('-id')
 
         if not logs.exists():
             messages.warning(request, f"Label '{label}' is empty!")
@@ -167,46 +174,6 @@ def logs(request, pk):
     else:
         return redirect('home')
 
-
-def label(request, pk, label):
-    if request.user.is_authenticated:
-        system = System.objects.get(id=pk)
-
-        logs = None
-        q = request.GET.get('search', '')
-        if q:
-            logs = logs.objects.filter(
-                Q(host__icontains=q) |
-                Q(program__icontains=q) |
-                Q(message__icontains=q),
-                host=system.ip,
-                label=label
-            ).order_by("-id")
-        else:
-            logs = Log.objects.filter(host=system.ip, label=label).order_by('-id')
-
-        if logs.count() == 0:
-            messages.warning(request, f"Label '{label}' is empty!")
-            return redirect('systems:logs', system.id)
-        
-        page = pagination(logs, request.GET.get("page"))
-        clusters = Log.objects.filter(label__isnull=False).values_list('label', flat=True).distinct()
-        page = logs_short_message(page)
-
-        hosts = Log.objects.all().values_list('host', flat=True).distinct()
-        systems = []
-        for host in hosts:
-            systems.append(System.objects.filter(ip=host).first())
-
-        data = {
-            'system': system,
-            'systems': systems,
-            'logs': page,
-            'clusters': clusters}
-        return render(request, 'misc/logs.html', data)
-        pass
-    else:
-        return redirect('home')
 
 def incidents(request, pk):
     if request.user.is_authenticated:

@@ -6,6 +6,6 @@ app_name = 'audit_log'
 
 urlpatterns = [
     path('', views.logs, name='list'),
-    path('<int:pk>', views.user, name='user'),
+    path('<int:user>', views.logs, name='list'),
 #    path('path/', views.view, name='name'),
 ]
