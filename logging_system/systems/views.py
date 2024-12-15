@@ -1,11 +1,11 @@
 from django.shortcuts import render, redirect, reverse
-from django.core.paginator import Paginator
 from django.contrib import messages
 from django.db.models import Q
 
-from .functions import get_ping_graph
+from .functions import get_ping_graph, get_packet_loss
+from logging_system.functions import pagination, logs_short_message
 
-from .models import System
+from .models import System, Ping
 from incidents.models import Incident
 from logs.models import Log
 from locations.models import Location
@@ -39,13 +39,17 @@ def systems(request):
             if last_log is not None:
                 system.last_log = last_log.datetime
                 system.save()
-        items_per_page = Settings.load().items_per_page
-        paginator = Paginator(systems, items_per_page)
-        page_number = request.GET.get("page")
-        page_systems = paginator.get_page(page_number)
+        
+        page = pagination(systems, request.GET.get("page"))
+
         locations = Location.objects.all()
+
+        # calculate packet loss
+        for system in page:
+            system.loss = get_packet_loss(system)
+
         data = {
-            'systems': page_systems,
+            'systems': page,
             'locations': locations
         }
         return render(request, 'system/list.html', data)
@@ -74,13 +78,16 @@ def location(request, location):
         if not systems.exists():
             messages.warning(request, f"There are no systems located in {location}!")
             return redirect('systems')
-        items_per_page = Settings.load().items_per_page
-        paginator = Paginator(systems, items_per_page)
-        page_number = request.GET.get("page")
-        page_systems = paginator.get_page(page_number)
+        
+        page = pagination(systems, request.GET.get("page"))
+
+        # calculate packet loss
+        for system in page:
+            system.loss = get_packet_loss(system)
+
         locations = Location.objects.all()
         data = {
-            'systems': page_systems,
+            'systems': page,
             'locations': locations
         }
         return render(request, 'system/list.html', data)
@@ -91,6 +98,9 @@ def system(request, pk):
     if request.user.is_authenticated:
         system = System.objects.get(id=pk)
         system.graph = get_ping_graph(system)
+
+        system.loss = get_packet_loss(system)
+
         last_log = Log.objects.filter(host=system.ip).last()
         if last_log is not None:
             system.last_log = last_log.datetime
@@ -101,11 +111,7 @@ def system(request, pk):
         # logs
         logs = Log.objects.filter(host=system.ip).order_by("-id")[:10]
         clusters = Log.objects.filter(label__isnull=False).values_list('label', flat=True).distinct()
-        for log in logs:
-            if len(log.message) > 50:
-                log.short_message = log.message[:50] + "..."
-            else:
-                log.short_message = log.message
+        logs = logs_short_message(logs)
         # -----
 
         incidents = Incident.objects.filter(system=system).order_by("-id")[:5]
@@ -139,16 +145,12 @@ def logs(request, pk):
         if not logs.exists():
             messages.warning(request, f"Label '{label}' is empty!")
             return redirect('logs')
-        items_per_page = Settings.load().items_per_page
-        paginator = Paginator(logs, items_per_page)
-        page_number = request.GET.get("page")
-        page_logs = paginator.get_page(page_number)
+        
+        page = pagination(logs, request.GET.get("page"))
         clusters = Log.objects.filter(label__isnull=False).values_list('label', flat=True).distinct()
-        for log in page_logs:
-            if len(log.message) > 50:
-                log.short_message = log.message[:50] + "..."
-            else:
-                log.short_message = log.message
+
+        page = logs_short_message(page)
+
         hosts = Log.objects.all().values_list('host', flat=True).distinct()
 
         systems = []
@@ -158,7 +160,7 @@ def logs(request, pk):
         data = {
             'system': system,
             'systems': systems,
-            'logs': page_logs,
+            'logs': page,
             'clusters': clusters}
         return render(request, 'misc/logs.html', data)
         pass
@@ -186,16 +188,10 @@ def label(request, pk, label):
         if logs.count() == 0:
             messages.warning(request, f"Label '{label}' is empty!")
             return redirect('systems:logs', system.id)
-        items_per_page = Settings.load().items_per_page
-        paginator = Paginator(logs, items_per_page)
-        page_number = request.GET.get("page")
-        page_logs = paginator.get_page(page_number)
+        
+        page = pagination(logs, request.GET.get("page"))
         clusters = Log.objects.filter(label__isnull=False).values_list('label', flat=True).distinct()
-        for log in page_logs:
-            if len(log.message) > 50:
-                log.short_message = log.message[:50] + "..."
-            else:
-                log.short_message = log.message
+        page = logs_short_message(page)
 
         hosts = Log.objects.all().values_list('host', flat=True).distinct()
         systems = []
@@ -205,7 +201,7 @@ def label(request, pk, label):
         data = {
             'system': system,
             'systems': systems,
-            'logs': page_logs,
+            'logs': page,
             'clusters': clusters}
         return render(request, 'misc/logs.html', data)
         pass
@@ -232,15 +228,14 @@ def incidents(request, pk):
         if not incidents.exists():
             messages.warning(request, f"There are no incidents for {system.name}")
             return redirect(reverse('systems:view', args=[system.id]))
-        items_per_page = Settings.load().items_per_page
-        paginator = Paginator(incidents, items_per_page)
-        page_number = request.GET.get("page")
-        page_incidents = paginator.get_page(page_number)
+        
+        page = pagination(incidents, request.GET.get("page"))
+
         systems = System.objects.filter(id__in=Incident.objects.values_list('system', flat=True).distinct())
         return render(request, 'incident/list.html', {
             'system': system,
             'systems': systems,
-            'incidents': page_incidents})
+            'incidents': page})
     else:
         return redirect('home')
 
@@ -258,15 +253,13 @@ def tag_incidents(request, pk, tag):
         if not incidents.exists():
             messages.warning(request, f"Label '{tag}' is empty!")
             return redirect(reverse('systems:view', args=[system.id]))
-        items_per_page = Settings.load().items_per_page
-        paginator = Paginator(incidents, items_per_page)
-        page_number = request.GET.get("page")
-        page_incidents = paginator.get_page(page_number)
+        
+        page = pagination(incidents, request.GET.get("page"))
         systems = System.objects.filter(id__in=Incident.objects.values_list('system', flat=True).distinct())
         return render(request, 'incident/list.html', {
             'system': system,
             'systems': systems,
-            'incidents': page_incidents})
+            'incidents': page})
     else:
         return redirect('home')   
 

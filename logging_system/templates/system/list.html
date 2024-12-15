@@ -25,8 +25,9 @@
                             <div class="col">ID:</div>
                             <div class="col">Name:</div>
                             <div class="col">IP Address:</div>
-                            <div class="col">Model:</div>
+                            <div class="col">System Type:</div>
                             <div class="col">Status:</div>
+                            <div class="col">Packet Loss:</div>
                             <div class="col">
                                 <a
                                     class="nav-link dropdown-toggle"
@@ -68,12 +69,13 @@
                             <div class="col">{{ obj.id }}</div>
                             <div class="col">{{ obj.name }}</div>
                             <div class="col">{{ obj.ip }}</div>
-                            <div class="col">{{ obj.model }}</div>
+                            <div class="col">{{ obj.get_system_type_display  }}</div>
                             {% if obj.last_ping %}
                             <div class="col text-success">{{ obj.last_ping }}</div>
                             {% else %}
                             <div class="col text-danger">Device down</div>
                             {% endif %}
+                            <div class="col">{{ obj.loss }}  &percnt;</div>
                             <div class="col">{{ obj.location }}</div>
                         </div>
                     </div>

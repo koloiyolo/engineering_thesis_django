@@ -1,13 +1,13 @@
 from django.shortcuts import render, redirect
-from django.core.paginator import Paginator
 from django.contrib import messages
+from django.db.models import Q
+
+from logging_system.functions import pagination
+from audit_log.models import AuditLog
 from systems.models import System
 from config.models import Settings
 from .models import Incident, Comment
 from .forms import CommentForm
-from django.db.models import Q
-
-from audit_log.models import AuditLog
 
 # Create your views here.
 
@@ -29,13 +29,11 @@ def incidents(request):
         else:
             incidents = Incident.objects.order_by("-id")
         
-        items_per_page = Settings.load().items_per_page
-        paginator = Paginator(incidents, items_per_page)
-        page_number = request.GET.get("page")
-        page_incidents = paginator.get_page(page_number)
+        page = pagination(incidents, request.GET.get("page"))
+
         systems = System.objects.filter(id__in=Incident.objects.values_list('system', flat=True).distinct())
         return render(request, 'incident/list.html', {
-            'incidents': page_incidents,
+            'incidents': page,
             'systems': systems})
     else:
         return redirect('home')
@@ -59,14 +57,12 @@ def tag_incidents(request, tag):
         if not incidents.exists():
             messages.warning(request, f"Label '{tag}' is empty!")
             return redirect('incidents:list')
-        items_per_page = Settings.load().items_per_page
-        paginator = Paginator(incidents, items_per_page)
-        page_number = request.GET.get("page")
-        page_incidents = paginator.get_page(page_number)
+        
+        page = pagination(incidents, request.GET.get("page"))
 
         systems = System.objects.filter(id__in=Incident.objects.values_list('system', flat=True).distinct())
         return render(request, 'incident/list.html', {
-            'incidents': page_incidents,
+            'incidents': page,
             'systems': systems})
     else:
         return redirect('home')    

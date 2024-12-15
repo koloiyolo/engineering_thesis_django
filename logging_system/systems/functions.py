@@ -7,6 +7,9 @@ from .models import System, Ping
 from config.models import Settings
 from audit_log.models import AuditLog
 
+
+
+# System ping task function
 def ping_systems(systems, debug=True):
     emails = []
     for system in systems:
@@ -33,6 +36,9 @@ def ping_systems(systems, debug=True):
     AuditLog.objects.create(user=None, text=f"All systems pinged.")
     return True
 
+
+
+# Ping graph function
 def get_ping_graph(system, height=300, width=900, range=144):
     pings = Ping.objects.filter(system=system).order_by('-id')[:range]
     n = 0
@@ -50,6 +56,8 @@ def get_ping_graph(system, height=300, width=900, range=144):
     return plot_div
 
 
+
+# System discovery task function
 def discover_systems(ip_range, system_type=None, prefix=""):
     systems = []
     match = re.search(r'^(([^.\\-]+)\.([^.\\-]+)\.([^.\\-]+)).*?([^.\\-]+)[-]([^.\\-]+)$', ip_range)
@@ -91,3 +99,14 @@ def discover_systems(ip_range, system_type=None, prefix=""):
 
     AuditLog.objects.create(user=None, text=f"New systems discovered prefix {prefix}.")
     return True
+
+# System packet loss function
+def get_packet_loss(system, range=144):
+    pings = Ping.objects.filter(system=system).order_by('-id')[:range]
+    count = pings.count()
+    none_count = 0
+    for ping in pings:
+        if ping.ping == None:
+            none_count += 1
+
+    return round(none_count/144*count, 2)

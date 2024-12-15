@@ -1,9 +1,9 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate
 from django.contrib.auth.models import User
-from config.models import Settings
-from django.core.paginator import Paginator
 from django.db.models import Q
+
+from logging_system.functions import pagination
 from .models import AuditLog
 from config.models import Settings
 
@@ -22,14 +22,12 @@ def logs(request):
         else:
             audit_logs = AuditLog.objects.order_by("-id")
 
-        items_per_page = Settings.load().items_per_page
-        paginator = Paginator(audit_logs, items_per_page)
-        page_number = request.GET.get("page")
-        page_items = paginator.get_page(page_number)
+        page = pagination(audit_logs, request.GET.get("page"))
+
         users = User.objects.all()
 
         data = {
-            'audit_logs': page_items,
+            'audit_logs': page,
             'users': users
         }
 
@@ -54,14 +52,12 @@ def user(request, pk):
         else:
             audit_logs = AuditLog.objects.filter(user=pk).order_by("-id")
         
-        items_per_page = Settings.load().items_per_page
-        paginator = Paginator(audit_logs, items_per_page)
-        page_number = request.GET.get("page")
-        page_items = paginator.get_page(page_number)
+        page = pagination(audit_logs, request.GET.get("page"))
+
         users = User.objects.all()
 
         data = {
-            'audit_logs': page_items,
+            'audit_logs': page,
             'users': users
         }
 

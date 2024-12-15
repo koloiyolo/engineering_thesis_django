@@ -1,7 +1,8 @@
 from django.shortcuts import render, redirect, reverse
-from django.core.paginator import Paginator
 from django.contrib import messages
 
+
+from logging_system.functions import pagination
 from config.models import Settings
 from .models import Location
 from .forms import LocationForm
@@ -16,12 +17,10 @@ def locations(request):
         locations = Location.objects.all().order_by("id")
         for location in locations:
             location.systems = System.objects.filter(location=location).count()
-        items_per_page = Settings.load().items_per_page
-        paginator = Paginator(locations, items_per_page)
-        page_number = request.GET.get("page")
-        page_locations = paginator.get_page(page_number)
         
-        return render(request, 'location/list.html', {'locations': page_locations})
+        page = pagination(locations, request.GET.get("page"))
+        
+        return render(request, 'location/list.html', {'locations': page})
     else:
         return redirect('home')
 
