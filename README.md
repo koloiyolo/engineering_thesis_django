@@ -1,4 +1,4 @@
-# Device Management and log analysis system
+# Device Management and Log Analysis System
 Simple system designed for log analysis and network devices monitoring.\
 Jakub Kołodziej's engineering thesis project.
 
@@ -30,7 +30,7 @@ Dependencies:
   * git
   * Docker
 
-Opened firewall ports:
+Open firewall ports:
   * **80/tcp** - Main application
   * **5014/udp** - Syslog-ng log collection
   * **8081/tcp** - (Optional) phpMyAdmin
