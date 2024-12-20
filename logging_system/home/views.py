@@ -5,6 +5,7 @@ from django.core.paginator import Paginator
 from django.http import JsonResponse
 from ping3 import ping
 from requests import get
+from django.contrib.auth.decorators import login_required
 
 from config.models import Settings
 from systems.models import System
@@ -85,6 +86,11 @@ def logout_user(request):
     messages.success(request, "You have been logged out")
     return redirect('home')
 
+def login_user(request):
+    logout(request)
+    messages.success(request, "You have been logged out")
+    return redirect('home')
+
 def register_user(request):
     if request.method == 'POST':
         form = SignUpForm(request.POST)
@@ -104,34 +110,3 @@ def register_user(request):
         return render(request, 'auth/register.html', {'form': form})
         
     return render(request, 'auth/register.html', {'form': form})
-
-# def logs(request):
-#     if request.user.is_authenticated:
-#         # Get search query from the request
-#         query = request.GET.get('q', '')
-
-#         # Filter logs by case-insensitive partial match if a query exists
-#         if query:
-#             logs = Log.objects.filter(message__icontains=query)
-#         else:
-#             logs = Log.objects.all()  # Return all logs if no search query is provided
-
-#         # Pagination setup
-#         items_per_page = Settings.load().items_per_page
-#         paginator = Paginator(logs, items_per_page)
-
-#         # Get the current page number (default to page 1 if not provided)
-#         page_number = request.GET.get("page", 1)
-#         page_logs = paginator.get_page(page_number)
-
-#         # Render the logs with pagination
-#         return render(request, 'logs.html', {'logs': page_logs, 'query': query})
-#     else:
-#         return redirect('home')
-
-# validated function
-
-# def function(request):
-#     if request.user.is_authenticated:
-#         pass
-#     
