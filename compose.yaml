@@ -56,7 +56,7 @@ services:
       timeout: 10s
       retries: 5
 
-  logging_system:
+  django:
     container_name: logging_system
     restart: always
     depends_on:
@@ -84,7 +84,7 @@ services:
         condition: service_healthy
       redis:
         condition: service_healthy
-      logging_system:
+      django:
         condition: service_healthy
     env_file:
       - config.env
@@ -97,7 +97,7 @@ services:
         condition: service_healthy
       redis:
         condition: service_healthy
-      logging_system:
+      django:
         condition: service_healthy
     env_file:
       - config.env
