@@ -147,20 +147,19 @@ CELERY_RESULT_SERIALIZER = 'json'
 from celery.schedules import crontab
 
 CELERY_BEAT_SCHEDULE = {
-    'classify-every-minute': {
+    'classify-every-10-minutes': {
         'task': 'logs.tasks.ml_classify_task',
-        'schedule': 60.0,
+        'schedule': 600.0,
         'args': (),
     },
     'train-every-week': {
         'task': 'logs.tasks.ml_train_task',
-        # 'schedule': crontab(hour=0, minute=0, day_of_week='sunday'),
-        'schedule': 360.0,
+        'schedule': crontab(hour=0, minute=0, day_of_week='sunday'),
         'args':()
     },
-    'ping-every-3-minutes': {
+    'ping-every-5-minutes': {
         'task': 'systems.tasks.ping_task',
-        'schedule': 120.0,
+        'schedule': 300.0,
         'args':(),
     }
 
