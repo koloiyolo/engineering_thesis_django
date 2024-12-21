@@ -103,7 +103,7 @@ def _classify(file_prefix = 'kmeans'):
     labels = clf.fit_predict(X)
     
     if file_prefix == 'dbscan' or file_prefix == 'hdbscan':
-        labels + 1
+        labels = labels + 1
 
     emails, message = zip_logs(
         logs=data, 
