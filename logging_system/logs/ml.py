@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.core.mail import send_mass_mail
 
-from sklearn.cluster import KMeans, AgglomerativeClustering
+from sklearn.cluster import KMeans, AgglomerativeClustering, DBSCAN, HDBSCAN
 # from sklearn.preprocessing import OneHotEncoder
 from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
 from sklearn.preprocessing import MinMaxScaler
@@ -62,50 +62,49 @@ def zip_logs(logs=None, labels=None, anomaly_label=0):
 
 
 # sklearn ML train function prototype
-def train(model=KMeans(2, random_state=42), file_prefix='kmeans'):
+def _train(model=KMeans(2, random_state=42), file_prefix='kmeans'):
     data = get_logs(Settings.load().ml_train)
 
-    if data is not None:
-        features = [obj.get_features() for obj in data]
-        encoder = TfidfVectorizer()
-        encoded_features = encoder.fit_transform(features).toarray()
+    if data is None:
+        return f"{file_prefix.title()} Training: Not enough log data."
 
-        clf = model
-        X = np.array(encoded_features)
-        clf.fit(X)
+    features = [obj.get_features() for obj in data]
+    encoder = TfidfVectorizer()
+    encoded_features = encoder.fit_transform(features).toarray()
+    clf = model
+    X = np.array(encoded_features)
+    clf.fit(X)
+    joblib.dump(clf, file_prefix + '.joblib')
+    joblib.dump(encoder, file_prefix + '_encoder.joblib')
 
-        joblib.dump(clf, file_prefix + '.joblib')
-        joblib.dump(encoder, file_prefix + '_encoder.joblib')
-
-        return True
-
-    else:
-        return False
-
-    return False
+    return f"{file_prefix.title()} Training: Success."
 
 
 # sklearn ML classify function
-def classify(file_prefix = 'kmeans'):
+def _classify(file_prefix = 'kmeans'):
     emails = None
     clf_file = file_prefix + '.joblib'
     encoder_file = file_prefix + '_encoder.joblib'
 
     if (os.path.exists(clf_file) and os.path.exists(encoder_file)) is False:
-        return False
+        print("Files don't exist")
+        return f"{file_prefix.title()} Classification: Model or encoder file doesn't exist."
 
     data = get_logs(Settings.load().ml_classify)
     if data is None:
         print("No data to classify")
-        return True
+        return f"{file_prefix.title()} Classification: Not enough log data."
 
     features = [obj.get_features() for obj in data]
     encoder = joblib.load(encoder_file)
     encoded_features = encoder.transform(features).toarray()
     X = np.array(encoded_features)
     clf = joblib.load(clf_file)
-    labels = clf.predict(X)
+    labels = clf.fit_predict(X)
     
+    if file_prefix == 'dbscan' or file_prefix == 'hdbscan':
+        labels + 1
+
     emails, message = zip_logs(
         logs=data, 
         labels=labels, 
@@ -117,42 +116,59 @@ def classify(file_prefix = 'kmeans'):
         send_mass_mail(emails)
     # send_anomaly_emails(data, debug=True)
 
-    return True
+    return f"{file_prefix.title()} Classification: Success."
 
 #######################################################################################################
 
 # K-Means
-def train_kmeans():
-    clusters = Settings.load().ml_clusters
-    return train(
-        model = KMeans(clusters, random_state=42),
+def train():
+    settings = Settings.load()
+    ml_model = settings.ml_model
+    ml_clusters = settings.ml_clusters
+    clf = KMeans(ml_clusters, random_state=42) 
+    file_prefix = 'kmeans'
+    if ml_model == 0:
+        clf = KMeans(ml_clusters, random_state=42)
         file_prefix = 'kmeans'
-    )
+    elif ml_model == 1:
+        clf = AgglomerativeClustering(n_clusters=ml_clusters)
+        file_prefix = 'ahc' 
+    elif ml_model == 2:
+        clf = DBSCAN()
+        file_prefix = 'dbscan' 
+    elif ml_model == 3:
+        clf = HDBSCAN()
+        file_prefix = 'hdbscan' 
+    else:
+        return train_som()
 
-def classify_kmeans():
-    return classify(
+    return _train(model=clf, file_prefix=file_prefix)
+
+
+def classify():
+    settings = Settings.load()
+    ml_model = settings.ml_model
+    file_prefix = 'kmeans'
+    if ml_model == 0:
         file_prefix = 'kmeans'
-    )
-
-# AHC
-def train_ahc():
-    clusters = Settings.load().ml_clusters
-    return train(
-        model = AgglomerativeClustering(n_clusters=clusters),
+    elif ml_model == 1:
         file_prefix = 'ahc'
-    )
+    elif ml_model == 2:
+        file_prefix = 'dbscan' 
+    elif ml_model == 3:
+        file_prefix = 'hdbscan' 
+    else:
+        return classify_som()
 
-def classify_ahc():
-    return classify(
-        file_prefix = 'ahc'
-    )
+    return _classify(file_prefix=file_prefix)
+
 
 # SOM
 def train_som():
     data = get_logs(Settings.load().ml_train)
     clusters = Settings.load().ml_clusters
     if data is None:
-        return True
+        return "SOM Training: Not enough log data."
 
     file_prefix = 'som'
     features = [obj.get_features() for obj in data]
@@ -166,56 +182,49 @@ def train_som():
     joblib.dump(som, 'som.joblib')
     joblib.dump(encoder, 'som_encoder.joblib')
     
-    return True
+    return "SOM Training: Success."
 
 def classify_som():
     emails = []
     som_file = 'som.joblib'
     encoder_file = 'som_encoder.joblib'
 
-    if os.path.exists(som_file) and os.path.exists(encoder_file):
-        data = get_logs(Settings.load().ml_classify)
-        if data is None or len(data) == 0:
-            print("No data to classify")
-            return True
+    if (os.path.exists(clf_file) and os.path.exists(encoder_file)) is False:
+        print("Files don't exist")
+        return f"SOM Classification: Model or encoder file doesn't exist."
+    
+    data = get_logs(Settings.load().ml_classify)
+    if data is None:
+        print("No data to classify")
+        return f"SOM Classification: Not enough log data."
 
-        features = [log.get_features() for log in data]
 
-        encoder = joblib.load(encoder_file)
-        encoded_features = encoder.transform(features).toarray()
+    features = [log.get_features() for log in data]
 
-        som = joblib.load(som_file)
+    encoder = joblib.load(encoder_file)
+    encoded_features = encoder.transform(features).toarray()
 
-        labels = []
-        for feat in encoded_features:
-            winner = som.winner(feat)
-            if winner == (0, 0):
-                labels.append(0)  # Anomaly
-            else:
-                labels.append(1)  # Normal
+    som = joblib.load(som_file)
 
-        anomaly = Settings.load().ml_anomaly_cluster
-        for log, label in zip(data, labels):
-            log.label = label
-            log.save()
-            if log.label == anomaly:
-                email = create_incident(log=log)
-                if email is not False:
-                    emails.append(email)
-
-        if len(emails) != 0:
-            send_mass_mail(emails)
-
-        return True
-
-    else:
-        if train_som():
-            classify_som()
-            return True
+    labels = []
+    for feat in encoded_features:
+        winner = som.winner(feat)
+        if winner == (0, 0):
+            labels.append(0)  # Anomaly
         else:
-            return False
+            labels.append(1)  # Normal
 
-    return False
+    emails, message = zip_logs(
+        logs=data, 
+        labels=labels, 
+        anomaly_label = Settings.load().ml_anomaly_cluster
+        )
+
+    if len(emails) != 0:
+        send_mass_mail(emails)
+
+    return f"SOM Classification: Success."
+
 
 #######################################################################################################
 # 
