@@ -45,10 +45,10 @@ def get_logs(count):
 def zip_logs(logs=None, labels=None, anomaly_label=0):
 
     if logs is None:
-        return None, "Logs dont exist"
+        return None, "Classification: Logs dont exist"
 
     if labels is None:
-        return None, "Labels dont exist"
+        return None, "Classification: Labels dont exist"
 
     emails = []
     for log, label in zip(logs, labels):
@@ -82,7 +82,6 @@ def _train(model=KMeans(2, random_state=42), file_prefix='kmeans'):
 
 # sklearn ML classify function
 def _classify(file_prefix = 'kmeans'):
-    emails = None
     clf_file = file_prefix + '.joblib'
     encoder_file = file_prefix + '_encoder.joblib'
 
@@ -110,6 +109,9 @@ def _classify(file_prefix = 'kmeans'):
         labels=labels, 
         anomaly_label = Settings.load().ml_anomaly_cluster
         )
+
+    if emails is None:
+        return message
 
     print(emails)
     if emails is not None and len(emails) != 0:
@@ -185,7 +187,6 @@ def train_som():
     return "SOM Training: Success."
 
 def classify_som():
-    emails = []
     som_file = 'som.joblib'
     encoder_file = 'som_encoder.joblib'
 
@@ -219,6 +220,9 @@ def classify_som():
         labels=labels, 
         anomaly_label = Settings.load().ml_anomaly_cluster
         )
+
+    if emails is None:
+        return message
 
     if len(emails) != 0:
         send_mass_mail(emails)
