@@ -10,8 +10,10 @@ class Settings(models.Model):
     # RadioSelect choices
     ML_MODEL_CHOICES = [
         (0, 'K-Means'),
-        (1, 'AHC'),
-        (2, 'SOM'),
+        (1, 'Agglomerative Clustering'),
+        (2, 'DBSCAN'),
+        (3, 'HDBSCAN'),
+        (4, 'SOM'),
     ]
     ML_CLUSTER_CHOICES = [
         (2, '2'),
