@@ -16,6 +16,7 @@ class SettingsPage(forms.ModelForm):
             "contact_email",
             "items_per_page",
             "ping_retries",
+            "graph_interval",
             "notifications_mode",
             "email_host",
             "email_port",
@@ -39,13 +40,16 @@ class SettingsPage(forms.ModelForm):
                 'label': 'Contact email',
                 'placeholder': 'admin@example.com',
             }),
-            "items_per_page": NumberInput(attrs={
-                'class': "form-control",
-                'placeholder': '20'
+            "items_per_page": Select(attrs={
+                'class': "form-control"
             }),
             "ping_retries": NumberInput(attrs={
                 'class': "form-control",
                 'placeholder': '20'
+            }),
+            "graph_interval": Select(attrs={
+                'class': "form-control",
+                'placeholder': 'Interval in hours, eg. 12'
             }),
             "notifications_mode": Select(attrs={
                 'class': "form-control",

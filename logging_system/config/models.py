@@ -49,14 +49,29 @@ class Settings(models.Model):
         (3, 'Both')
     ]
 
+    PAGE_CHOICES = [
+        (15, '15'),
+        (20,'20'),
+        (25,'25'),
+        (50,'50'),
+        (100,'100')
+    ]
+    INTERVAL_CHOICES = [
+        (1, '1'),
+        (3, '3'),
+        (6, '6'),
+        (12, '12'),
+        (24, '24')
+    ]
 
     # Site settings
     site_name = models.CharField(max_length=200, default='My Site')
     maintenance_mode = models.BooleanField(default=False, choices=BOOL_CHOICES)
     contact_email = models.EmailField(default='admin@example.com')
-    items_per_page = models.IntegerField(default=20)
+    items_per_page = models.IntegerField(default=20, choices=PAGE_CHOICES)
     
     ping_retries = models.IntegerField(default=5)
+    graph_interval = models.IntegerField(default=6, choices=INTERVAL_CHOICES)
 
     # Email settings
     notifications_mode = models.IntegerField(choices=NOTIFICATION_CHOICES, default=0)

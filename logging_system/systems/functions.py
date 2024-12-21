@@ -39,8 +39,9 @@ def ping_systems(systems, debug=True):
 
 
 # Ping graph function
-def get_ping_graph(system, height=300, width=900, range=144):
-    pings = Ping.objects.filter(system=system).order_by('-id')[:range]
+def get_ping_graph(system, height=300, width=900):
+    range_ = Settings.load().graph_interval * 12
+    pings = Ping.objects.filter(system=system).order_by('-id')[:range_]
     n = 0
     timestamps = [n + i/12 for i,_ in enumerate(pings)]
     ping_values = [ping.ping for ping in pings][::-1]
@@ -101,8 +102,9 @@ def discover_systems(ip_range, system_type=None, prefix=""):
     return True
 
 # System packet loss function
-def get_packet_loss(system, range=144):
-    pings = Ping.objects.filter(system=system).order_by('-id')[:range]
+def get_packet_loss(system):
+    range_ = Settings.load().graph_interval * 12
+    pings = Ping.objects.filter(system=system).order_by('-id')[:range_]
     count = pings.count()
     none_count = 0
     for ping in pings:
