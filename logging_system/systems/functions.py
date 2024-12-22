@@ -1,5 +1,10 @@
+import csv
+from django.http import HttpResponse
+
 from django.core.mail import send_mass_mail
 import re
+import csv
+from django.http import HttpResponse
 from ping3 import ping
 import plotly.graph_objs as go
 from incidents.functions import create_incident
@@ -112,3 +117,29 @@ def get_packet_loss(system):
             none_count += 1
 
     return round(none_count/144*count, 2)
+
+
+def export_csv():
+
+    systems = System.objects.all()
+
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = f"attachment; filename=systems.csv"
+
+    file = csv.writer(response)
+    
+    file.writerow(['name', 'ip', 'system_type', 'port', 'location', 'town', 'address', 'room', 'model', 'notes'])
+    for system in systems:
+        file.writerow([
+            system.name,
+            system.ip, 
+            system.get_system_type_display(), 
+            system.port if system.port is not None else None,
+            system.location if system.location is not None else None,
+            system.location.town if system.location is not None else None,
+            system.location.address if system.location is not None else None,
+            system.location.room if system.location is not None else None,
+            system.model if system.model is not None else None,
+            system.notes if system.port is not None else None])
+
+    return response

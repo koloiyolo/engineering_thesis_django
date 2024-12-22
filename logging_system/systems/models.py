@@ -9,7 +9,20 @@ BOOL_CHOICES = [
 ]
 SYSTEM_TYPE_CHOICES = [
     (0, 'Device'),
-    (1, 'Service'),
+    (1, 'Computer'),
+    (2, 'Server'),
+    (3, 'Mobile Phone'),
+    (4, 'Network Device'),
+    (5, 'Router'),
+    (6, 'Switch'),
+    (7, 'Access Point'),
+    (8, 'IoT'),
+    (100, 'Service'),
+    (101, 'Virtual Machine'),
+    (102, 'Container'),
+    (103, 'Web Application'),
+    (104, 'Dataabse'),
+    (105, 'Backend'),
 ]
 
 class System(models.Model):

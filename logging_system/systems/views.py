@@ -3,7 +3,7 @@ from django.contrib import messages
 from django.db.models import Q
 from django.contrib.auth.decorators import login_required
 
-from .functions import get_ping_graph, get_packet_loss
+from .functions import get_ping_graph, get_packet_loss, export_csv
 from logging_system.functions import pagination, logs_short_message
 
 from .models import System, Ping
@@ -47,7 +47,10 @@ def systems(request, location=None, system_type=None):
                 system_type=system_type
             ).order_by("id")
         else:
-            systems = System.objects.filter(system_type=system_type).order_by("id")
+            if system_type == 0:
+                systems = System.objects.filter(system_type__lt=100).order_by("id")
+            else:
+                systems = System.objects.filter(system_type__gte=100).order_by("id")
     else:
         if q:
             systems = System.objects.filter(
@@ -251,3 +254,6 @@ def remove(request, pk):
     delete_it.delete()
     messages.success(request, "System removed successfully")
     return redirect('systems:list')
+
+def export(request):
+    return export_csv()

@@ -5,6 +5,7 @@ app_name = 'systems'
 
 urlpatterns = [
     path('', views.systems, name='list'),
+    path('export', views.export, name='export'),
     path('location/<int:location>', views.systems, name='location'),
     path('type/<int:system_type>', views.systems, name='type'),
     path('view/<int:pk>', views.system, name='view'),
