@@ -75,5 +75,5 @@ def export(request, pk=None):
             response = export_csv(logs, count=count, file_name=file_name, labels=labels)
             return response
     else:
-        return render(request, 'log/export.html', {'form': form})
-    return render(request, 'log/export.html', {'form': form})
+        return render(request, 'log/export.html', {'form': form, 'system': system.id if system else None})
+    return render(request, 'log/export.html', {'form': form, 'system': system.id if system else None})
