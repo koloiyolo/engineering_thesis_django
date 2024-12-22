@@ -1,6 +1,6 @@
 from django.http import HttpResponse
 import csv
-
+import random
 from .models import Log
 from config.models import Settings
 from incidents.functions import create_incident
