@@ -10,7 +10,7 @@ Jakub Kołodziej's engineering thesis project.
 
 
 ## Features
-* Log collection(using Syslog-ng)
+* Log collection(using Syslog-ng).
 * Log classification using unsupervised learning algorithms like:
   * K-Means,
   * AHC Clustering,
@@ -20,11 +20,11 @@ Jakub Kołodziej's engineering thesis project.
 * Notifications on incidents.
 * Basic CRUD operations regarding system, location and incident management.
 * Audit Log. [#5](https://github.com/koloiyolo/engineering_thesis_django/pull/5)
+* Log records CSV export. [#8](https://github.com/koloiyolo/engineering_thesis_django/pull/8)
 
 ### To Do:
 * Report generation
 * Mail notifications
-* Log CSV export
 
 ## Requirements
 Dependencies:
