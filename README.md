@@ -24,6 +24,7 @@ Jakub Kołodziej's engineering thesis project.
 ### To Do:
 * Report generation
 * Mail notifications
+* Log CSV export
 
 ## Requirements
 Dependencies:
