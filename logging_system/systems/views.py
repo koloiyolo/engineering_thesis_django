@@ -256,4 +256,5 @@ def remove(request, pk):
     return redirect('systems:list')
 
 def export(request):
+    AuditLog.objects.create(user=request.user, text=f"{request.user} exported systems data successfully.")
     return export_csv()

@@ -13,6 +13,7 @@ from .models import Log
 from .forms import ExportToCsvForm
 from .functions import export_csv
 
+from audit_log.models import AuditLog
 from systems.models import System
 
 @login_required
@@ -73,6 +74,7 @@ def export(request, pk=None):
                 logs = Log.objects.filter(host=system.ip).order_by("-id")
                 
             response = export_csv(logs, count=count, file_name=file_name, labels=labels)
+            AuditLog.objects.create(user=request.user, text=f"{request.user} exported logs data successfully.")
             return response
     else:
         return render(request, 'log/export.html', {'form': form, 'system': system.id if system else None})
