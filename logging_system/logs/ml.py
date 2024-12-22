@@ -17,48 +17,10 @@ import os
 
 
 from .models import Log
+from .functions import zip_logs, get_logs
 from config.models import Settings
 from incidents.functions import create_incident
 # from .functions import get_logs, send_anomaly_emails
-
-# get logs from database
-def get_logs(count):
-    data = None
-    _count = Log.objects.all().count()
-    if count > _count:
-        offset = random.randint(0, (_count - count))
-        data = Log.objects.all()[offset:offset + count]
-    else:
-        data = Log.objects.all()
-    
-    data = Log.objects.all().filter(label=None)[:2500]
-
-    if data.count() == 0:
-        data = None
-        return data
-
-    return data
-
-# zips logs with labels and saves them to database
-# creates incidents
-# returns emails
-def zip_logs(logs=None, labels=None, anomaly_label=0):
-
-    if logs is None:
-        return None, "Classification: Logs dont exist"
-
-    if labels is None:
-        return None, "Classification: Labels dont exist"
-
-    emails = []
-    for log, label in zip(logs, labels):
-            log.label = label
-            log.save()
-            if log.label == anomaly_label:
-                email = create_incident(log=log)
-                if email is not False:
-                    emails.append(email)
-    return emails, "Zipping complete"
 
 
 # sklearn ML train function prototype

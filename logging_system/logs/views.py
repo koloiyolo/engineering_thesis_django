@@ -68,23 +68,12 @@ def export(request, pk=None):
 
             logs = None
             if system is None:
-                print("None")
-                logs = Log.objects.all()
+                logs = Log.objects.all().order_by("-id")
             else:
-                print("not None")
-                logs = Log.objects.filter(host=system.ip)
-            
+                logs = Log.objects.filter(host=system.ip).order_by("-id")
+                
             response = export_csv(logs, count=count, file_name=file_name, labels=labels)
             return response
     else:
         return render(request, 'log/export.html', {'form': form})
     return render(request, 'log/export.html', {'form': form})
-
-
-
-
-
-    if system:
-        return redirect(f"system:logs {system.id}")
-    else:
-        return redirect(f"logs:list")
