@@ -148,7 +148,7 @@ def logs(request, pk, label=None):
         'systems': systems,
         'logs': page,
         'clusters': clusters}
-    return render(request, 'misc/logs.html', data)
+    return render(request, 'log/list.html', data)
 
 
 @login_required
