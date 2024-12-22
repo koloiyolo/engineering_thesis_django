@@ -1,13 +1,13 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
-from django.contrib.auth.decorators import login_required
+from django.contrib.admin.views.decorators import staff_member_required
 
 from .forms import SettingsPage
 from .models import Settings
 from audit_log.models import AuditLog
 
 # Create your views here.
-@login_required
+@staff_member_required(login_url='/accounts/login/')
 def settings(request):
     print("Working")
     if request.user.is_authenticated:

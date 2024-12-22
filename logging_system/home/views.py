@@ -21,6 +21,7 @@ def health_check(request):
 
 # Create your views here.
 
+@login_required
 def home(request):
     
     response = None
@@ -63,30 +64,10 @@ def home(request):
             'labels_graph': labels_graph,
             'uptime_graph': uptime_graph}
 
-    if request.method == 'POST':
-        username = request.POST['username']
-        password = request.POST['password']
-        user = authenticate(request, username=username, password=password)
-        if user is not None:
-            login(request, user)
-            AuditLog.objects.create(user=user, text=f"{user} logged in.")
-            return redirect('home')
-
-        else:
-            messages.success(request, "Failed to log in, try again!")
-            return redirect('home')
-
-    else:
-        return render(request, 'misc/home.html', data)
     return render(request, 'misc/home.html', data)
 
 
 def logout_user(request):
-    logout(request)
-    messages.success(request, "You have been logged out")
-    return redirect('home')
-
-def login_user(request):
     logout(request)
     messages.success(request, "You have been logged out")
     return redirect('home')
@@ -107,6 +88,6 @@ def register_user(request):
         pass
     else:
         form = SignUpForm()
-        return render(request, 'auth/register.html', {'form': form})
+        return render(request, 'registration/register.html', {'form': form})
         
-    return render(request, 'auth/register.html', {'form': form})
+    return render(request, 'registration/register.html', {'form': form})

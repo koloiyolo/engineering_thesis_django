@@ -1,5 +1,4 @@
 {% extends 'elements/base.html' %} {% block content %}
-<h1>Register</h1>
 <br />
 <div class="col-md-6 offset-md-3">
     <form method="POST" action="{% url 'register' %}">
@@ -14,7 +13,9 @@
                 aria-label="Close"
                 ></button>
         </div>
-        {% endif %} {{ form.as_p }}
+        {% endif %} 
+        <h3>Register</h3>
+        {{ form.as_p }}
         <button type="submit" class="btn btn-dark"> Sign Up </button>
         <a class="btn btn-secondary" href="{% url 'home' %}"> Login instead </a>
     </form>
