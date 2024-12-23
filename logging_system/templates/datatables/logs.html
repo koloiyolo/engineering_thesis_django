@@ -13,7 +13,13 @@
                     <div class="col-2">{{ log.datetime }}</div>
                     <div class="col-2">{{ log.host }}</div>
                     <div class="col-2">{{ log.program }}</div>
-                    <div class="col-1">{{ log.label }}</div>
+                    {% if log.label is none %}
+                        <div class="col-1"> Not classified </div>
+                    {% elif log.label %}
+                        <div class="col-1"> Normal </div>
+                    {% else %}
+                        <div class="col-1 text-danger"> Anomaly </div>
+                    {% endif %}
                     <div class="col-5">{{ log.short_message }}</div>
                 </div>
             </div>
