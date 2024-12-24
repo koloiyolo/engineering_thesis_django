@@ -24,12 +24,12 @@ from incidents.functions import create_incident
 
 
 # sklearn ML train function prototype
-def train():
+def train(clf=None, vec=None):
 
     settings = Settings.load()
-    clf = settings.ml_classifier
+    clf = clf if clf is not None else settings.ml_classifier
     clf_tag = settings.get_ml_classifier_display()
-    vec = settings.ml_vectorizer
+    vec = vec if vec is not None else settings.ml_vectorizer
     clf_params = ast.literal_eval(settings.ml_classifier_parameters) if settings.ml_classifier_parameters != "" else None
     vec_params = ast.literal_eval(settings.ml_vectorizer_parameters) if settings.ml_vectorizer_parameters != "" else None
 

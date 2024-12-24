@@ -13,8 +13,8 @@ def ml_classify_task ():
     return output
 
 @shared_task
-def ml_train_task ():
-    output = train()
+def ml_train_task (clf=None, vec=None):
+    output = train(clf=clf, vec=vec)
     AuditLog.objects.create(user=None, text=output)
     return output
     

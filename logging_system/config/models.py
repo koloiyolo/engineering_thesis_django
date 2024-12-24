@@ -110,14 +110,14 @@ class Settings(models.Model):
                     Log.objects.update(label=None)
 
                     from logs.tasks import ml_train_task
-                    ml_train_task.delay()
+                    ml_train_task.delay(clf=self.ml_classifier)
 
                 current = Settings.load().ml_vectorizer
                 if self.on_model_change_reset and self.ml_vectorizer !=  current:
                     Log.objects.update(label=None)
 
                     from logs.tasks import ml_train_task
-                    ml_train_task.delay()
+                    ml_train_task.delay(vec=self.ml_vectorizer)
         
         super().save(*args, **kwargs)
 
