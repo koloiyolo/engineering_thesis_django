@@ -84,9 +84,10 @@ class Settings(models.Model):
 
     # ML settings
     ml_classifier = models.IntegerField(default=0, choices=ML_CLASSIFIER_CHOICES)
+    ml_classifier_parameters = models.TextField(blank=True, default=None)
     ml_vectorizer = models.IntegerField(default=0, choices=ML_VECTORIZER_CHOICES)
-    on_model_change_reset_labels = models.BooleanField(choices=BOOL_CHOICES, default=False)
-    ml_clusters = models.IntegerField(default=2, choices=ML_CLUSTER_CHOICES)
+    ml_vectorizer_parameters = models.TextField(blank=True, default=None)
+    on_model_change_reset = models.BooleanField(choices=BOOL_CHOICES, default=False)
     ml_anomaly_cluster = models.IntegerField(default=0, choices=ML_ANOMALY_CHOICES)
     ml_train = models.IntegerField(default=10000)
     ml_classify = models.IntegerField(default = 2000)
@@ -105,21 +106,14 @@ class Settings(models.Model):
             
             if self.pk:
                 current = Settings.load().ml_classifier
-                if self.on_model_change_reset_labels and self.ml_classifier != current:
-                    Log.objects.update(label=None)
-
-                    from logs.tasks import ml_train_task
-                    ml_train_task.delay()
-
-                current = Settings.load().ml_clusters
-                if self.on_model_change_reset_labels and self.ml_clusters !=  current:
+                if self.on_model_change_reset and self.ml_classifier != current:
                     Log.objects.update(label=None)
 
                     from logs.tasks import ml_train_task
                     ml_train_task.delay()
 
                 current = Settings.load().ml_vectorizer
-                if self.on_model_change_reset_labels and self.ml_vectorizer !=  current:
+                if self.on_model_change_reset and self.ml_vectorizer !=  current:
                     Log.objects.update(label=None)
 
                     from logs.tasks import ml_train_task

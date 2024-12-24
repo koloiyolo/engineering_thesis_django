@@ -114,7 +114,7 @@ def logs(request, pk, label=None):
     system = System.objects.get(id=pk)
     logs = None
     q = request.GET.get('search', '')
-    if label:
+    if label is not None:
         if q:
             logs = logs.objects.filter(
                 Q(host__icontains=q) |
@@ -137,7 +137,7 @@ def logs(request, pk, label=None):
             logs = Log.objects.filter(host=system.ip).order_by('-id')
     if not logs.exists():
         messages.warning(request, f"Label '{label}' is empty!")
-        return redirect('logs')
+        return redirect('logs:list')
     
     page = pagination(logs, request.GET.get("page"))
     clusters = Log.objects.filter(label__isnull=False).values_list('label', flat=True).distinct()

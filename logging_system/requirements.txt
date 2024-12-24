@@ -4,7 +4,6 @@ numpy
 pandas
 plotly
 sklearn_minisom
-minisom>=2.3.3
 # backend
 django
 celery

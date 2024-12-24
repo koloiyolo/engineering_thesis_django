@@ -80,13 +80,23 @@
                         <br />
                         <h5>Machine Learning Settings</h5>
                         <div class="row">
-                            <div class="col">
+                            <div class="col-4">
                                 {{ form.ml_classifier.label_tag }}
                                 {{ form.ml_classifier }}
                             </div>
-                            <div class="col">
+                            <div class="col-8">
+                                {{ form.ml_classifier_parameters.label_tag }}
+                                {{ form.ml_classifier_parameters }}
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-4">
                                 {{ form.ml_vectorizer.label_tag }}
                                 {{ form.ml_vectorizer }}
+                            </div>
+                            <div class="col-8">
+                                {{ form.ml_vectorizer_parameters.label_tag }}
+                                {{ form.ml_vectorizer_parameters }}
                             </div>
                         </div>
                         <div class="row">
@@ -95,19 +105,13 @@
                         </div>
                         <div class="row">
                             <div class="col">
-                                {{ form.on_model_change_reset_labels.label_tag }}
-                                {{ form.on_model_change_reset_labels }}
-                            </div>
-                            <div class="col">
-                                {{ form.ml_clusters.label_tag }}
-                                {{ form.ml_clusters }}
+                                {{ form.on_model_change_reset.label_tag }}
+                                {{ form.on_model_change_reset }}
                             </div>
                             <div class="col">
                                 {{ form.ml_anomaly_cluster.label_tag }}
                                 {{ form.ml_anomaly_cluster }}
                             </div>
-                        </div>
-                        <div class="row">
                             <div class="col">
                                 {{ form.ml_train.label_tag }}
                                 {{ form.ml_train }}

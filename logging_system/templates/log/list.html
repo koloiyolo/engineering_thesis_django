@@ -64,11 +64,14 @@
                                 Label:
                                 </a>
                                 <ul class="dropdown-menu"  style="max-height: 300px; overflow-y: auto;">
+                                    {% if system %}
+                                    <li><a class="dropdown-item" href="{% url 'systems:logs' system.id %}">All</a></li>
+                                    <li><a class="dropdown-item" href="{% url 'systems:label' system.id 0 %}"> Anomaly </a></li>
+                                    <li><a class="dropdown-item" href="{% url 'systems:label' system.id 1 %}"> Normal </a></li>
+                                    {% else %}
                                     <li><a class="dropdown-item" href="{% url 'logs:list' %}">All</a></li>
-                                    {% if clusters %}
-                                    {% for cluster in clusters %}
-                                        <li><a class="dropdown-item" href="{% url 'logs:list' cluster %}"> {{ cluster }} </a></li>
-                                    {% endfor %}
+                                    <li><a class="dropdown-item" href="{% url 'logs:list' 0 %}"> Anomaly </a></li>
+                                    <li><a class="dropdown-item" href="{% url 'logs:list' 1 %}"> Normal </a></li>
                                     {% endif %}
                                 </ul>
                             </div>
