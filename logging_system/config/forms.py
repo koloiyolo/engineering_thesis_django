@@ -24,9 +24,11 @@ class SettingsPage(forms.ModelForm):
             "email_host_password",
             "email_use_ssl",
             "email_from_address",
-            "ml_model",
-            "on_model_change_reset_labels",
-            "ml_clusters",
+            "ml_classifier",
+            "ml_vectorizer",
+            "ml_classifier_parameters",
+            "ml_vectorizer_parameters",
+            "on_model_change_reset",
             "ml_anomaly_cluster",
             "ml_train",
             "ml_classify"
@@ -83,16 +85,25 @@ class SettingsPage(forms.ModelForm):
                 'label': 'Email address',
                 'placeholder': 'user@example.com',                
             }),
-            "ml_model": Select(attrs={
+            "ml_classifier": Select(attrs={
                 'class': "form-control",
             }),
-            "on_model_change_reset_labels": Select(attrs={
+            "ml_classifier_parameters": TextInput(attrs={
+                'class': "form-control",
+                'label': 'Classifier hyperparameters',
+                'placeholder': "eg. {'n_clusters': 2, 'learning_rate': 0.01, 'eps': 0.8}",                
+            }),
+            "ml_vectorizer": Select(attrs={
                 'class': "form-control",
             }),
-            "ml_clusters": Select(attrs={
+            "ml_vectorizer_parameters": TextInput(attrs={
+                'class': "form-control",
+                'label': 'Classifier hyperparameters',
+                'placeholder': "eg. {lowercase=True, preprocessor=None}",                
+            }),
+            "on_model_change_reset": Select(attrs={
                 'class': "form-control",
             }),
-
             "ml_anomaly_cluster": Select(attrs={
                 'class': "form-control",
             }),
