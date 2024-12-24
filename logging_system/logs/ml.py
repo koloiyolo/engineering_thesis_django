@@ -6,6 +6,7 @@ from sklearn.cluster import KMeans, AgglomerativeClustering, DBSCAN, HDBSCAN
 # from sklearn.preprocessing import OneHotEncoder
 from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
 from sklearn.utils import Bunch
+from sklearn_minisom import MiniSOM
 
 import pandas as pd
 import random
@@ -13,11 +14,11 @@ import joblib
 import time
 import os
 
-
 from .models import Log
 from .functions import zip_logs, get_logs
 from config.models import Settings
 from incidents.functions import create_incident
+
 # from .functions import get_logs, send_anomaly_emails
 
 
@@ -43,7 +44,8 @@ def train():
         KMeans(clusters) if clf == 0 else
         AgglomerativeClustering(n_clusters=clusters) if clf == 1 else
         DBSCAN(eps=0.8) if clf == 2 else 
-        HDBSCAN()
+        HDBSCAN() if clf == 3 else
+        MiniSOM()
         )
 
     vectorizer = (

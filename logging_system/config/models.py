@@ -13,7 +13,7 @@ class Settings(models.Model):
         (1, 'Agglomerative Clustering'),
         (2, 'DBSCAN'),
         (3, 'HDBSCAN'),
-    #    (4, 'SOM'),
+        (4, 'SOM')
     ]
 
     ML_VECTORIZER_CHOICES = [

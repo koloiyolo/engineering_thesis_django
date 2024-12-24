@@ -3,8 +3,8 @@ scikit-learn
 numpy
 pandas
 plotly
-minisom
-
+sklearn_minisom
+minisom>=2.3.3
 # backend
 django
 celery
