@@ -38,7 +38,7 @@ def ping_systems(systems, debug=True):
     if len(emails) != 0:
         send_mass_mail(emails)
 
-    AuditLog.objects.create(user=None, text=f"All systems pinged.")
+    AuditLog.objects.create(user=None, message=f"All systems pinged.")
     return True
 
 
@@ -119,9 +119,14 @@ def get_packet_loss(system):
     return round(none_count/144*count, 2)
 
 
-def export_csv():
+def export_csv(system_type=None):
 
-    systems = System.objects.all()
+    systems = (
+                System.objects.all() if system_type is None else 
+                System.objects.filter(system_type__lt=100).order_by("id") 
+                if system_type == 0 else
+                System.objects.filter(system_type__gte=100).order_by("id")
+                )
 
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = f"attachment; filename=systems.csv"
@@ -143,3 +148,4 @@ def export_csv():
             system.notes if system.port is not None else None])
 
     return response
+    

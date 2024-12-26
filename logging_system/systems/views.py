@@ -14,6 +14,7 @@ from config.models import Settings
 from .forms import SystemForm, DiscoverSystemsForm
 from audit_log.models import AuditLog
 from .tasks import discover_systems_task
+import datetime
 # Create your views here.
 
 @login_required
@@ -47,10 +48,10 @@ def systems(request, location=None, system_type=None):
                 system_type=system_type
             ).order_by("id")
         else:
-            if system_type == 0:
-                systems = System.objects.filter(system_type__lt=100).order_by("id")
-            else:
-                systems = System.objects.filter(system_type__gte=100).order_by("id")
+            systems = (
+                System.objects.filter(system_type__lt=100).order_by("id") 
+                if system_type == 0 else
+                System.objects.filter(system_type__gte=100).order_by("id"))
     else:
         if q:
             systems = System.objects.filter(
@@ -209,7 +210,7 @@ def add(request):
     if request.method == 'POST':
         if form.is_valid():
             add_record = form.save()
-            AuditLog.objects.create(user=request.user, text=f"{request.user} created system {add_record} successfully.")
+            AuditLog.objects.create(user=request.user, message=f"User {request.user} created system {add_record} successfully.")
             messages.success(request, "System added successfully")
             return redirect('systems:list')
     else:
@@ -226,7 +227,7 @@ def discover(request):
             system_type = form.cleaned_data.get("system_type")
             prefix = form.cleaned_data.get("prefix") if form.cleaned_data.get("prefix") else ""
             discover_systems_task.delay(ip_range, system_type=system_type, prefix=prefix)
-            AuditLog.objects.create(user=request.user, text=f"{request.user} scheluded discovery task on {ip_range} ip range.")
+            AuditLog.objects.create(user=request.user, message=f"User {request.user} scheluded discovery task on {ip_range} ip range.")
             messages.success(request, "System discovery sheluded")
             return redirect('systems:list')
     else:
@@ -240,7 +241,7 @@ def edit(request, pk):
     form = SystemForm(request.POST or None, instance=update_it)
     if form.is_valid():
         form.save()
-        AuditLog.objects.create(user=request.user, text=f"{request.user} updated system {update_it} successfully.")
+        AuditLog.objects.create(user=request.user, message=f"User {request.user} updated system {update_it} successfully.")
         messages.success(request, "System updated successfully")
         return redirect('systems:list')
     else:
@@ -250,11 +251,30 @@ def edit(request, pk):
 @login_required
 def remove(request, pk):
     delete_it = System.objects.get(id=pk)
-    AuditLog.objects.create(user=request.user, text=f"{request.user} removed system {delete_it} successfully.")
+    AuditLog.objects.create(user=request.user, message=f"User {request.user} removed system {delete_it} successfully.")
     delete_it.delete()
     messages.success(request, "System removed successfully")
-    return redirect('systems:list')
+    return redirect(request.META.get('HTTP_REFERER', 'systems:list'))
 
-def export(request):
-    AuditLog.objects.create(user=request.user, text=f"{request.user} exported systems data successfully.")
-    return export_csv()
+@login_required
+def export_to_csv(request, system_type=None):
+    AuditLog.objects.create(user=request.user, message=f"User {request.user} exported systems data to CSV successfully.")
+    return export_csv(system_type=system_type)
+
+@login_required
+def report(request, system_type=None):
+    AuditLog.objects.create(user=request.user, message=f"User {request.user} created systems report.")
+
+    systems = (
+                System.objects.all() if system_type is None else 
+                System.objects.filter(system_type__lt=100).order_by("id") 
+                if system_type == 0 else
+                System.objects.filter(system_type__gte=100).order_by("id")
+                )
+
+    current_date = timezone.now()
+    return render(request, 'report/system.html', {
+                'date': current_date,
+                'user': request.user,
+                'systems': systems
+                })

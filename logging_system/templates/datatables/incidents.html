@@ -8,14 +8,18 @@
             data-bs-target="#collapse{{ incident.id }}"
             aria-expanded="false"
             >
-            <div class="container text-start">
+            <div class="container text-">
                 <div class="row">
                     <div class="col-1">{{ incident.id }}</div>
-                    <div class="col-2">{{ incident.date }}</div>
-                    <div class="col-1">{{ incident.time }}</div>
+                    <div class="col-2">{{ incident.date }} {{ incident.time }}</div>
                     <div class="col-2">{{ incident.system.name }}</div>
                     <div class="col-2">{{ incident.get_tag_display }}</div>
                     <div class="col-4">{{ incident.title }}</div>
+                    {% if incident.user %}
+                    <div class="col-1"> {{ incident.user.username }} </div>
+                    {% else %}
+                    <div class="col-1 text-danger"> No </div>
+                    {% endif %}
                 </div>
             </div>
         </button>
@@ -26,8 +30,8 @@
         data-bs-parent="#accordionServices"
         >
         <div class="accordion-body">
-            <div id="ping-plot">{{ incident.graph|safe }}</div>
             <div class="btn-group" role="group">
+                <a class="btn btn-success" href="{% url 'incidents:resolve' incident.id%}"> Resolve <a>
                 <a href="{% url 'incidents:view' incident.id %}" class="btn btn-dark">
                 View
                 </a>

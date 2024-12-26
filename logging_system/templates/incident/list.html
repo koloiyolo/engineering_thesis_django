@@ -1,19 +1,16 @@
 {% extends 'elements/base.html' %} {% block content %}
 <div class="col-md-12">
-    {% if incidents %}
     <div class="d-flex justify-content-between">
-        <div class="btn-group mb-3">
-            <button class="btn btn-secondary">
-                <a class="text-decoration-none text-white" href="{{ request.META.HTTP_REFERER|default:'/' }}">&laquo; Back</a>
-            </button>
-            <button type="button" class="btn btn-outline-dark dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+        <div class="input-group mb-3">
+            <a class="btn btn-secondary" href="{{ request.META.HTTP_REFERER|default:'/' }}">&laquo; Back</a>
+            <a class="btn btn-outline-dark dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
                 {% if system %}
                     {{ system }}'s incidents
                 {% else %}
                     All incidents
                 {% endif %}
-            </button>
-            <ul class="dropdown-menu" style="max-height: 300px; overflow-y: auto;">
+            </a>
+            <ul class="dropdown-menu" style="max-height: 180px; overflow-y: auto;">
                 <li><a class="dropdown-item" href="{% url 'incidents:list' %}">All</a></li>
                 {% if systems %}
                 {% for obj in systems %}
@@ -23,6 +20,24 @@
                 {% endfor %}
                 {% endif %}
             </ul>
+            <a class="btn btn-dark dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" > Create Report </a>
+            <ul class="dropdown-menu" style="max-height: 360px; overflow-y: auto;">
+                {% comment %} <li><a href="{% url 'incidents:report' %}"class="dropdown-item">Today</a></li> {% endcomment %}
+                <li><a href="{% url 'incidents:report' 0 %}" class="dropdown-item bg-secondary text-bg-dark">All</a></li>
+                <li><a href="{% url 'incidents:report' 1 %}"class="dropdown-item">Last Week</a></li>
+                <li><a href="{% url 'incidents:report' 2 %}"class="dropdown-item">Last Month</a></li>
+                {% comment %} <li><a href="{% url 'incidents:report' %}"class="dropdown-item">Custom</a></li> {% endcomment %}
+                <li><a href="{% url 'incidents:report' 0 0 %}" class="dropdown-item bg-secondary text-bg-dark">System down</a></li>
+                {% comment %} <li><a href="{% url 'incidents:report_tag' 0 %}" class="dropdown-item">Today</a></li> {% endcomment %}
+                <li><a href="{% url 'incidents:report' 1 0 %}" class="dropdown-item">Last Week</a></li>
+                <li><a href="{% url 'incidents:report' 2 0 %}" class="dropdown-item">Last Month</a></li>
+                {% comment %} <li><a href="{% url 'incidents:report_tag' 0 %}" class="dropdown-item">Custom</a></li> {% endcomment %}
+                <li><a href="{% url 'incidents:report' 0 1 %}" class="dropdown-item bg-secondary text-bg-dark">Log anomaly</a></li>
+                {% comment %} <li><a href="{% url 'incidents:report_tag' 1 %}" class="dropdown-item">Today</a></li> {% endcomment %}
+                <li><a href="{% url 'incidents:report' 1 1 %}" class="dropdown-item">Last Week</a></li>
+                <li><a href="{% url 'incidents:report' 2 1 %}" class="dropdown-item">Last Month</a></li>
+                {% comment %} <li><a href="{% url 'incidents:report_tag' 1 %}" class="dropdown-item">Custom</a></li> {% endcomment %}
+            </ul>
         </div>
         <form method="get" class="align-self-center">
             <div class="input-group">
@@ -31,23 +46,15 @@
             </div>
         </form>
     </div>
-    <div class="input-group mb-3">
-        <a class="btn btn-outline-dark disabled" > Create analysis </a>
-        <a class="btn btn-dark">Today</a>
-        <a class="btn btn-dark">Last Week</a>
-        <a class="btn btn-dark">Last Month</a>
-        <a class="btn btn-dark">Last Year</a>
-    </div>
     <div class="accordion" id="accordionServices">
         <div class="accordion-item">
             <h2 class="accordion-header">
-                <button class="accordion-button collapsed">
+                <div class="accordion-button collapsed">
                     <div class="container text-start">
                         <div class="row">
                             <div class="col-1">ID:</div>
                             <div class="col-2">Date:</div>
-                            <div class="col-1">Time:</div>
-                            <div class="col-2">System name:</div>
+                            <div class="col-2">System:</div>
                             <div class="col-2"><a
                                 class="nav-link dropdown-toggle"
                                 href="#"
@@ -64,19 +71,21 @@
                                 </ul>
                             </div>
                             <div class="col-4">Title:</div>
+                            <div class="col-1">Resolved:</div>
                         </div>
                     </div>
-                </button>
+                </div>
             </h2>
         </div>
+        {% if incidents %}
         {% include 'datatables/incidents.html' with incidents=incidents %}
+        {% else %}
+        <br />
+        <h3>No incidents reported yet ;)</h3>
+        <br />
+    {% endif %}
     </div>
     <br />
     {% include 'elements/pagination.html' with objs=incidents %}
-    {% else %}
-    <br />
-    <h3>No incidents reported yet ;)</h3>
-    <br />
-    {% endif %}
 </div>
 {% endblock %}

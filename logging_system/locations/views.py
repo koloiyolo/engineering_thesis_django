@@ -31,7 +31,7 @@ def edit(request, pk):
     if request.method == 'POST':
         if form.is_valid():
             form.save()
-            AuditLog.objects.create(user=request.user, text=f"{request.user} updated location {update_it} successfully.")
+            AuditLog.objects.create(user=request.user, message=f"User {request.user} updated location {update_it} successfully.")
             messages.success(request, "Location edited successfully")
             # return redirect('locations:list')
             return redirect('home')
@@ -46,7 +46,7 @@ def add(request):
     if request.method == 'POST':
         if form.is_valid():
             add_record = form.save()
-            AuditLog.objects.create(user=request.user, text=f"{request.user} created location {add_record} successfully.")
+            AuditLog.objects.create(user=request.user, message=f"User {request.user} created location {add_record} successfully.")
             messages.success(request, "Location added successfully")
             return redirect('systems:add')
     else:
@@ -55,7 +55,7 @@ def add(request):
 
 def remove(request, pk):
     delete_it = Location.objects.get(id=pk)
-    AuditLog.objects.create(user=request.user, text=f"{request.user} removed location {delete_it} successfully.")
+    AuditLog.objects.create(user=request.user, message=f"User {request.user} removed location {delete_it} successfully.")
     delete_it.delete()
     messages.success(request, "Location removed successfully")
     referer = request.META.get('HTTP_REFERER', '/')
@@ -63,9 +63,3 @@ def remove(request, pk):
         return redirect(referer)
     else:
         return redirect('locations:list')
-
-# def function(request):
-#     if request.user.is_authenticated:
-#         pass
-#     else:
-#         return redirect('home')

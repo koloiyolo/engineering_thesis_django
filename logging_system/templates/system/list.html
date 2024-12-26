@@ -7,7 +7,34 @@
             <a class="btn btn-dark" href="{% url 'systems:add' %}"> Add System </a>
             <a class="btn btn-dark" href="{% url 'systems:discover' %}"> System Discovery </a>
             <a class="btn btn-dark" href="{% url 'locations:list' %}"> Manage Locations </a>
-            <a class="btn btn-dark" href="{% url 'systems:export' %}"> Export to CSV </a>
+            <a
+                class="btn btn-dark text-white dropdown-toggle"
+                href="#"
+                role="button"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+                >
+                Export to CSV
+            </a>
+            <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="{% url 'systems:export' %}">All systems</a></li>
+                <li><a class="dropdown-item" href="{% url 'systems:export' 0 %}"> Devices </a></li>
+                <li><a class="dropdown-item" href="{% url 'systems:export' 1 %}"> Services </a></li>
+            </ul>
+            <a
+                class="btn btn-dark text-white dropdown-toggle"
+                href="#"
+                role="button"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+                >
+                Export to PDF
+            </a>
+            <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="{% url 'systems:report' %}">All systems</a></li>
+                <li><a class="dropdown-item" href="{% url 'systems:report' 0 %}"> Devices </a></li>
+                <li><a class="dropdown-item" href="{% url 'systems:report' 1 %}"> Services </a></li>
+            </ul>
         </div>
         <form method="get" class="align-self-center">
             <div class="input-group">
@@ -20,7 +47,7 @@
     <div class="accordion" id="accordionServices">
         <div class="accordion-item">
             <h2 class="accordion-header">
-                <button class="accordion-button collapsed">
+                <div class="accordion-button collapsed">
                     <div class="container text-start">
                         <div class="row">
                             <div class="col">ID:</div>
@@ -38,8 +65,8 @@
                                 </a>
                                 <ul class="dropdown-menu">
                                     <li><a class="dropdown-item" href="{% url 'systems:list' %}">All</a></li>
-                                    <li><a class="dropdown-item" href="{% url 'systems:type' 0 %}"> Device </a></li>
-                                    <li><a class="dropdown-item" href="{% url 'systems:type' 1 %}"> Service </a></li>
+                                    <li><a class="dropdown-item" href="{% url 'systems:list' 0 %}"> Device </a></li>
+                                    <li><a class="dropdown-item" href="{% url 'systems:list' 1 %}"> Service </a></li>
                                 </ul>
                             </div>
                             <div class="col">Status:</div>
@@ -67,7 +94,7 @@
                             </div>
                         </div>
                     </div>
-                </button>
+                </div>
             </h2>
         </div>
         {% for obj in systems %}

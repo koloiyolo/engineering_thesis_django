@@ -4,6 +4,24 @@
         <div class="input-group mb-3">
             <a class="btn btn-secondary" href="{{ request.META.HTTP_REFERER|default:'/' }}">&laquo; Back</a>
             <a class="btn btn-outline-dark disabled" > Audit Log </a>
+            <a class="btn btn-dark dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" > Create Report </a>
+            <ul class="dropdown-menu" style="max-height: 180px; overflow-y: auto;">
+                <li><a href="{% url 'audit_log:report' 0 %}" class="dropdown-item bg-secondary text-bg-dark"> All </a></li>
+                {% comment %} <li><a href="{% url 'incidents:report_tag' 0 %}" class="dropdown-item">Today</a></li> {% endcomment %}
+                <li><a href="{% url 'audit_log:report' 1 %}" class="dropdown-item">Last Week</a></li>
+                <li><a href="{% url 'audit_log:report' 2 %}" class="dropdown-item">Last Month</a></li>
+                <li><a href="{% url 'audit_log:report' 0 0 %}" class="dropdown-item bg-secondary text-bg-dark"> System </a></li>
+                <li><a href="{% url 'audit_log:report' 1 0 %}" class="dropdown-item">Last Week</a></li>
+                <li><a href="{% url 'audit_log:report' 2 0 %}" class="dropdown-item">Last Month</a></li>
+                {% comment %} <li><a href="{% url 'incidents:report_tag' 0 %}" class="dropdown-item">Today</a></li> {% endcomment %}
+                {% for user in users %}
+                {% if user.id %}
+                <li><a href="{% url 'audit_log:report' 0 user.id %}" class="dropdown-item bg-secondary text-bg-dark"> {{ user.username }} </a></li>
+                <li><a href="{% url 'audit_log:report' 1 user.id %}" class="dropdown-item">Last Week</a></li>
+                <li><a href="{% url 'audit_log:report' 2 user.id %}" class="dropdown-item">Last Month</a></li>
+                {% endif %}
+                {% endfor %}
+            </ul>
         </div>
         <form method="get" class="align-self-center">
             <div class="input-group">
@@ -12,45 +30,47 @@
             </div>
         </form>
     </div>
-    {% if audit_logs %}
     <div class="accordion" id="accordionServices">
         <div class="accordion-item">
-            <div class="accordion-button collapsed">
-                <div class="container text-start">
-                    <div class="row">
-                        <div class="col-2">Date:</div>
-                        <div class="col-2"><a
-                            class="nav-link dropdown-toggle"
-                            href="#"
-                            role="button"
-                            data-bs-toggle="dropdown"
-                            aria-expanded="false"
-                            >
-                            User:
-                            </a>
-                            <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="{% url 'audit_log:list' %}">All</a></li>
-                                <li><a class="dropdown-item" href="{% url 'audit_log:list' 0 %}">System</a></li>
-                                {% for user in users %}
-                                {% if user.id %}
-                                <li><a class="dropdown-item" href="{% url 'audit_log:list' user.id %}">{{user.username}}</a></li>
-                                {% endif %}
-                                {% endfor %}
-                            </ul>
+            <h2 class="accordion-header">
+                <div class="accordion-button collapsed">
+                    <div class="container text-start">
+                        <div class="row">
+                            <div class="col-2">Date:</div>
+                            <div class="col-2"><a
+                                class="nav-link dropdown-toggle"
+                                href="#"
+                                role="button"
+                                data-bs-toggle="dropdown"
+                                aria-expanded="false"
+                                >
+                                User:
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" href="{% url 'audit_log:list' %}">All</a></li>
+                                    <li><a class="dropdown-item" href="{% url 'audit_log:list' 0 %}">System</a></li>
+                                    {% for user in users %}
+                                    {% if user.id %}
+                                    <li><a class="dropdown-item" href="{% url 'audit_log:list' user.id %}">{{user.username}}</a></li>
+                                    {% endif %}
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                            <div class="col-8">Message:</div>
                         </div>
-                        <div class="col-8">Text:</div>
                     </div>
                 </div>
-            </div>
+            </h2>
         </div>
+        {% if audit_logs %}
         {% include 'datatables/audit_logs.html' with audit_logs=audit_logs %}
+        {% else %}
+        <br />
+        <h3>No records yet </h3>
+        <br />
+        {% endif %}
     </div>
     <br />
     {% include 'elements/pagination.html' with objs=audit_logs %}
-    {% else %}
-    <br />
-    <h3>No records yet </h3>
-    <br />
-    {% endif %}
 </div>
 {% endblock %}

@@ -6,7 +6,7 @@ from systems.models import System
 
 TAG_CHOICES = [
                 (0, 'System down'),
-                (1, 'Log anomaly detected'),
+                (1, 'Log anomaly'),
                 ]
 
 class Incident(models.Model):
@@ -17,6 +17,7 @@ class Incident(models.Model):
     tag                     = models.IntegerField(choices=TAG_CHOICES, default=0)
     title                   = models.TextField(max_length=250)
     message                 = models.TextField(max_length=500)
+    user                    = models.ForeignKey(User, on_delete=models.SET_NULL,null=True,  default=None)
 
     def __str__(self):
         return self.title

@@ -5,4 +5,4 @@ from django.contrib.auth.models import User
 class AuditLog(models.Model):
     datetime = models.DateTimeField(auto_now=True)
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
-    text = models.CharField(max_length=200)
+    message = models.CharField(max_length=200)
