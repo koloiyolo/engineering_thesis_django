@@ -15,7 +15,7 @@ def settings(request):
         form = SettingsPage(request.POST or None, instance=settings)
         if form.is_valid():
             form.save()
-            AuditLog.objects.create(user=request.user, text=f"{request.user} updated settings.")
+            AuditLog.objects.create(user=request.user, message=f"User {request.user} updated settings.")
             messages.success(request, "Settings updated successfully")
             return redirect('home')
         else:

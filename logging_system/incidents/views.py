@@ -2,6 +2,8 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.db.models import Q
 from django.contrib.auth.decorators import login_required
+from django.utils import timezone
+from datetime import timedelta
 
 from logging_system.functions import pagination
 from audit_log.models import AuditLog
@@ -28,8 +30,6 @@ def incidents(request, tag=None, system=None):
             ).order_by("-id")
         else:
             incidents = Incident.objects.filter(tag=tag).order_by("-id")
-        if incidents.count() == 0:
-            return redirect('incidents:list') 
     else:
         if q:
             incidents = Incident.objects.filter(
@@ -60,8 +60,8 @@ def view(request, pk):
             comment.user = request.user
             comment.incident = incident
             comment.save()
-            AuditLog.objects.create(user=request.user, text=f"{request.user} commented on incident '{incident}': {comment}")
-            return redirect('incidents:view', incident.id)
+            AuditLog.objects.create(user=request.user, message=f"User {request.user} commented on incident '{incident}': {comment}")
+            return redirect('incidents:view', incident.id )
         else:
             form = CommentForm()
     incident = Incident.objects.get(id=pk)
@@ -77,13 +77,40 @@ def view(request, pk):
 @login_required
 def remove(request, pk):
     delete_it = Incident.objects.get(id=pk)
-    AuditLog.objects.create(user=request.user, text=f"{request.user} removed incident {delete_it} successfully.")
+    AuditLog.objects.create(user=request.user, message=f"User {request.user} removed incident {delete_it} successfully.")
     delete_it.delete()
-    messages.success(request, "System removed successfully")
-    return redirect('incidents:list')
+    messages.success(request, "Incident removed successfully")
+    return redirect(request.META.get('HTTP_REFERER', 'incidents:list'))
 
-# def function(request):
-#     if request.user.is_authenticated:
-#         pass
-#     else:
-#         return redirect('home')
+@login_required
+def resolve(request, pk):
+    incident = Incident.objects.get(id=pk)
+    AuditLog.objects.create(user=request.user, message=f"User {request.user} resolved incident {incident}.")
+    incident.user = request.user
+    incident.save()
+    messages.success(request, "Incident resolved successfully")
+    return redirect(request.META.get('HTTP_REFERER', 'incidents:list'))
+
+
+@login_required 
+def report(request,frame=0, tag=None):
+    AuditLog.objects.create(user=request.user, message=f"User {request.user} created incidents report.")
+
+    start = (
+        timezone.now() - timedelta(weeks=9999) if frame == 0 else
+        timezone.now() - timedelta(days=30) if frame == 1 else
+        timezone.now() - timedelta(days=7)
+    )
+
+    incidents = (
+                Incident.objects.filter(date__gte=start)[:5000] if tag is None else 
+                Incident.objects.filter(date__gte=start, tag=tag).order_by("id")[:5000]
+                )
+
+    current_date = timezone.now()
+    return render(request, 'report/incident.html', {
+                'date': current_date,
+                'start': start,
+                'user': request.user,
+                'incidents': incidents
+                })

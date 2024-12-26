@@ -1,26 +1,20 @@
 from django.shortcuts import render
 from django.core.mail import send_mass_mail
-
 from sklearn.pipeline import Pipeline
 from sklearn.cluster import KMeans, AgglomerativeClustering, DBSCAN, HDBSCAN
-# from sklearn.preprocessing import OneHotEncoder
 from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
 from sklearn.utils import Bunch
 from sklearn_minisom import MiniSOM
-
 import pandas as pd
 import random
 import joblib
 import time
 import os
 import ast
-
 from .models import Log
 from .functions import zip_logs, get_logs
 from config.models import Settings
 from incidents.functions import create_incident
-
-# from .functions import get_logs, send_anomaly_emails
 
 
 # sklearn ML train function prototype
@@ -32,7 +26,6 @@ def train(clf=None, vec=None):
     vec = vec if vec is not None else settings.ml_vectorizer
     clf_params = ast.literal_eval(settings.ml_classifier_parameters) if settings.ml_classifier_parameters != "" else None
     vec_params = ast.literal_eval(settings.ml_vectorizer_parameters) if settings.ml_vectorizer_parameters != "" else None
-
 
     data = get_logs(train=True)
     if data is None:
@@ -58,7 +51,6 @@ def train(clf=None, vec=None):
             TfidfVectorizer() if vec == 0 else
             CountVectorizer() 
             )
-
 
     try:
         if clf == 0:

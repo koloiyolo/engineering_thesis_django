@@ -3,6 +3,8 @@ from django.contrib.auth import authenticate
 from django.contrib.auth.models import User
 from django.db.models import Q
 from django.contrib.admin.views.decorators import staff_member_required
+from django.utils import timezone
+from datetime import timedelta
 
 from logging_system.functions import pagination
 from .models import AuditLog
@@ -19,7 +21,7 @@ def logs(request, user=None):
             user = None
         if q:
             audit_logs = AuditLog.objects.filter(
-                Q(text__icontains=q) |
+                Q(message__icontains=q) |
                 Q(user__username__icontains=q),
                 user = user
             ).order_by("-id")
@@ -28,7 +30,7 @@ def logs(request, user=None):
     else:
         if q:
             audit_logs = AuditLog.objects.filter(
-                Q(text__icontains=q) |
+                Q(message__icontains=q) |
                 Q(user__username__icontains=q)
             ).order_by("-id")
         else:
@@ -40,3 +42,27 @@ def logs(request, user=None):
         'users': users
     }
     return render(request, 'audit_log/list.html' ,data)
+
+@staff_member_required(login_url='/accounts/login/')
+def report(request, frame=0, user=None):
+    AuditLog.objects.create(user=request.user, message=f"User {request.user} created audit logs report.")
+
+    start = (
+        timezone.now() - timedelta(weeks=9999) if frame == 0 else
+        timezone.now() - timedelta(days=30) if frame == 1 else
+        timezone.now() - timedelta(days=7)
+    )
+
+    audit_log = (
+                AuditLog.objects.filter(datetime__gte=start, user__isnull=True).order_by("id").order_by("-id")[:5000] if user == 0 else
+                AuditLog.objects.filter(datetime__gte=start).order_by("-id")[:5000] if user is None else 
+                AuditLog.objects.filter(datetime__gte=start, user=user).order_by("id").order_by("-id")[:5000]
+                )
+
+    current_date = timezone.now()
+    return render(request, 'report/audit_log.html', {
+                'date': current_date,
+                'start': start,
+                'audit_logs': audit_log,
+                'user': request.user
+                })
