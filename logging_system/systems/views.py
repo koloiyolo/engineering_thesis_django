@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect, reverse
 from django.contrib import messages
 from django.db.models import Q
 from django.contrib.auth.decorators import login_required
-
+from django.utils import timezone
 from .functions import get_ping_graph, get_packet_loss, export_csv
 from logging_system.functions import pagination, logs_short_message
 
@@ -14,7 +14,6 @@ from config.models import Settings
 from .forms import SystemForm, DiscoverSystemsForm
 from audit_log.models import AuditLog
 from .tasks import discover_systems_task
-import datetime
 # Create your views here.
 
 @login_required
