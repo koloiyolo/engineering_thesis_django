@@ -23,6 +23,7 @@ Jakub Kołodziej's engineering thesis project.
 * Basic CRUD operations regarding system, location and incident management.
 * Audit Log. [#5](https://github.com/koloiyolo/engineering_thesis_django/pull/5)
 * Log records CSV export. [#8](https://github.com/koloiyolo/engineering_thesis_django/pull/8)
+* Report generation. [#10](https://github.com/koloiyolo/engineering_thesis_django/pull/10)
 
 ### To Do:
 * Report generation
