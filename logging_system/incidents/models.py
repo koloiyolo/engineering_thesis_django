@@ -13,11 +13,20 @@ class Incident(models.Model):
     date                    = models.DateField(auto_now_add=True)
     time                    = models.TimeField(auto_now_add=True)
     system                  = models.ForeignKey(System, on_delete=models.CASCADE, null=True)
-    ip                      = models.TextField(max_length=50)
+    ip                      = models.CharField(max_length=50)
     tag                     = models.IntegerField(choices=TAG_CHOICES, default=0)
-    title                   = models.TextField(max_length=250)
-    message                 = models.TextField(max_length=500)
+    title                   = models.CharField(max_length=255)
+    message                 = models.CharField(max_length=255)
     user                    = models.ForeignKey(User, on_delete=models.SET_NULL,null=True,  default=None)
+
+    def save(self, *args, **kwargs):
+        if self.ip:
+            self.ip = self.ip[:50]
+        if self.title:
+            self.title = self.title[:255]
+        if self.message:
+            self.message = self.message[:255]
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return self.title
@@ -27,7 +36,12 @@ class Comment(models.Model):
     date                    = models.DateField(auto_now_add=True)
     time                    = models.TimeField(auto_now_add=True)
     user                    = models.ForeignKey(User, on_delete=models.CASCADE)
-    message                 = models.TextField(max_length=250)
+    message                 = models.CharField(max_length=255)
+
+    def save(self, *args, **kwargs):
+        if self.message:
+            self.message = self.message[:255]
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return self.message
