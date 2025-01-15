@@ -54,7 +54,7 @@
                         <h5>Email settings</h5>
                         {{ form.notifications_mode.label_tag }}
                         {{ form.notifications_mode }}
-                        {{ form.email_host.label_tag }}
+                        {% comment %} {{ form.email_host.label_tag }}
                         {{ form.email_host }}
                         <div class="row">
                             <div class="col">
@@ -71,7 +71,7 @@
                         {{ form.email_host_password.label_tag }}
                         {{ form.email_host_password }}
                         {{ form.email_from_address.label_tag }}
-                        {{ form.email_from_address }}
+                        {{ form.email_from_address }} {% endcomment %}
                         <br/>
                     </div>
                 </li>
@@ -87,6 +87,16 @@
                             <div class="col-8">
                                 {{ form.ml_classifier_parameters.label_tag }}
                                 {{ form.ml_classifier_parameters }}
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-4">
+                                {{ form.ml_classifier_optional.label_tag }}
+                                {{ form.ml_classifier_optional }}
+                            </div>
+                            <div class="col-8">
+                                {{ form.ml_classifier_parameters_optional.label_tag }}
+                                {{ form.ml_classifier_parameters_optional }}
                             </div>
                         </div>
                         <div class="row">

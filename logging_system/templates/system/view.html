@@ -6,47 +6,46 @@
     </div>
     <div class="card">
         <div class="card-body">
-            <!-- System Header Section -->
-            <h4 class="card-title text-center"><strong>Name: </strong>{{ system.name }}</h4>
+            <ul class="list-group list-group-flush">
+                <!-- System Details Section -->
+                <li class="list-group-item">
+                    <div class="row">
+                        <div class="col">
+                        <h5 class="mb-3">System Details:</h5>
+                        <p><strong><i class="fas fa-desktop"></i> System Name:</strong> {{ system.name }}</p>
+                        <p><strong><i class="fas fa-desktop"></i> System Type:</strong> {{ system.get_system_type_display }}</p>
+                        {% if system.model %}
+                        <p><strong><i class="fas fa-cogs"></i> System Model:</strong> {{ system.model }}</p>
+                        {% endif %}
+                        <!-- Network Information Section -->
+                        <br/>
+                        <p><strong><i class="fas fa-network-wired"></i> IP Address:</strong> {{ system.ip }}</p>
+                        {% if system.port %}
+                        <p><strong><i class="fas fa-plug"></i> Network Port:</strong> {{ system.port }}</p>
+                        {% endif %}
+                        {% if system.last_ping %}
+                        <p><strong><i class="fas fa-plug text-success"></i> Last Response Time:</strong> {{ system.last_ping}}</p>
+                        {% else %}
+                        <p><strong><i class="fas fa-plug text-success"></i> Last Response Time:</strong> Device Down</p>
+                        {% endif %}
+                        <p><strong><i class="fas fa-plug text-success"></i> Average Packet Loss</strong> {{ system.loss}} &percnt;</p>
+                        <br/>
+                        <!-- Network Information Section -->
+                        {% if system.location %}
+                            <p><strong><i class="fas fa-map-marker-alt"></i> Location:</strong> {{ system.location }}</p>
+                            <p><strong><i class="fas fa-map-marker-alt"></i> Town:</strong> {{ system.location.town }}</p>
+                            <p><strong><i class="fas fa-map-marker-alt"></i> Address:</strong> {{ system.location.address }}</p>
+                            <p><strong><i class="fas fa-map-marker-alt"></i> Room:</strong> {{ system.location.room }}</p>
+                        {% endif %}
+                        </div>
+                        <div class="col">
+                        <h5 class="mb-3 text-center">Latency Graph:</h5>
+                        <div id="ping-plot" class="text-center">{{ system.graph|safe }}</div>
+                        </div>
+                    </div>
+                </li>
+            </ul>
         </div>
-        <ul class="list-group list-group-flush">
-            <!-- System Details Section -->
-            <li class="list-group-item">
-                <div class="row">
-                    <div class="col">
-                    <h5 class="mb-3">System Details:</h5>
-                    <p><strong><i class="fas fa-desktop"></i> System Type:</strong> {{ system.get_system_type_display }}</p>
-                    {% if system.model %}
-                    <p><strong><i class="fas fa-cogs"></i> System Model:</strong> {{ system.model }}</p>
-                    {% endif %}
-                    <!-- Network Information Section -->
-                    <br/>
-                    <p><strong><i class="fas fa-network-wired"></i> IP Address:</strong> {{ system.ip }}</p>
-                    {% if system.port %}
-                    <p><strong><i class="fas fa-plug"></i> Network Port:</strong> {{ system.port }}</p>
-                    {% endif %}
-                    {% if system.last_ping %}
-                    <p><strong><i class="fas fa-plug text-success"></i> Last Response Time:</strong> {{ system.last_ping}}</p>
-                    {% else %}
-                    <p><strong><i class="fas fa-plug text-success"></i> Last Response Time:</strong> Device Down</p>
-                    {% endif %}
-                    <p><strong><i class="fas fa-plug text-success"></i> Average Packet Loss</strong> {{ system.loss}} &percnt;</p>
-                    <br/>
-                    <!-- Network Information Section -->
-                    {% if system.location %}
-                        <p><strong><i class="fas fa-map-marker-alt"></i> Location:</strong> {{ system.location }}</p>
-                        <p><strong><i class="fas fa-map-marker-alt"></i> Town:</strong> {{ system.location.town }}</p>
-                        <p><strong><i class="fas fa-map-marker-alt"></i> Address:</strong> {{ system.location.address }}</p>
-                        <p><strong><i class="fas fa-map-marker-alt"></i> Room:</strong> {{ system.location.room }}</p>
-                    {% endif %}
-                    </div>
-                    <div class="col">
-                    <h5 class="mb-3 text-center">Latency Graph:</h5>
-                    <div id="ping-plot" class="text-center">{{ system.graph|safe }}</div>
-                    </div>
-                </div>
-            </li>
-        </ul>
         <!-- Action Buttons in Card Footer -->
         <div class="card-footer">
             <div class="btn-group" role="group">
@@ -63,7 +62,7 @@
                 <a href="{% url 'systems:incidents' system.id %}" class="btn btn-secondary">
                     <i class="fas fa-exclamation-triangle"></i> Incidents
                 </a>
-                <a href="{% url 'systems:edit' system.id %}" class="btn btn-secondary">
+                <a href="{% url 'systems:edit' system.id %}" class="btn btn-dark">
                     <i class="fas fa-edit"></i> Edit
                 </a>
                 <a href="{% url 'systems:remove' system.id %}" class="btn btn-danger">
@@ -148,7 +147,7 @@
                                         <li><a class="dropdown-item" href="{% url 'systems:logs'  system.id %}">All</a></li>
                                         {% if clusters %}
                                         {% for cluster in clusters %}
-                                        <li><a class="dropdown-item" href="{% url 'systems:label' system.id cluster %}"> {{ cluster }} </a></li>
+                                        <li><a class="dropdown-item" href="{% url 'systems:logs' system.id cluster %}"> {{ cluster }} </a></li>
                                         {% endfor %}
                                         {% endif %}
                                     </ul>

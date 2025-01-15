@@ -9,11 +9,11 @@ class Settings(models.Model):
 
     # RadioSelect choices
     ML_CLASSIFIER_CHOICES = [
-        (0, 'K-Means'),
-        (1, 'Agglomerative Clustering'),
-        (2, 'DBSCAN'),
-        (3, 'HDBSCAN'),
-        (4, 'SOM')
+        (1, 'K-Means'),
+        (2, 'Agglomerative Clustering'),
+        (3, 'DBSCAN'),
+        (4, 'HDBSCAN'),
+        (5, 'SOM')
     ]
 
     ML_VECTORIZER_CHOICES = [
@@ -75,16 +75,18 @@ class Settings(models.Model):
 
     # Email settings
     notifications_mode = models.IntegerField(choices=NOTIFICATION_CHOICES, default=0)
-    email_host = models.CharField(max_length=200, default='smtp.example.com')
-    email_port = models.IntegerField(default=465)
-    email_host_user = models.CharField(max_length=200, default='from@example.com')
-    email_host_password = models.CharField(max_length=200, default='password')
-    email_use_ssl = models.BooleanField(default=True, choices=BOOL_CHOICES)
-    email_from_address = models.EmailField(default='noreply@example.com')
+    # email_host = models.CharField(max_length=200, default='smtp.example.com')
+    # email_port = models.IntegerField(default=465)
+    # email_host_user = models.CharField(max_length=200, default='from@example.com')
+    # email_host_password = models.CharField(max_length=200, default='password')
+    # email_use_ssl = models.BooleanField(default=True, choices=BOOL_CHOICES)
+    # email_from_address = models.EmailField(default='noreply@example.com')
 
     # ML settings
-    ml_classifier = models.IntegerField(default=0, choices=ML_CLASSIFIER_CHOICES)
+    ml_classifier = models.IntegerField(default=1, choices=ML_CLASSIFIER_CHOICES)
     ml_classifier_parameters = models.TextField(blank=True, default=None)
+    ml_classifier_optional = models.IntegerField(null=True, blank=True, default=None, choices=ML_CLASSIFIER_CHOICES)
+    ml_classifier_parameters_optional = models.TextField(blank=True, default=None)
     ml_vectorizer = models.IntegerField(default=0, choices=ML_VECTORIZER_CHOICES)
     ml_vectorizer_parameters = models.TextField(blank=True, default=None)
     on_model_change_reset = models.BooleanField(choices=BOOL_CHOICES, default=False)
@@ -105,19 +107,22 @@ class Settings(models.Model):
                 raise ValidationError("There can be only one Settings instance.")
             
             if self.pk:
-                current = Settings.load().ml_classifier
-                if self.on_model_change_reset and self.ml_classifier != current:
+                settings = Settings.load()
+                clf = settings.ml_classifier
+                clf_optional = settings.ml_classifier_optional
+                vec = settings.ml_vectorizer
+
+                if (self.on_model_change_reset 
+                    and (self.ml_classifier != clf
+                    or self.ml_classifier_optional != clf_optional
+                    or self.ml_vectorizer != vec)):
+
                     Log.objects.update(label=None)
 
                     from logs.tasks import ml_train_task
                     ml_train_task.delay(clf=self.ml_classifier)
 
-                current = Settings.load().ml_vectorizer
-                if self.on_model_change_reset and self.ml_vectorizer !=  current:
-                    Log.objects.update(label=None)
 
-                    from logs.tasks import ml_train_task
-                    ml_train_task.delay(vec=self.ml_vectorizer)
         
         super().save(*args, **kwargs)
 
