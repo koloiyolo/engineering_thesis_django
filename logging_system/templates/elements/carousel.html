@@ -54,14 +54,14 @@
                                                 <p>Unresolved Ratio: </p>
                                             </div>
                                             <div class="col">
-                                                {% if statistics.incident_tag0_ratio < 25 %}
+                                                {% if statistics.incident_tag1_ratio > 25 %}
                                                 <p class="text-danger">{{statistics.incident_tag1_ratio}}&percnt;</p>
                                                 {% else %}
                                                 <p class="text-success">{{statistics.incident_tag1_ratio}}&percnt;</p>
                                                 {% endif %}
                                             </div>
                                             <div class="col">
-                                                {% if statistics.incident_tag1_ratio < 25 %}
+                                                {% if statistics.incident_tag0_ratio > 25 %}
                                                 <p class="text-danger">{{statistics.incident_tag0_ratio}}&percnt;</p>
                                                 {% else %}
                                                 <p class="text-success">{{statistics.incident_tag0_ratio}}&percnt;</p>

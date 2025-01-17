@@ -53,6 +53,7 @@ def home(request):
     # Incidents
     statistics.incident_count = Incident.objects.count()
     statistics.incident_resolved_count = Incident.objects.filter(user__isnull=False).count()
+    
     try:
         statistics.incident_resolved_ratio = round(statistics.incident_resolved_count / statistics.incident_count * 100)
     except ZeroDivisionError:
