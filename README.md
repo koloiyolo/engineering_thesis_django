@@ -26,7 +26,6 @@ Jakub Kołodziej's engineering thesis project.
 * Report generation. [#10](https://github.com/koloiyolo/engineering_thesis_django/pull/10)
 
 ### To Do:
-* Report generation
 * Mail notifications
 
 ## Requirements

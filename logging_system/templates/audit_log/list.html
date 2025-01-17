@@ -63,7 +63,9 @@
             </h2>
         </div>
         {% if audit_logs %}
+        <div style="max-height: 70vh; overflow-y: auto;">
         {% include 'datatables/audit_logs.html' with audit_logs=audit_logs %}
+        </div>
         {% else %}
         <br />
         <h3>No records yet </h3>

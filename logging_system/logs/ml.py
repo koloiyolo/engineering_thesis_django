@@ -78,7 +78,6 @@ def train(clf=None, vec=None):
 
     return f"{classifier} Training: Success."
 
-
 # sklearn ML classify function
 def classify():
     settings = Settings.load()

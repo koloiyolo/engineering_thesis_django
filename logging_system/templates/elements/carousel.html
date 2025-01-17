@@ -1,0 +1,155 @@
+
+        <div>
+            <div id="featuredStatistics" class="carousel slide" data-bs-ride="carousel">
+                <div class="carousel-indicators">
+                    <button type="button" data-bs-target="#FeaturedStatistics" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+                    <button type="button" data-bs-target="#FeaturedStatistics" data-bs-slide-to="1" aria-label="Slide 2"></button>
+                    <button type="button" data-bs-target="#FeaturedStatistics" data-bs-slide-to="2" aria-label="Slide 3"></button>
+                </div>
+                <div class="carousel-inner">
+                    <div class="carousel-item active">
+                        <div class="card bg-dark">
+                            <div class="card-body text-light">
+                                <div class="row">
+                                    <div class="col">
+                                        <h5>Incidents Statistics</h5>
+                                        <p>Incidents count: <strong>{{statistics.incident_count}}</strong></p>
+                                        <p>Resolved incidents: <strong class="text-success">{{statistics.incident_resolved_count}}</strong></p>
+                                        {% if statistics.incident_resolved_ratio < 80 %}
+                                        <p>Resolved incidents ratio: <strong class="text-danger">{{statistics.incident_resolved_ratio}}&percnt;</strong></p>
+                                        {% else %}
+                                        <p>Resolved incidents ratio: <strong class="text-success">{{statistics.incident_resolved_ratio}}&percnt;</strong></p>
+                                        {% endif %}
+                                        <br/>
+                                        <a href="#" class="btn btn-primary" style="width: auto;" > View Incidents </a>
+                                    </div>
+                                    <div class="col">
+                                        <div class="row">
+                                            <h5>Per category: </h5>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col">
+                                                <p></p>
+                                            </div>
+                                            <div class="col">
+                                                <p>Offline systems: </p>
+                                            </div>
+                                            <div class="col">
+                                                <p>Log anomalies: </p>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col">
+                                                <p>Incident ount: </p>
+                                            </div>
+                                            <div class="col">
+                                                <p>{{statistics.incident_tag1_count}}</p>
+                                            </div>
+                                            <div class="col">
+                                                <p>{{statistics.incident_tag0_count}} </p>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col">
+                                                <p>Unresolved Ratio: </p>
+                                            </div>
+                                            <div class="col">
+                                                {% if statistics.incident_tag0_ratio < 25 %}
+                                                <p class="text-danger">{{statistics.incident_tag1_ratio}}&percnt;</p>
+                                                {% else %}
+                                                <p class="text-success">{{statistics.incident_tag1_ratio}}&percnt;</p>
+                                                {% endif %}
+                                            </div>
+                                            <div class="col">
+                                                {% if statistics.incident_tag1_ratio < 25 %}
+                                                <p class="text-danger">{{statistics.incident_tag0_ratio}}&percnt;</p>
+                                                {% else %}
+                                                <p class="text-success">{{statistics.incident_tag0_ratio}}&percnt;</p>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <br/>
+                        </div>
+                    </div>
+                    <div class="carousel-item">
+                        <div class="card bg-dark">
+                            <div class="card-body text-light">
+                                <div class="row">
+                                    <div class="col">
+                                        <h5>Logs Statistics</h5>
+                                        <p>Logs count: <strong>{{statistics.log_count}}</strong></p>
+                                        <p>Anomaly logs count: <strong>{{statistics.log_anomaly_count}}</strong></p>
+                                        {% if statistics.log_anomaly_ratio > 10 %}
+                                        <p>Anomaly logs ratio: <strong class="text-danger">{{statistics.log_anomaly_ratio}}&percnt;</strong></p>
+                                        {% else %}
+                                        <p>Anomaly logs ratio: <strong class="text-success">{{statistics.log_anomaly_ratio}}&percnt;</strong></p>
+                                        {% endif %}
+                                        <br/>
+                                        <a href="#" class="btn btn-primary" style="width: auto;" > View Logs </a>
+                                    </div>
+                                    <div class="col">
+                                        <div class="row">
+                                            <div class="col">
+                                                <p>System IP: </p>
+                                            </div>
+                                            <div class="col">
+                                                <p>Anomaly records: </p>
+                                            </div>
+                                        </div>
+                                        {% for obj in statistics.log_devices_anomaly %}
+                                        <div class="row">
+                                            <div class="col">
+                                                <p>{{ obj.host }} </p>
+                                            </div>
+                                            <div class="col text-danger">
+                                                <p>{{ obj.count }} </p>
+                                            </div>
+                                        </div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </div>
+                            <br/>
+                        </div>
+                    </div>
+                    <div class="carousel-item">
+                        <div class="card bg-dark">
+                            <div class="card-body text-light">
+                                <div class="row">
+                                <div class="col">
+                                    <h5>System Statistics</h5>
+                                    <p>System count: <strong>{{statistics.system_count}}</strong></p>
+                                    <p>System down count: <strong class="text-danger">{{statistics.system_down_count}}</strong></p>
+                                    {% if statistics.system_down_ratio > 10 %}
+                                    <p>System down ratio: <strong class="text-danger">{{statistics.system_down_ratio}}&percnt;</strong></p>
+                                    {% else %}
+                                    <p>System down ratio: <strong class="text-success">{{statistics.system_down_ratio}}&percnt;</strong></p>
+                                    {% endif %}
+                                    <br/>
+                                    <a href="#" class="btn btn-primary" style="width: auto;" > View Logs </a>
+                                </div>
+                                <div class="col">
+                                    <p>Recent offline systems: </p>
+                                    {% for obj in statistics.system_systems_down %}
+                                    <p>{{ obj }} </p>
+                                    {% endfor %}
+                                </div>
+                                </div>
+                            </div>
+                            <br/>
+                        </div>
+                    </div>
+                </div>
+                <button class="carousel-control-prev" type="button" data-bs-target="#featuredStatistics" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Previous</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#featuredStatistics" data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Next</span>
+                </button>
+            </div>
+        </div>

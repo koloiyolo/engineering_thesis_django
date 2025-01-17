@@ -86,7 +86,12 @@ def systems(request, location=None, system_type=None):
 
 @login_required
 def system(request, pk):
-    system = System.objects.get(id=pk)
+    system = None
+    try:
+        system = System.objects.get(id=pk)
+    except System.DoesNotExist:
+        return redirect('systems:list')
+    
     system.graph = get_ping_graph(system)
     system.loss = get_packet_loss(system)
     last_log = Log.objects.filter(host=system.ip).last()

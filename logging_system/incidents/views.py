@@ -51,7 +51,12 @@ def incidents(request, tag=None, system=None):
 
 @login_required
 def view(request, pk):
-    incident = Incident.objects.get(id=pk)
+    incident = None
+    try:
+        incident = Incident.objects.get(id=pk)
+    except Incident.DoesNotExist:
+        return redirect('incidents:list')
+
     comments = Comment.objects.filter(incident=incident)
     form = CommentForm(request.POST)
     if request.method == "POST":

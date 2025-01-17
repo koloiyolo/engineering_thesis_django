@@ -97,67 +97,73 @@
                 </div>
             </h2>
         </div>
+        <div style="max-height: 70vh; overflow-y: auto;">
         {% for obj in systems %}
-        <div class="accordion-item">
-            <h2 class="accordion-header" id="heading{{ obj.id }}">
-                <button
-                    class="accordion-button collapsed"
-                    type="button"
-                    data-bs-toggle="collapse"
-                    data-bs-target="#collapse{{ obj.id }}"
-                    aria-expanded="false"
-                    >
-                    <div class="container text-start">
-                        <div class="row">
-                            <div class="col">{{ obj.id }}</div>
-                            <div class="col">{{ obj.name }}</div>
-                            <div class="col">{{ obj.ip }}</div>
-                            <div class="col">{{ obj.get_system_type_display  }}</div>
-                            {% if obj.last_ping %}
-                            <div class="col text-success">{{ obj.last_ping }}</div>
-                            {% else %}
-                            <div class="col text-danger">Device down</div>
-                            {% endif %}
-                            <div class="col">{{ obj.loss }}  &percnt;</div>
-                            <div class="col">{{ obj.location }}</div>
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="heading{{ obj.id }}">
+                    <button
+                        class="accordion-button collapsed"
+                        type="button"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#collapse{{ obj.id }}"
+                        aria-expanded="false"
+                        >
+                        <div class="container text-start">
+                            <div class="row">
+                                <div class="col">{{ obj.id }}</div>
+                                <div class="col">{{ obj.name }}</div>
+                                <div class="col">{{ obj.ip }}</div>
+                                <div class="col">{{ obj.get_system_type_display  }}</div>
+                                {% if obj.last_ping %}
+                                <div class="col text-success">{{ obj.last_ping }}</div>
+                                {% else %}
+                                <div class="col text-danger">Device down</div>
+                                {% endif %}
+                                {% if obj.loss %}
+                                <div class="col text-danger">{{ obj.loss }}&percnt;</div>
+                                {% else %}
+                                <div class="col text-success">{{ obj.loss }}&percnt;</div>
+                                {% endif %}
+                                <div class="col">{{ obj.location }}</div>
+                            </div>
                         </div>
-                    </div>
-                </button>
-            </h2>
-            <div
-                id="collapse{{ obj.id }}"
-                class="accordion-collapse collapse"
-                data-bs-parent="#accordionServices"
-                >
-                <div class="accordion-body">
-                    <div class="btn-group" role="group">
-                        {% if obj.port %}
-                        <a href="http://{{obj.ip}}:{{obj.port}}" class="btn btn-dark">
-                        Connect
-                        </a>
-                        {% endif %} 
-                        <a href="{% url 'systems:view' obj.id %}" class="btn btn-dark">
-                        View
-                        </a>
-                        {% if obj.last_log %}
-                        <a href="{% url 'systems:logs' obj.id %}" class="btn btn-secondary">
-                        Logs
-                        </a>
-                        <a href="{% url 'systems:incidents' obj.id %}" class="btn btn-secondary">
-                        Incidents
-                        </a>
-                        {% endif %}
-                        <a href="{% url 'systems:edit' obj.id %}" class="btn btn-secondary">
-                        Edit
-                        </a>
-                        <a href="{% url 'systems:remove' obj.id %}" class="btn btn-danger"
-                            >Remove</a
-                            >
+                    </button>
+                </h2>
+                <div
+                    id="collapse{{ obj.id }}"
+                    class="accordion-collapse collapse"
+                    data-bs-parent="#accordionServices"
+                    >
+                    <div class="accordion-body">
+                        <div class="btn-group" role="group">
+                            {% if obj.port %}
+                            <a href="http://{{obj.ip}}:{{obj.port}}" class="btn btn-dark">
+                            Connect
+                            </a>
+                            {% endif %} 
+                            <a href="{% url 'systems:view' obj.id %}" class="btn btn-dark">
+                            View
+                            </a>
+                            {% if obj.last_log %}
+                            <a href="{% url 'systems:logs' obj.id %}" class="btn btn-secondary">
+                            Logs
+                            </a>
+                            <a href="{% url 'systems:incidents' obj.id %}" class="btn btn-secondary">
+                            Incidents
+                            </a>
+                            {% endif %}
+                            <a href="{% url 'systems:edit' obj.id %}" class="btn btn-secondary">
+                            Edit
+                            </a>
+                            <a href="{% url 'systems:remove' obj.id %}" class="btn btn-danger"
+                                >Remove</a
+                                >
+                        </div>
                     </div>
                 </div>
             </div>
+            {% endfor %}
         </div>
-        {% endfor %}
     </div>
     <br />
     {% include 'elements/pagination.html' with objs=systems %}

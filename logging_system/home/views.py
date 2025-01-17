@@ -6,6 +6,7 @@ from django.http import JsonResponse
 from ping3 import ping
 from requests import get
 from django.contrib.auth.decorators import login_required
+from django.db.models import Count
 
 from config.models import Settings
 from systems.models import System
@@ -27,19 +28,7 @@ def home(request):
     response = None
     ip = None
 
-    incidents = Incident.objects.all().order_by("-id")[:5]
-
-    # logs 
-    logs = Log.objects.all().order_by("-id")[:10]
-    id = 0
-    for log in logs:
-        log.id = id
-        id += 1
-        if len(log.message) > 50:
-            log.short_message = log.message[:50] + "..."
-        else:
-            log.short_message = log.message
-    # -----
+    incidents = Incident.objects.all().order_by("-id")[:Settings.load().items_per_page]
 
     try:
         response = f"{ping('8.8.8.8', unit='ms'):.3} ms"
@@ -53,16 +42,62 @@ def home(request):
     #     system.graph = get_ping_graph(system, width=490)
 
 
-    labels_graph = get_labels_graph()
-    uptime_graph = get_uptime_graph()
+    # labels_graph = get_labels_graph()
+    # uptime_graph = get_uptime_graph()
 
+    class Statistics:
+        pass
+
+    statistics = Statistics()
+    
+    # Incidents
+    statistics.incident_count = Incident.objects.count()
+    statistics.incident_resolved_count = Incident.objects.filter(user__isnull=False).count()
+    try:
+        statistics.incident_resolved_ratio = round(statistics.incident_resolved_count / statistics.incident_count * 100)
+    except ZeroDivisionError:
+         statistics.incident_resolved_ratio = 0
+
+    statistics.incident_tag0_count = Incident.objects.filter(tag=0).count()
+    statistics.incident_tag1_count = Incident.objects.filter(tag=1).count()
+    # statistics.incident_tag0_resolved_count = Incident.objects.filter(tag=0, user__isnull=False).count()
+    # statistics.incident_tag1_resolved_count = Incident.objects.filter(tag=1, user__isnull=False).count()
+    statistics.incident_tag0_unresolved_count = Incident.objects.filter(tag=0, user__isnull=True).count()
+    statistics.incident_tag1_unresolved_count = Incident.objects.filter(tag=1, user__isnull=True).count()
+
+    try:
+        statistics.incident_tag0_ratio = round(statistics.incident_tag0_unresolved_count /                                            100 * statistics.incident_tag0_count)
+    except ZeroDivisionError:
+         statistics.incident_tag0_ratio = 0
+
+    try:
+        statistics.incident_tag1_ratio = round(statistics.incident_tag1_unresolved_count / 
+                                           statistics.incident_tag1_count * 100)
+    except ZeroDivisionError:
+         statistics.incident_tag1_ratio = 0
+
+    # Log
+    statistics.log_count = Log.objects.count()
+    statistics.log_anomaly_count = Log.objects.filter(label=0).count()
+    statistics.log_anomaly_ratio = round(statistics.log_anomaly_count/statistics.log_count * 100)
+
+    statistics.log_devices_anomaly = Log.objects.filter(label=0).values('host').annotate(count=Count('host')).order_by('-count')
+
+    # Systems
+    statistics.system_count = System.objects.count()
+    statistics.system_down_count = System.objects.filter(d_count__gt=0).count()
+    statistics.system_down_ratio = round(statistics.system_down_count / statistics.system_count * 100)
+
+    statistics.system_systems_down = System.objects.filter(d_count__gt=0).order_by('d_count')[:3]
     
     data = {'ip': ip,
             'ping': response,
             'incidents': incidents,
-            'logs': logs,
-            'labels_graph': labels_graph,
-            'uptime_graph': uptime_graph}
+            'statistics': statistics,
+            # 'logs': logs,
+            # 'labels_graph': labels_graph,
+            # 'uptime_graph': uptime_graph
+            }
 
     return render(request, 'misc/home.html', data)
 

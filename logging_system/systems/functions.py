@@ -116,14 +116,14 @@ def get_packet_loss(system):
         if ping.ping == None:
             none_count += 1
 
-    return round(none_count/144*count, 2)
+    return round(none_count/count*100, 2)
 
 
 def export_csv(system_type=None):
 
     systems = (
                 System.objects.all() if system_type is None else 
-                System.objects.filter(system_type__lt=100).order_by("id") 
+                System.objects.filter(system_type__lt=100).order_by("id")
                 if system_type == 0 else
                 System.objects.filter(system_type__gte=100).order_by("id")
                 )

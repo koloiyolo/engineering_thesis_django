@@ -1,40 +1,11 @@
 {% extends 'elements/base.html' %} {% block content %}
 <div class="col-md-12 offset-md-0">
     {% if user.is_authenticated %}
-    <br />
     <div class="container text-center">
-        <div class="row">
-            <div class="col">
-                <div class="row">
-                    <div class="col-5">
-                        {% if ping %}
-                        <div class="card bg-success">
-                            <div class="card-body">
-                                <h5 class="card-title text-light">Internet conectivity status:</h5>
-                                <p class="card-text text-light">Internet connection is up.</p>
-                                <p class="card-text text-light">
-                                    Your current latency is <strong>{{ ping }}</strong>
-                                </p>
-                            </div>
-                        </div>
-                        {% else %}
-                        <div class="card bg-danger">
-                            <div class="card-body">
-                                <h5 class="card-title text-light">Internet conectivity status:</h5>
-                                <p class="card-text text-light">Internet connection is down.</p>
-                                <p class="card-text text-light">
-                                    <strong>No connection to the internet !!!</strong>
-                                </p>
-                            </div>
-                        </div>
-                        {% endif %}
-                    </div>
-                    <div class="col">
-                        <div id="ping-plot">{{ labels_graph|safe }}</div>
-                    </div>
-                </div>
-            </div>
+        <div class="col-12">
+            {% include 'elements/carousel.html' with statistics=statistics %}
         </div>
+        <br/>
         <div class="col-12">
             {% if incidents %}
             <div class="accordion" id="accordionServices">
@@ -47,13 +18,14 @@
                                     <div class="col-2">Date:</div>
                                     <div class="col-1">Time:</div>
                                     <div class="col-2">System name:</div>
-                                    <div class="col-2"><a
-                                        class="nav-link dropdown-toggle"
-                                        href="#"
-                                        role="button"
-                                        data-bs-toggle="dropdown"
-                                        aria-expanded="false"
-                                        >
+                                    <div class="col-2">
+                                        <a
+                                            class="nav-link dropdown-toggle"
+                                            href="#"
+                                            role="button"
+                                            data-bs-toggle="dropdown"
+                                            aria-expanded="false"
+                                            >
                                         Tag:
                                         </a>
                                         <ul class="dropdown-menu">
@@ -68,44 +40,23 @@
                         </button>
                     </h2>
                 </div>
+                <div style="max-height: 24rem; overflow-y: auto;">
                 {% include 'datatables/incidents.html' with incidents=incidents %}
+                </div>
             </div>
             {% endif %}
             <br/>
-            {% if logs %}
-            <div class="accordion" id="accordionServices">
-                <div class="accordion-item">
-                    <h2 class="accordion-header">
-                        <button class="accordion-button collapsed">
-                            <div class="container text-start">
-                                <div class="row">
-                                    <div class="col-2">Datetime</div>
-                                    <div class="col-2">IP Address</div>
-                                    <div class="col-2">Program</div>
-                                    <div class="col-1">
-                                        <a
-                                            class="nav-link dropdown-toggle"
-                                            href="#"
-                                            role="button"
-                                            data-bs-toggle="dropdown"
-                                            aria-expanded="false"
-                                            >
-                                        Label
-                                        </a>
-                                        <ul class="dropdown-menu">
-                                            <li><a class="dropdown-item" href="{% url 'logs:list' %}">All</a></li>
-                                            {% for cluster in clusters %}
-                                                <li><a class="dropdown-item" href="{% url 'logs:list' cluster %}"> {{ cluster }} </a></li>
-                                            {% endfor %}
-                                        </ul>
-                                    </div>
-                                    <div class="col-5">Message:</div>
-                                </div>
-                            </div>
-                        </button>
-                    </h2>
+            {% if ping %}
+            <div class="card bg-success">
+                <div class="card-body text-light">
+                    Internet conectivity status: <strong>UP</strong> Current latency: <strong>{{ping}}</strong> Current IP address: <strong>{{ip}}</strong>
                 </div>
-                {% include 'datatables/logs.html' with logs=logs %}
+            </div>
+            {% else %}
+            <div class="card bg-danger">
+                <div class="card-body text-light">
+                    Internet conectivity status: <strong>No Connection</strong>.
+                </div>
             </div>
             {% endif %}
             <br/>    
