@@ -21,7 +21,7 @@
                                         <p>Resolved incidents ratio: <strong class="text-success">{{statistics.incident_resolved_ratio}}&percnt;</strong></p>
                                         {% endif %}
                                         <br/>
-                                        <a href="#" class="btn btn-primary" style="width: auto;" > View Incidents </a>
+                                        <a href="{% url 'incidents:list' %}" class="btn btn-primary" style="width: auto;" > View Incidents </a>
                                     </div>
                                     <div class="col">
                                         <div class="row">
@@ -88,7 +88,7 @@
                                         <p>Anomaly logs ratio: <strong class="text-success">{{statistics.log_anomaly_ratio}}&percnt;</strong></p>
                                         {% endif %}
                                         <br/>
-                                        <a href="#" class="btn btn-primary" style="width: auto;" > View Logs </a>
+                                        <a href="{% url 'logs:list' %}" class="btn btn-primary" style="width: auto;" > View Logs </a>
                                     </div>
                                     <div class="col">
                                         <div class="row">
@@ -129,7 +129,7 @@
                                     <p>System down ratio: <strong class="text-success">{{statistics.system_down_ratio}}&percnt;</strong></p>
                                     {% endif %}
                                     <br/>
-                                    <a href="#" class="btn btn-primary" style="width: auto;" > View Logs </a>
+                                    <a href="{% url 'systems:list' %}" class="btn btn-primary" style="width: auto;" > View Logs </a>
                                 </div>
                                 <div class="col">
                                     <p>Recent offline systems: </p>
