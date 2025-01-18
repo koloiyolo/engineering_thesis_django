@@ -2,11 +2,11 @@
 <div class="accordion-item">
     <h2 class="accordion-header" id="heading{{ log.id }}">
         <button
-            {% if dark %}
+            {% comment %} {% if dark %}
             class="accordion-button collapsed bg-dark text-light"
-            {% else %}
+            {% else %} {% endcomment %}
             class="accordion-button collapsed"
-            {% endif %}
+            {% comment %} {% endif %} {% endcomment %}
             type="button"
             data-bs-toggle="collapse"
             data-bs-target="#collapse{{ log.id }}"

@@ -2,11 +2,11 @@
 <div class="accordion-item">
     <h2 class="accordion-header" id="heading{{ incident.id }}">
         <button
-            {% if dark %}
+            {% comment %} {% if dark %}
             class="accordion-button collapsed bg-dark text-light"
-            {% else %}
+            {% else %} {% endcomment %}
             class="accordion-button collapsed"
-            {% endif %}
+            {% comment %} {% endif %} {% endcomment %}
             type="button"
             data-bs-toggle="collapse"
             data-bs-target="#collapse{{ incident.id }}"
@@ -34,11 +34,11 @@
         data-bs-parent="#accordionServices"
         >
         <div
-            {% if dark %}
+            {% comment %} {% if dark %}
             class="accordion-body bg-dark text-light"
-            {% else %}
+            {% else %} {% endcomment %}
             class="accordion-body"
-            {% endif %}
+            {% comment %} {% endif %} {% endcomment %}
             >
             <div class="btn-group" role="group">
                 <a class="btn btn-success" href="{% url 'incidents:resolve' incident.id%}"> Resolve <a>
