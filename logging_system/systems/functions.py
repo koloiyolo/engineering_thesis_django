@@ -44,7 +44,7 @@ def ping_systems(systems, debug=True):
 
 
 # Ping graph function
-def get_ping_graph(system, height=300, width=900):
+def get_ping_graph(system, height=320, width=1240):
     range_ = Settings.load().graph_interval * 12
     pings = Ping.objects.filter(system=system).order_by('-id')[:range_]
     n = 0
@@ -57,7 +57,7 @@ def get_ping_graph(system, height=300, width=900):
                        height=height,
                        width=width,)
     figure = go.Figure(data=[trace], layout=layout)
-    plot_div = figure.to_html(full_html=False)
+    plot_div = figure.to_html(full_html=True)
 
     return plot_div
 
@@ -115,8 +115,10 @@ def get_packet_loss(system):
     for ping in pings:
         if ping.ping == None:
             none_count += 1
-
-    return round(none_count/count*100, 2)
+    try:
+        return round(none_count/count*100, 2)
+    except ZeroDivisionError:
+        return 0
 
 
 def export_csv(system_type=None):

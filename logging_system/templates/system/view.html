@@ -1,168 +1,213 @@
-{% extends 'elements/base.html' %} {% block content %}
-<div class="col-md-12">
+{% extends 'elements/base.html' %}
+{% block content %}
+<div class="col-12">
     <div class="input-group mb-3">
         <a class="btn btn-secondary" href="{{ request.META.HTTP_REFERER|default:'/' }}">&laquo; Back</a>
         <a class="btn btn-outline-dark disabled" > {{ system.name }} </a>
     </div>
-    <div class="card">
-        <div class="card-body">
-            <ul class="list-group list-group-flush">
-                <!-- System Details Section -->
-                <li class="list-group-item">
-                    <div class="row">
-                        <div class="col">
-                        <h5 class="mb-3">System Details:</h5>
-                        <p><strong><i class="fas fa-desktop"></i> System Name:</strong> {{ system.name }}</p>
-                        <p><strong><i class="fas fa-desktop"></i> System Type:</strong> {{ system.get_system_type_display }}</p>
-                        {% if system.model %}
-                        <p><strong><i class="fas fa-cogs"></i> System Model:</strong> {{ system.model }}</p>
-                        {% endif %}
-                        <!-- Network Information Section -->
+    <div id="carouselSystem" class="card carousel slide bg-dark text-light" data-bs-ride="ride">
+        <div class="carousel-indicators">
+            <button type="button" data-bs-target="#carouselSystem" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+            {% if incidents or logs%}
+            <button type="button" data-bs-target="#carouselSystem" data-bs-slide-to="1" aria-label="Slide 2"></button>
+            {% endif %}
+            {% if incidents and logs %}
+            <button type="button" data-bs-target="#carouselSystem" data-bs-slide-to="2" aria-label="Slide 3"></button>
+            {% endif %}
+        </div>
+        <div class="carousel-inner">
+            <div class="carousel-item active">
+                <div class="bg-dark">
+                    <div class="card-body text-light">
                         <br/>
-                        <p><strong><i class="fas fa-network-wired"></i> IP Address:</strong> {{ system.ip }}</p>
-                        {% if system.port %}
-                        <p><strong><i class="fas fa-plug"></i> Network Port:</strong> {{ system.port }}</p>
-                        {% endif %}
-                        {% if system.last_ping %}
-                        <p><strong><i class="fas fa-plug text-success"></i> Last Response Time:</strong> {{ system.last_ping}}</p>
-                        {% else %}
-                        <p><strong><i class="fas fa-plug text-success"></i> Last Response Time:</strong> Device Down</p>
-                        {% endif %}
-                        <p><strong><i class="fas fa-plug text-success"></i> Average Packet Loss</strong> {{ system.loss}} &percnt;</p>
-                        <br/>
-                        <!-- Network Information Section -->
-                        {% if system.location %}
-                            <p><strong><i class="fas fa-map-marker-alt"></i> Location:</strong> {{ system.location }}</p>
-                            <p><strong><i class="fas fa-map-marker-alt"></i> Town:</strong> {{ system.location.town }}</p>
-                            <p><strong><i class="fas fa-map-marker-alt"></i> Address:</strong> {{ system.location.address }}</p>
-                            <p><strong><i class="fas fa-map-marker-alt"></i> Room:</strong> {{ system.location.room }}</p>
-                        {% endif %}
+                        <div class="row">
+                            <div class="col-1">
+                            </div>
+                            <div class="col-4">
+                                <h5 class="mb-3">System Details:</h5>
+                                <p><strong>Name:</strong> {{ system.name }}</p>
+                                <p><strong>Type:</strong> {{ system.get_system_type_display }}</p>
+                                {% if system.model %}
+                                <p><strong>Model:</strong> {{ system.model }}</p>
+                                {% endif %}
+                            </div>
+                            <div class="col-3">
+                                <h5 class="mb-3">Network Details:</h5>
+                                <p><strong><i class="fas fa-network-wired"></i> IP Address:</strong> {{ system.ip }}</p>
+                                {% if system.port %}
+                                <p><strong>Network Port:</strong> {{ system.port }}</p>
+                                {% endif %}
+                                {% if system.last_ping %}
+                                <p><strong>Last Response Time:</strong> <span class="text-success">{{ system.last_ping}}</span></p>
+                                {% else %}
+                                <p><strong>Last Response Time:</strong> <span class="text-danger">Device Down</span></p>
+                                {% endif %}
+                                {% if system.loss > 5 %}
+                                <p><strong>Average Packet Loss</strong> <span class="text-danger">{{ system.loss}}&percnt;</span></p>
+                                {% else %}
+                                <p><strong>Average Packet Loss</strong> <span class="text-success">{{ system.loss}}&percnt;</span></p>
+                                {% endif %}
+                            </div>
+                            <div class="col-3">
+                                <h5 class="mb-3">Location Details:</h5>
+                                {% if system.location %}
+                                <p><strong><i class="fas fa-map-marker-alt"></i> Location:</strong> {{ system.location }}</p>
+                                <p><strong><i class="fas fa-map-marker-alt"></i> Town:</strong> {{ system.location.town }}</p>
+                                <p><strong><i class="fas fa-map-marker-alt"></i> Address:</strong> {{ system.location.address }}</p>
+                                <p><strong><i class="fas fa-map-marker-alt"></i> Room:</strong> {{ system.location.room }}</p>
+                                {% else %}
+                                <p><strong><i class="fas fa-map-marker-alt"></i> No location selected.</strong></p>
+                                {% endif %}
+                            </div>
+                            <div class="col-1">
+                            </div>
                         </div>
-                        <div class="col">
+                        <br/>
                         <h5 class="mb-3 text-center">Latency Graph:</h5>
-                        <div id="ping-plot" class="text-center">{{ system.graph|safe }}</div>
+                        <div id="ping-plot" class="card align-content-center">{{ system.graph|safe }}</div>
+                    </div>
+                    <div class="card-footer">
+                        <div class="btn-group" role="group">
+                            {% if system.port %}
+                            <a href="http://{{system.ip}}:{{system.port}}" class="btn btn-primary">
+                                <i class="fas fa-link"></i> Connect
+                            </a>
+                            {% endif %}
+                            {% if system.last_log %}
+                            <a href="{% url 'systems:logs' system.id %}" class="btn btn-secondary">
+                                <i class="fas fa-file-alt"></i> Logs
+                            </a>
+                            {% endif %}
+                            <a href="{% url 'systems:incidents' system.id %}" class="btn btn-secondary">
+                                <i class="fas fa-exclamation-triangle"></i> Incidents
+                            </a>
+                            <a href="{% url 'systems:edit' system.id %}" class="btn btn-dark">
+                                <i class="fas fa-edit"></i> Edit
+                            </a>
+                            <a href="{% url 'systems:remove' system.id %}" class="btn btn-danger">
+                                <i class="fas fa-trash-alt"></i> Remove
+                            </a>
                         </div>
                     </div>
-                </li>
-            </ul>
-        </div>
-        <!-- Action Buttons in Card Footer -->
-        <div class="card-footer">
-            <div class="btn-group" role="group">
-                {% if system.port %}
-                <a href="http://{{system.ip}}:{{system.port}}" class="btn btn-dark">
-                    <i class="fas fa-link"></i> Connect
-                </a>
-                {% endif %}
-                {% if system.last_log %}
-                <a href="{% url 'systems:logs' system.id %}" class="btn btn-secondary">
-                    <i class="fas fa-file-alt"></i> Logs
-                </a>
-                {% endif %}
-                <a href="{% url 'systems:incidents' system.id %}" class="btn btn-secondary">
-                    <i class="fas fa-exclamation-triangle"></i> Incidents
-                </a>
-                <a href="{% url 'systems:edit' system.id %}" class="btn btn-dark">
-                    <i class="fas fa-edit"></i> Edit
-                </a>
-                <a href="{% url 'systems:remove' system.id %}" class="btn btn-danger">
-                    <i class="fas fa-trash-alt"></i> Remove
-                </a>
+                </div>
             </div>
-        </div>
-    </div>
-    
-    {% comment %} Tu będzie karta systemu {% endcomment %}
-    <br/>
-
-    <div class="col-12">
-        {% if incidents %}
-        <div class="accordion" id="accordionServices">
-            <div class="accordion-item">
-                <h2 class="accordion-header">
-                    <button class="accordion-button collapsed">
-                        <div class="container text-start">
-                            <div class="row text-center">
-                                <h5> Last 5 incidents </h5>
+            {% if incidents %}
+            <div class="carousel-item">
+                <div class="bg-dark">
+                    <div class="card-body text-light">
+                        <div class="accordion" id="accordionServices">
+                            <div class="accordion-item">
+                                <h2 class="accordion-header">
+                                    <button class="accordion-button bg-dark text-light collapsed">
+                                        <div class="container text-start">
+                                            <div class="row text-center">
+                                                <h5> Last 10 incidents </h5>
+                                            </div>
+                                            <br/>
+                                            <div class="row">
+                                                <div class="col-1">ID:</div>
+                                                <div class="col-2">Date:</div>
+                                                <div class="col-1">Time:</div>
+                                                <div class="col-2">System name:</div>
+                                                <div class="col-2">
+                                                    <a
+                                                        class="nav-link dropdown-toggle"
+                                                        href="#"
+                                                        role="button"
+                                                        data-bs-toggle="dropdown"
+                                                        aria-expanded="false"
+                                                        >
+                                                    Tag:
+                                                    </a>
+                                                    <ul class="dropdown-menu">
+                                                        <li><a class="dropdown-item" href="{% url 'incidents:list' %}">All</a></li>
+                                                        <li><a class="dropdown-item" href="{% url 'incidents:list' 0 %}">System down</a></li>
+                                                        <li><a class="dropdown-item" href="{% url 'incidents:list' 1 %}">Log anomaly detected</a></li>
+                                                    </ul>
+                                                </div>
+                                                <div class="col-4">Title:</div>
+                                            </div>
+                                        </div>
+                                    </button>
+                                </h2>
                             </div>
-                            <br/>
-                            <div class="row">
-                                <div class="col-1">ID:</div>
-                                <div class="col-2">Date:</div>
-                                <div class="col-1">Time:</div>
-                                <div class="col-2">System name:</div>
-                                <div class="col-2">
-                                    <a
-                                        class="nav-link dropdown-toggle"
-                                        href="#"
-                                        role="button"
-                                        data-bs-toggle="dropdown"
-                                        aria-expanded="false"
-                                        >
-                                    Tag:
-                                    </a>
-                                    <ul class="dropdown-menu">
-                                        <li><a class="dropdown-item" href="{% url 'incidents:list' %}">All</a></li>
-                                        <li><a class="dropdown-item" href="{% url 'incidents:list' 0 %}">System down</a></li>
-                                        <li><a class="dropdown-item" href="{% url 'incidents:list' 1 %}">Log anomaly detected</a></li>
-                                    </ul>
-                                </div>
-                                <div class="col-4">Title:</div>
-                            </div>
+                            {% include 'datatables/incidents.html' with incidents=incidents dark=1 %}
                         </div>
-                    </button>
-                </h2>
-            </div>
-            {% include 'datatables/incidents.html' with incidents=incidents %}
-        </div>
-        {% endif %}
-
-        <br/>
-
-        {% if logs %}
-        <div class="accordion" id="accordionServices">
-            <div class="accordion-item">
-                <h2 class="accordion-header">
-                    <button class="accordion-button collapsed">
-                        <div class="container text-start">
-                            <div class="row text-center">
-                                <h5> Last 10 logs </h5>
-                            </div>
-                            <br/>
-                            <div class="row">
-                                <div class="col-2">Datetime:</div>
-                                <div class="col-2">IP Address:</div>
-                                <div class="col-2">Program:</div>
-                                <div class="col-1">
-                                    <a
-                                        class="nav-link dropdown-toggle"
-                                        href="#"
-                                        role="button"
-                                        data-bs-toggle="dropdown"
-                                        aria-expanded="false"
-                                        >
-                                    Label:
-                                    </a>
-                                    <ul class="dropdown-menu">
-                                        <li><a class="dropdown-item" href="{% url 'systems:logs'  system.id %}">All</a></li>
-                                        {% if clusters %}
-                                        {% for cluster in clusters %}
-                                        <li><a class="dropdown-item" href="{% url 'systems:logs' system.id cluster %}"> {{ cluster }} </a></li>
-                                        {% endfor %}
-                                        {% endif %}
-                                    </ul>
-                                </div>
-                                <div class="col-5">Message:</div>
-                            </div>
+                    </div>
+                    <div class="card-footer">
+                        <div class="btn-group" role="group">
+                            <a href="{% url 'systems:incidents' system.id %}" class="btn btn-secondary">
+                                <i class="fas fa-exclamation-triangle"></i> Incidents
+                            </a>
+                            <a href="{% url 'systems:incidents' system.id %}" class="btn btn-secondary">
+                                <i class="fas fa-exclamation-triangle"></i> All incidents
+                            </a>
                         </div>
-                    </button>
-                </h2>
+                    </div>
+                </div>
             </div>
-            {% include 'datatables/logs.html' with logs=logs %}
+            {% endif %}
+            {% if logs %}
+            <div class="carousel-item">
+                <div class="bg-dark">
+                    <div class="card-body text-light">
+                        <div class="accordion bg-dark text-light" id="accordionServices">
+                            <div class="accordion-item">
+                                <h2 class="accordion-header">
+                                    <button class="accordion-button bg-dark text-light collapsed">
+                                        <div class="container text-start">
+                                            <div class="row text-center">
+                                                <h5> Last 10 logs </h5>
+                                            </div>
+                                            <br/>
+                                            <div class="row">
+                                                <div class="col-2">Datetime:</div>
+                                                <div class="col-2">IP Address:</div>
+                                                <div class="col-2">Program:</div>
+                                                <div class="col-1">
+                                                    <a
+                                                        class="nav-link dropdown-toggle"
+                                                        href="#"
+                                                        role="button"
+                                                        data-bs-toggle="dropdown"
+                                                        aria-expanded="false"
+                                                        >
+                                                    Label:
+                                                    </a>
+                                                    <ul class="dropdown-menu">
+                                                        <li><a class="dropdown-item" href="{% url 'systems:logs'  system.id %}">All</a></li>
+                                                        {% if clusters %}
+                                                        {% for cluster in clusters %}
+                                                        <li><a class="dropdown-item" href="{% url 'systems:logs' system.id cluster %}"> {{ cluster }} </a></li>
+                                                        {% endfor %}
+                                                        {% endif %}
+                                                    </ul>
+                                                </div>
+                                                <div class="col-5">Message:</div>
+                                            </div>
+                                        </div>
+                                    </button>
+                                </h2>
+                            </div>
+                            {% include 'datatables/logs.html' with logs=logs dark=1%}
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <div class="btn-group" role="group">
+                            {% if system.last_log %}
+                            <a href="{% url 'systems:logs' system.id %}" class="btn btn-secondary">
+                                <i class="fas fa-file-alt"></i> System's logs
+                            </a>
+                            {% endif %}
+                            <a href="{% url 'logs:list'%}" class="btn btn-secondary">
+                                <i class="fas fa-exclamation-triangle"></i> All logs
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
         </div>
-        {% endif %}
-
-        <br/>    
     </div>
 </div>
 {% endblock %}

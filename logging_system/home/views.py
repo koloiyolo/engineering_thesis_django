@@ -36,14 +36,6 @@ def home(request):
     except:
         response = None
         ip = None
-        
-    # systems_d = System.objects.filter(last_ping=None)
-    # for system in systems_d:
-    #     system.graph = get_ping_graph(system, width=490)
-
-
-    # labels_graph = get_labels_graph()
-    # uptime_graph = get_uptime_graph()
 
     class Statistics:
         pass
@@ -61,13 +53,11 @@ def home(request):
 
     statistics.incident_tag0_count = Incident.objects.filter(tag=0).count()
     statistics.incident_tag1_count = Incident.objects.filter(tag=1).count()
-    # statistics.incident_tag0_resolved_count = Incident.objects.filter(tag=0, user__isnull=False).count()
-    # statistics.incident_tag1_resolved_count = Incident.objects.filter(tag=1, user__isnull=False).count()
     statistics.incident_tag0_unresolved_count = Incident.objects.filter(tag=0, user__isnull=True).count()
     statistics.incident_tag1_unresolved_count = Incident.objects.filter(tag=1, user__isnull=True).count()
 
     try:
-        statistics.incident_tag0_ratio = round(statistics.incident_tag0_unresolved_count /                                            100 * statistics.incident_tag0_count)
+        statistics.incident_tag0_ratio = round(statistics.incident_tag0_unresolved_count / statistics.incident_tag0_count * 100)
     except ZeroDivisionError:
          statistics.incident_tag0_ratio = 0
 

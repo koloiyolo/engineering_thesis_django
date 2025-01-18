@@ -2,9 +2,9 @@
         <div>
             <div id="featuredStatistics" class="carousel slide" data-bs-ride="carousel">
                 <div class="carousel-indicators">
-                    <button type="button" data-bs-target="#FeaturedStatistics" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
-                    <button type="button" data-bs-target="#FeaturedStatistics" data-bs-slide-to="1" aria-label="Slide 2"></button>
-                    <button type="button" data-bs-target="#FeaturedStatistics" data-bs-slide-to="2" aria-label="Slide 3"></button>
+                    <button type="button" data-bs-target="#featuredStatistics" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+                    <button type="button" data-bs-target="#featuredStatistics" data-bs-slide-to="1" aria-label="Slide 2"></button>
+                    <button type="button" data-bs-target="#featuredStatistics" data-bs-slide-to="2" aria-label="Slide 3"></button>
                 </div>
                 <div class="carousel-inner">
                     <div class="carousel-item active">
@@ -32,10 +32,10 @@
                                                 <p></p>
                                             </div>
                                             <div class="col">
-                                                <p>Offline systems: </p>
+                                                <p>Log anomalies:</p>
                                             </div>
                                             <div class="col">
-                                                <p>Log anomalies: </p>
+                                                <p>Offline systems:</p>
                                             </div>
                                         </div>
                                         <div class="row">
@@ -129,7 +129,7 @@
                                     <p>System down ratio: <strong class="text-success">{{statistics.system_down_ratio}}&percnt;</strong></p>
                                     {% endif %}
                                     <br/>
-                                    <a href="{% url 'systems:list' %}" class="btn btn-primary" style="width: auto;" > View Logs </a>
+                                    <a href="{% url 'systems:list' %}" class="btn btn-primary" style="width: auto;" > View Systems </a>
                                 </div>
                                 <div class="col">
                                     <p>Recent offline systems: </p>

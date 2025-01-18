@@ -104,7 +104,7 @@ def system(request, pk):
     clusters = Log.objects.filter(label__isnull=False).values_list('label', flat=True).distinct()
     logs = logs_short_message(logs)
     # -----
-    incidents = Incident.objects.filter(system=system).order_by("-id")[:5]
+    incidents = Incident.objects.filter(system=system).order_by("-id")[:10]
     data = {
         'system': system,
         'logs': logs,
