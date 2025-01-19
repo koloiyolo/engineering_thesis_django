@@ -82,13 +82,13 @@ class Settings(models.Model):
 
     s2 - Step 2 Outlier/Anomaly Detection
     '''
-    s1_vectorizer = models.IntegerField(null=True, blank=True, default=0, choices=ML_VECTORIZER_CHOICES)
+    s1_vectorizer = models.IntegerField(null=True, blank=True, default=1, choices=ML_VECTORIZER_CHOICES)
     s1_vectorizer_parameters = models.TextField(null=True, blank=True, default=None)
     s1_clusterer = models.IntegerField(null=True, blank=True, default=1, choices=ML_CLASSIFIER_CHOICES)
     s1_clusterer_parameters = models.TextField(null=True, blank=True, default=None)
     s2_vectorizer = models.IntegerField(default=0, choices=ML_VECTORIZER_CHOICES)
     s2_vectorizer_parameters = models.TextField(null=True, blank=True, default=None)
-    s2_clusterer = models.IntegerField(default=0, choices=ML_CLASSIFIER_CHOICES)
+    s2_clusterer = models.IntegerField(default=3, choices=ML_CLASSIFIER_CHOICES)
     s2_clusterer_parameters = models.TextField(null=True, blank=True, default=None)
     on_model_change_reset = models.BooleanField(choices=BOOL_CHOICES, default=False)
     ml_anomaly_cluster = models.IntegerField(default=0, choices=ML_ANOMALY_CHOICES)

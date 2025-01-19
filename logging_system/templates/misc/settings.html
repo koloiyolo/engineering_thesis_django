@@ -1,5 +1,5 @@
 {% extends 'elements/base.html' %} {% block content %}
-<div class="col-md-8 offset-md-2">
+<div class="col-10 offset-1">
     <form method="POST">
         {% csrf_token %} {% if form.errors %}
         <div class="alert alert-danger alert-dismissible fade show" role="alert">
@@ -17,7 +17,7 @@
         <br />
         <div class="card">
             <ul class="list-group list-group-flush">
-                <li class="list-group-item">
+                <li class="card-header" style='list-style-type: none;'>
                     <div class="form-group">
                         <br />
                         <h5>Main settings</h5>
@@ -48,7 +48,7 @@
                         <br />
                     </div>
                 </li>
-                <li class="card-header" style='list-style-type: none;'>
+                <li class="list-group-item">
                     <div class="form-group">
                         <br />
                         <h5>Email settings</h5>
@@ -57,7 +57,7 @@
                         <br/>
                     </div>
                 </li>
-                <li class="list-group-item">
+                <li class="card-header" style='list-style-type: none;'>
                     <div class="form-group">
                         <br />
                         <h5>Machine Learning Settings</h5>
@@ -70,7 +70,7 @@
                             <div class="col-8">
                                 Hyper parameters
                                 {{ form.s1_vectorizer_parameters }}
-                            </div>s
+                            </div>
                         </div>
                         <div class="row">
                             <div class="col-4">
@@ -128,13 +128,15 @@
                             </div>
                         </div>
                         <br />
+                        <a class="btn btn-danger" href="{% url 'config:reset_ml' %}">Reset ML configuration</a>
+                        <br />
                     </div>
                 </li>
             </ul>
         </div>
         <br />
         <button type="submit" class="btn btn-dark">Save</button>
-        <a class="btn btn-secondary" href="{{ request.META.HTTP_REFERER|default:'/' }}">Reset</a>
+        <a class="btn btn-danger" href="{% url 'config:reset' %}">Reset</a>
         <a class="btn btn-secondary" href="{{ request.META.HTTP_REFERER|default:'/' }}">Back</a>
     </form>
     </br>

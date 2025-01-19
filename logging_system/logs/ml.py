@@ -22,8 +22,12 @@ def train(cl=None, vec=None):
 
     settings = Settings.load()
     cl = cl if cl is not None else settings.s1_clusterer
-    cl_tag = settings.get_s1_clusterer_display()
     vec = vec if vec is not None else settings.s1_vectorizer
+
+    if cl is None or vec is None:
+        return f"Training: Skipping. No algorithm selected"
+    
+    cl_tag = settings.get_s1_clusterer_display()
     cl_params = None if settings.s1_clusterer_parameters == "" else ast.literal_eval(settings.s1_clusterer_parameters)
     vec_params = None if settings.s1_vectorizer_parameters == "" else ast.literal_eval(settings.s1_vectorizer_parameters)
 
@@ -58,15 +62,13 @@ def train(cl=None, vec=None):
 def classify():
     settings = Settings.load()
     cl = settings.s2_clusterer
-    cl_tag = settings.get_s2_clusterer_display()
+    cl1_tag = settings.get_s2_clusterer_display()
+    cl2_tag = settings.get_s2_clusterer_display()
     vec = settings.s2_vectorizer
     cl_params = None if settings.s2_clusterer_parameters == "" else ast.literal_eval(settings.s2_clusterer_parameters)
     vec_params = None if settings.s2_vectorizer_parameters == "" else ast.literal_eval(settings.s2_vectorizer_parameters) 
 
     file = 'step1.joblib'
-
-    if (os.path.exists(file)) is False:
-        return f"{cl_tag} Classification: Pipeline file '{file}' doesn't exist."
 
     data = get_logs(train=False)
     if data is None:
@@ -77,14 +79,16 @@ def classify():
     df['program'] = data.values('program')
     df['message'] = data.values('message')
 
-    step1 = joblib.load(file)
+
+    if (os.path.exists(file)):
+        step1 = joblib.load(file)
+        df['group'] = grouping(data=df, pipeline=step1)
 
     step2 = Pipeline([
         ('vectorizer', get_preprocessor(vec=vec, vec_params=vec_params)),
         ('clusterer', get_clusterer(cl=cl, cl_params=cl_params))
     ])
 
-    df['group'] = grouping(data=df, pipeline=step1)
     labels = outlier_detection(data=df, pipeline=step2)
     
     
@@ -106,7 +110,7 @@ def classify():
         send_mass_mail(emails)
     # send_anomaly_emails(data, debug=True)
 
-    return f"{cl_tag} Classification: Success."
+    return f"Step 1 Grouping: {cl1_tag} Step 2 Anomaly Detection: {cl2_tag}, Status: Success."
 
 #######################################################################################################
 
