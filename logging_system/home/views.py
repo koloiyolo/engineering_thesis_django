@@ -70,14 +70,22 @@ def home(request):
     # Log
     statistics.log_count = Log.objects.count()
     statistics.log_anomaly_count = Log.objects.filter(label=0).count()
-    statistics.log_anomaly_ratio = round(statistics.log_anomaly_count/statistics.log_count * 100)
+
+    try:
+        statistics.log_anomaly_ratio = round(statistics.log_anomaly_count/statistics.log_count * 100)
+    except ZeroDivisionError:
+        statistics.log_anomaly_ratio = 0
 
     statistics.log_devices_anomaly = Log.objects.filter(label=0).values('host').annotate(count=Count('host')).order_by('-count')
 
     # Systems
     statistics.system_count = System.objects.count()
     statistics.system_down_count = System.objects.filter(d_count__gt=0).count()
-    statistics.system_down_ratio = round(statistics.system_down_count / statistics.system_count * 100)
+
+    try:
+        statistics.system_down_ratio = round(statistics.system_down_count / statistics.system_count * 100)
+    except ZeroDivisionError:
+        statistics.system_down_ratio = 0
 
     statistics.system_systems_down = System.objects.filter(d_count__gt=0).order_by('d_count')[:3]
     
@@ -108,7 +116,7 @@ def register_user(request):
             password = form.cleaned_data['password1']
             user = authenticate(request, username=username, password=password)
             login(request, user)
-            AuditLog.objects.create(user=user, text=f"{user} created account successfuly.")
+            AuditLog.objects.create(user=user, message=f"{user} created account successfuly.")
             messages.success(request, "You have successfuly created an account!")
             return redirect('home')
         pass

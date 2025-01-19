@@ -73,22 +73,23 @@ class Settings(models.Model):
     ping_retries = models.IntegerField(default=5)
     graph_interval = models.IntegerField(default=6, choices=INTERVAL_CHOICES)
 
-    # Email settings
+    # Notifications settings
     notifications_mode = models.IntegerField(choices=NOTIFICATION_CHOICES, default=0)
-    # email_host = models.CharField(max_length=200, default='smtp.example.com')
-    # email_port = models.IntegerField(default=465)
-    # email_host_user = models.CharField(max_length=200, default='from@example.com')
-    # email_host_password = models.CharField(max_length=200, default='password')
-    # email_use_ssl = models.BooleanField(default=True, choices=BOOL_CHOICES)
-    # email_from_address = models.EmailField(default='noreply@example.com')
 
     # ML settings
-    ml_classifier = models.IntegerField(default=1, choices=ML_CLASSIFIER_CHOICES)
-    ml_classifier_parameters = models.TextField(blank=True, default=None)
-    ml_classifier_optional = models.IntegerField(null=True, blank=True, default=None, choices=ML_CLASSIFIER_CHOICES)
-    ml_classifier_parameters_optional = models.TextField(blank=True, default=None)
-    ml_vectorizer = models.IntegerField(default=0, choices=ML_VECTORIZER_CHOICES)
-    ml_vectorizer_parameters = models.TextField(blank=True, default=None)
+    '''
+    s1 - Step 1 Log Grouping
+
+    s2 - Step 2 Outlier/Anomaly Detection
+    '''
+    s1_vectorizer = models.IntegerField(null=True, blank=True, default=0, choices=ML_VECTORIZER_CHOICES)
+    s1_vectorizer_parameters = models.TextField(null=True, blank=True, default=None)
+    s1_clusterer = models.IntegerField(null=True, blank=True, default=1, choices=ML_CLASSIFIER_CHOICES)
+    s1_clusterer_parameters = models.TextField(null=True, blank=True, default=None)
+    s2_vectorizer = models.IntegerField(default=0, choices=ML_VECTORIZER_CHOICES)
+    s2_vectorizer_parameters = models.TextField(null=True, blank=True, default=None)
+    s2_clusterer = models.IntegerField(default=0, choices=ML_CLASSIFIER_CHOICES)
+    s2_clusterer_parameters = models.TextField(null=True, blank=True, default=None)
     on_model_change_reset = models.BooleanField(choices=BOOL_CHOICES, default=False)
     ml_anomaly_cluster = models.IntegerField(default=0, choices=ML_ANOMALY_CHOICES)
     ml_train = models.IntegerField(default=10000)
@@ -108,19 +109,21 @@ class Settings(models.Model):
             
             if self.pk:
                 settings = Settings.load()
-                clf = settings.ml_classifier
-                clf_optional = settings.ml_classifier_optional
-                vec = settings.ml_vectorizer
+                cl1 = settings.s1_clusterer
+                cl2 = settings.s2_clusterer
+                vec1 = settings.s1_vectorizer
+                vec2 = settings.s2_vectorizer
 
                 if (self.on_model_change_reset 
-                    and (self.ml_classifier != clf
-                    or self.ml_classifier_optional != clf_optional
-                    or self.ml_vectorizer != vec)):
+                    and (self.s1_clusterer != cl1
+                    or self.s2_clusterer != cl2
+                    or self.s1_vectorizer != vec1
+                    or self.s2_vectorizer != vec2)):
 
                     Log.objects.update(label=None)
 
                     from logs.tasks import ml_train_task
-                    ml_train_task.delay(clf=self.ml_classifier)
+                    ml_train_task.delay(cl=self.s1_clusterer, vec=self.s1_vectorizer)
 
 
         

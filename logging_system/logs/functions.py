@@ -34,7 +34,7 @@ def get_logs(train=False):
 # zips logs with labels and saves them to database
 # creates incidents
 # returns emails
-def zip_logs(logs=None, labels=None, anomaly_label=0):
+def zip_logs(logs=None, labels=None, groups=None, anomaly_label=0):
 
     if logs is None:
         return None, "Classification: Logs dont exist"
@@ -42,17 +42,21 @@ def zip_logs(logs=None, labels=None, anomaly_label=0):
     if labels is None:
         return None, "Classification: Labels dont exist"
 
+    if groups is None:
+        return None, "Classification: groups dont exist"
+
     emails = []
-    for log, label in zip(logs, labels):
-            if label == anomaly_label:
-                log.label = 0
-                log.save()
-                email = create_incident(log=log)
-                if email is not False:
-                    emails.append(email)
-            else:
-                log.label = 1
-                log.save()
+    for log, label, group in zip(logs, labels, groups):
+        log.log_group = group
+        if label == anomaly_label:
+            log.label = 0
+            log.save()
+            email = create_incident(log=log)
+            if email is not False:
+                emails.append(email)
+        else:
+            log.label = 1
+            log.save()
     return emails, "Zipping complete"
 
 

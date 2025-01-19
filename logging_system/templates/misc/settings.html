@@ -54,24 +54,6 @@
                         <h5>Email settings</h5>
                         {{ form.notifications_mode.label_tag }}
                         {{ form.notifications_mode }}
-                        {% comment %} {{ form.email_host.label_tag }}
-                        {{ form.email_host }}
-                        <div class="row">
-                            <div class="col">
-                                {{ form.email_port.label_tag }}
-                                {{ form.email_port }}
-                            </div>
-                            <div class="col">
-                                {{ form.email_use_ssl.label_tag }}
-                                {{ form.email_use_ssl }}
-                            </div>
-                        </div>
-                        {{ form.email_host_user.label_tag }}
-                        {{ form.email_host_user }}
-                        {{ form.email_host_password.label_tag }}
-                        {{ form.email_host_password }}
-                        {{ form.email_from_address.label_tag }}
-                        {{ form.email_from_address }} {% endcomment %}
                         <br/>
                     </div>
                 </li>
@@ -79,36 +61,50 @@
                     <div class="form-group">
                         <br />
                         <h5>Machine Learning Settings</h5>
+                        <p>Step 1 Log grouping (optional)</p>
                         <div class="row">
                             <div class="col-4">
-                                {{ form.ml_classifier.label_tag }}
-                                {{ form.ml_classifier }}
+                                Data preprocessor
+                                {{ form.s1_vectorizer }}
                             </div>
                             <div class="col-8">
-                                {{ form.ml_classifier_parameters.label_tag }}
-                                {{ form.ml_classifier_parameters }}
+                                Hyper parameters
+                                {{ form.s1_vectorizer_parameters }}
+                            </div>s
+                        </div>
+                        <div class="row">
+                            <div class="col-4">
+                                Clustering algorithm
+                                {{ form.s1_clusterer }}
+                            </div>
+                            <div class="col-8">
+                                Hyper parameters
+                                {{ form.s1_clusterer_parameters }}
+                            </div>
+                        </div>
+                        <br />
+                        <p>Step 2 log anomaly detection<p>
+                        <div class="row">
+                            <div class="col-4">
+                                Data preprocessor
+                                {{ form.s2_vectorizer }}
+                            </div>
+                            <div class="col-8">
+                                Hyper parameters
+                                {{ form.s2_vectorizer_parameters }}
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-4">
-                                {{ form.ml_classifier_optional.label_tag }}
-                                {{ form.ml_classifier_optional }}
+                                Clustering algorithm
+                                {{ form.s2_clusterer }}
                             </div>
                             <div class="col-8">
-                                {{ form.ml_classifier_parameters_optional.label_tag }}
-                                {{ form.ml_classifier_parameters_optional }}
+                                Hyper parameters
+                                {{ form.s2_clusterer_parameters }}
                             </div>
                         </div>
-                        <div class="row">
-                            <div class="col-4">
-                                {{ form.ml_vectorizer.label_tag }}
-                                {{ form.ml_vectorizer }}
-                            </div>
-                            <div class="col-8">
-                                {{ form.ml_vectorizer_parameters.label_tag }}
-                                {{ form.ml_vectorizer_parameters }}
-                            </div>
-                        </div>
+                        <br />
                         <div class="row">
                             {{ form.ml_hyper_parametrs.label_tag }}
                             {{ form.ml_hyper_parameters }}
@@ -138,6 +134,7 @@
         </div>
         <br />
         <button type="submit" class="btn btn-dark">Save</button>
+        <a class="btn btn-secondary" href="{{ request.META.HTTP_REFERER|default:'/' }}">Reset</a>
         <a class="btn btn-secondary" href="{{ request.META.HTTP_REFERER|default:'/' }}">Back</a>
     </form>
     </br>

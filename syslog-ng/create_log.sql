@@ -4,5 +4,10 @@ CREATE TABLE IF NOT EXISTS log (
     host VARCHAR(255),
     program VARCHAR(255),
     message TEXT,
+    log_group INT,
     label INT
 );
+
+
+ALTER TABLE log
+ADD COLUMN IF NOT EXISTS log_group INT;

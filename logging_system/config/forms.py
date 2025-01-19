@@ -18,18 +18,14 @@ class SettingsPage(forms.ModelForm):
             "ping_retries",
             "graph_interval",
             "notifications_mode",
-            # "email_host",
-            # "email_port",
-            # "email_host_user",
-            # "email_host_password",
-            # "email_use_ssl",
-            # "email_from_address",
-            "ml_classifier",
-            "ml_classifier_optional",
-            "ml_vectorizer",
-            "ml_classifier_parameters",
-            "ml_classifier_parameters_optional",
-            "ml_vectorizer_parameters",
+            "s1_clusterer",
+            "s2_clusterer",
+            "s1_vectorizer",
+            "s2_vectorizer",
+            "s1_clusterer_parameters",
+            "s2_clusterer_parameters",
+            "s1_vectorizer_parameters",
+            "s2_vectorizer_parameters",
             "on_model_change_reset",
             "ml_anomaly_cluster",
             "ml_train",
@@ -58,55 +54,34 @@ class SettingsPage(forms.ModelForm):
             "notifications_mode": Select(attrs={
                 'class': "form-control",
             }),
-            # "email_host": TextInput(attrs={
-            #     'class': "form-control",
-            #     'label': 'Email hosting',
-            #     'placeholder': 'smtp.example.com',                
-            # }),
-            # "email_port": NumberInput(attrs={
-            #     'class': "form-control",
-            #     'label': 'Email hosting port',
-            #     'placeholder': '465',
-            # }),
-            # "email_use_ssl": Select(attrs={
-            #     'class': "form-control",
-            # }),
-            # "email_host_user": EmailInput(attrs={
-            #     'class': "form-control",
-            #     'label': 'Email hosting user',
-            #     'placeholder': 'user@example.com',                
-            # }),
-            # "email_host_password":  TextInput(attrs={
-            #     'class': "form-control",
-            #     'label': 'Email hosting user password',
-            #     'type':'password',
-            #     'placeholder': 'password',                
-            # }),
-            # "email_from_address": EmailInput(attrs={
-            #     'class': "form-control",
-            #     'label': 'Email address',
-            #     'placeholder': 'user@example.com',                
-            # }),
-            "ml_classifier": Select(attrs={
+            "s1_clusterer": Select(attrs={
                 'class': "form-control",
             }),
-            "ml_classifier_parameters": TextInput(attrs={
+            "s1_clusterer_parameters": TextInput(attrs={
                 'class': "form-control",
                 'label': 'Classifier hyperparameters',
                 'placeholder': "eg. {'n_clusters': 2, 'learning_rate': 0.01, 'eps': 0.8}",                
             }),
-            "ml_classifier_optional": Select(attrs={
+            "s2_clusterer": Select(attrs={
                 'class': "form-control",
             }),
-            "ml_classifier_parameters_optional": TextInput(attrs={
+            "s2_clusterer_parameters": TextInput(attrs={
                 'class': "form-control",
                 'label': 'Classifier hyperparameters',
                 'placeholder': "eg. {'n_clusters': 2, 'learning_rate': 0.01, 'eps': 0.8}",                
             }),
-            "ml_vectorizer": Select(attrs={
+            "s1_vectorizer": Select(attrs={
                 'class': "form-control",
             }),
-            "ml_vectorizer_parameters": TextInput(attrs={
+            "s1_vectorizer_parameters": TextInput(attrs={
+                'class': "form-control",
+                'label': 'Classifier hyperparameters',
+                'placeholder': "eg. {lowercase=True, preprocessor=None}",                
+            }),
+            "s2_vectorizer": Select(attrs={
+                'class': "form-control",
+            }),
+            "s2_vectorizer_parameters": TextInput(attrs={
                 'class': "form-control",
                 'label': 'Classifier hyperparameters',
                 'placeholder': "eg. {lowercase=True, preprocessor=None}",                
