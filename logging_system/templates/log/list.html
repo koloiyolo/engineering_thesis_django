@@ -23,7 +23,6 @@
             </div>
         </form>
     </div>
-    {% if logs %}
     <div class="accordion" id="accordionServices">
         <div class="accordion-item">
             <h2 class="accordion-header">
@@ -87,10 +86,5 @@
     </div>
     <br />
     {% include 'elements/pagination.html' with objs=logs %}
-    {% else %}
-    <br />
-    <h3>No logs data yet</h3>
-    <br />
-    {% endif %}
 </div>
 {% endblock %}

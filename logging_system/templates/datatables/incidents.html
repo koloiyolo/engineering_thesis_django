@@ -41,7 +41,10 @@
             {% comment %} {% endif %} {% endcomment %}
             >
             <div class="btn-group" role="group">
+                {% if incident.user %}
+                {% else %}
                 <a class="btn btn-success" href="{% url 'incidents:resolve' incident.id%}"> Resolve <a>
+                {% endif %}
                 <a href="{% url 'incidents:view' incident.id %}" class="btn btn-dark">
                 View
                 </a>
