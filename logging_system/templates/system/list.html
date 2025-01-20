@@ -43,17 +43,16 @@
             </div>
         </form>
     </div>
-    {% if systems %}
     <div class="accordion" id="accordionServices">
         <div class="accordion-item">
             <h2 class="accordion-header">
                 <div class="accordion-button collapsed">
                     <div class="container text-start">
                         <div class="row">
-                            <div class="col">ID:</div>
-                            <div class="col">Name:</div>
-                            <div class="col">IP Address:</div>
-                            <div class="col">
+                            <div class="col-1">ID:</div>
+                            <div class="col-2">Name:</div>
+                            <div class="col-2">IP Address:</div>
+                            <div class="col-2">
                                 <a
                                     class="nav-link dropdown-toggle"
                                     href="#"
@@ -69,9 +68,9 @@
                                     <li><a class="dropdown-item" href="{% url 'systems:list' 1 %}"> Service </a></li>
                                 </ul>
                             </div>
-                            <div class="col">Status:</div>
-                            <div class="col">Packet Loss:</div>
-                            <div class="col">
+                            <div class="col-1">Status:</div>
+                            <div class="col-2">Packet Loss:</div>
+                            <div class="col-2">
                                 <a
                                     class="nav-link dropdown-toggle"
                                     href="#"
@@ -110,21 +109,21 @@
                         >
                         <div class="container text-start">
                             <div class="row">
-                                <div class="col">{{ obj.id }}</div>
-                                <div class="col">{{ obj.name }}</div>
-                                <div class="col">{{ obj.ip }}</div>
-                                <div class="col">{{ obj.get_system_type_display  }}</div>
+                                <div class="col-1">{{ obj.id }}</div>
+                                <div class="col-2">{{ obj.name }}</div>
+                                <div class="col-2">{{ obj.ip }}</div>
+                                <div class="col-2">{{ obj.get_system_type_display  }}</div>
                                 {% if obj.last_ping %}
-                                <div class="col text-success">{{ obj.last_ping }}</div>
+                                <div class="col-1 text-success">{{ obj.last_ping }}</div>
                                 {% else %}
-                                <div class="col text-danger">Device down</div>
+                                <div class="col-1 text-danger">Down</div>
                                 {% endif %}
                                 {% if obj.loss %}
-                                <div class="col text-danger">{{ obj.loss }}&percnt;</div>
+                                <div class="col-2 text-danger">{{ obj.loss }}&percnt;</div>
                                 {% else %}
-                                <div class="col text-success">{{ obj.loss }}&percnt;</div>
+                                <div class="col-2 text-success">{{ obj.loss }}&percnt;</div>
                                 {% endif %}
-                                <div class="col">{{ obj.location }}</div>
+                                <div class="col-2">{{ obj.location }}</div>
                             </div>
                         </div>
                     </button>
@@ -167,10 +166,5 @@
     </div>
     <br />
     {% include 'elements/pagination.html' with objs=systems %}
-    {% else %}
-    <br />
-    <h3>No systems yet <a href="{% url 'systems:add' %}">add new one</a></h3>
-    <br />
-    {% endif %}
 </div>
 {% endblock %}
