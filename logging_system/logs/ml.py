@@ -91,7 +91,7 @@ def classify():
 
     labels = outlier_detection(data=df, pipeline=step2)
     
-    
+    # DBSCAN / HDBSCAN correction
     if settings.s2_clusterer in [2, 3]:
         labels = labels + 1
 
