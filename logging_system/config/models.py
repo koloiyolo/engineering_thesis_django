@@ -57,11 +57,11 @@ class Settings(models.Model):
         (100,'100')
     ]
     INTERVAL_CHOICES = [
-        (1, '1'),
-        (3, '3'),
-        (6, '6'),
-        (12, '12'),
-        (24, '24')
+        (1, '1 hour'),
+        (3, '3 hours'),
+        (6, '6 hours'),
+        (12, '12 hours'),
+        (24, '24 hours')
     ]
 
     ACTION_INTERVAL_CHOICES = [
@@ -94,6 +94,7 @@ class Settings(models.Model):
     ping_interval = models.IntegerField(default=3, choices=ACTION_INTERVAL_CHOICES)
     ping_interval_ctr = models.IntegerField(default=0)
     graph_interval = models.IntegerField(default=6, choices=INTERVAL_CHOICES)
+    system_discovery_dns = models.BooleanField(default=True, choices=BOOL_CHOICES)
 
     # Notifications settings
     notifications_mode = models.IntegerField(choices=NOTIFICATION_CHOICES, default=0)

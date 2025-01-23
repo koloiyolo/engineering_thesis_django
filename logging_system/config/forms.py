@@ -18,6 +18,7 @@ class SettingsPage(forms.ModelForm):
             "ping_retries",
             "ping_interval",
             "graph_interval",
+            "system_discovery_dns",
             "notifications_mode",
             "s1_clusterer",
             "s2_clusterer",
@@ -55,6 +56,9 @@ class SettingsPage(forms.ModelForm):
                 'placeholder': 'Interval in hours, eg. 12'
             }),
             "ping_interval": Select(attrs={
+                'class': "form-control"
+            }),
+            "system_discovery_dns": Select(attrs={
                 'class': "form-control"
             }),
             "notifications_mode": Select(attrs={

@@ -37,6 +37,16 @@
                                 {{ form.items_per_page }}
                             </div>
                             <div class="col">
+                                {{ form.notifications_mode.label_tag }}
+                                {{ form.notifications_mode }}
+                            </div>
+                            <div class="col">
+                                Use DNS name in system discovery
+                                {{ form.system_discovery_dns}}
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
                                 {{ form.ping_retries.label_tag }}
                                 {{ form.ping_retries }}
                             </div>
@@ -52,16 +62,7 @@
                         <br />
                     </div>
                 </li>
-                <li class="list-group-item">
-                    <div class="form-group">
-                        <br />
-                        <h5>Email settings</h5>
-                        {{ form.notifications_mode.label_tag }}
-                        {{ form.notifications_mode }}
-                        <br/>
-                    </div>
-                </li>
-                <li class="card-header" style='list-style-type: none;'>
+                <li class="list-group-item" style='list-style-type: none;'>
                     <div class="form-group">
                         <br />
                         <h5>Machine Learning Settings</h5>
