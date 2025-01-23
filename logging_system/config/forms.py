@@ -16,6 +16,7 @@ class SettingsPage(forms.ModelForm):
             "contact_email",
             "items_per_page",
             "ping_retries",
+            "ping_interval",
             "graph_interval",
             "notifications_mode",
             "s1_clusterer",
@@ -29,7 +30,9 @@ class SettingsPage(forms.ModelForm):
             "on_model_change_reset",
             "ml_anomaly_cluster",
             "ml_train",
-            "ml_classify"
+            "ml_train_interval",
+            "ml_classify",
+            "ml_classify_interval"
         ]
         widgets = {
             "maintenance_mode": Select(attrs={
@@ -50,6 +53,9 @@ class SettingsPage(forms.ModelForm):
             "graph_interval": Select(attrs={
                 'class': "form-control",
                 'placeholder': 'Interval in hours, eg. 12'
+            }),
+            "ping_interval": Select(attrs={
+                'class': "form-control"
             }),
             "notifications_mode": Select(attrs={
                 'class': "form-control",
@@ -96,8 +102,14 @@ class SettingsPage(forms.ModelForm):
                 'class': "form-control",
                 'placeholder': '10000'
             }),
+            "ml_train_interval": Select(attrs={
+                'class': "form-control"
+            }),
             "ml_classify": NumberInput(attrs={
                 'class': "form-control",
                 'placeholder': '2000'
+            }),
+            "ml_classify_interval": Select(attrs={
+                'class': "form-control"
             }),
         }

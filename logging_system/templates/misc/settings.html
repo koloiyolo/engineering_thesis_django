@@ -41,6 +41,10 @@
                                 {{ form.ping_retries }}
                             </div>
                             <div class="col">
+                                {{ form.ping_interval.label_tag }}
+                                {{ form.ping_interval }}
+                            </div>
+                            <div class="col">
                                 {{ form.graph_interval.label_tag }}
                                 {{ form.graph_interval }}
                             </div>
@@ -111,6 +115,26 @@
                         </div>
                         <div class="row">
                             <div class="col">
+                                Training dataset size
+                                {{ form.ml_train }}
+                            </div>
+                            <div class="col">
+                                Training interval
+                                {{ form.ml_train_interval }}
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                Classification dataset size
+                                {{ form.ml_classify }}
+                            </div>
+                            <div class="col">
+                                Classification interval
+                                {{ form.ml_classify_interval }}
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
                                 {{ form.on_model_change_reset.label_tag }}
                                 {{ form.on_model_change_reset }}
                             </div>
@@ -118,18 +142,11 @@
                                 {{ form.ml_anomaly_cluster.label_tag }}
                                 {{ form.ml_anomaly_cluster }}
                             </div>
-                            <div class="col">
-                                {{ form.ml_train.label_tag }}
-                                {{ form.ml_train }}
-                            </div>
-                            <div class="col">
-                                {{ form.ml_classify.label_tag }}
-                                {{ form.ml_classify }}
+                            <div class="col text-center">
+                                <br/>
+                                <a class="btn btn-danger" href="{% url 'config:reset_ml' %}">Reset ML configuration</a>
                             </div>
                         </div>
-                        <br />
-                        <a class="btn btn-danger" href="{% url 'config:reset_ml' %}">Reset ML configuration</a>
-                        <br />
                     </div>
                 </li>
             </ul>

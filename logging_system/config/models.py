@@ -64,6 +64,26 @@ class Settings(models.Model):
         (24, '24')
     ]
 
+    ACTION_INTERVAL_CHOICES = [
+        (1, '5 minutes'),
+        (2, '10 minutes'),
+        (3, '15 minutes'),
+        (6, '30 minutes'),
+        (12, '1 hour'),
+        (24, '2 hours')
+    ]
+
+    TRAIN_INTERVAL_CHOICES = [
+        (1, '1 hour'),
+        (3, '3 hour'),
+        (6, '6 hour'),
+        (12, '12 hour'),
+        (24, '1 day'),
+        (48, '2 days'),
+        (168, 'One week'),
+        (338, 'Two weeks')
+    ]
+
     # Site settings
     site_name = models.CharField(max_length=200, default='My Site')
     maintenance_mode = models.BooleanField(default=False, choices=BOOL_CHOICES)
@@ -71,6 +91,8 @@ class Settings(models.Model):
     items_per_page = models.IntegerField(default=20, choices=PAGE_CHOICES)
     
     ping_retries = models.IntegerField(default=5)
+    ping_interval = models.IntegerField(default=3, choices=ACTION_INTERVAL_CHOICES)
+    ping_interval_ctr = models.IntegerField(default=0)
     graph_interval = models.IntegerField(default=6, choices=INTERVAL_CHOICES)
 
     # Notifications settings
@@ -93,7 +115,11 @@ class Settings(models.Model):
     on_model_change_reset = models.BooleanField(choices=BOOL_CHOICES, default=False)
     ml_anomaly_cluster = models.IntegerField(default=0, choices=ML_ANOMALY_CHOICES)
     ml_train = models.IntegerField(default=10000)
+    ml_train_interval = models.IntegerField(default=3, choices=TRAIN_INTERVAL_CHOICES)
+    ml_train_interval_ctr = models.IntegerField(default=0)
     ml_classify = models.IntegerField(default = 2000)
+    ml_classify_interval = models.IntegerField(default=3, choices=ACTION_INTERVAL_CHOICES)
+    ml_classify_interval_ctr = models.IntegerField(default=0)
 
     # tracking info
     last_changed_at = models.DateField(auto_now=True)
