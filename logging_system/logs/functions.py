@@ -25,7 +25,7 @@ def get_logs(train=False):
 
         return data
     else:
-        data = Log.objects.all().filter(label=None)[:settings.ml_classify]
+        data = Log.objects.all().filter(label=None)[:settings.ml_cluster]
         if data.count() == 0:
             return None
 

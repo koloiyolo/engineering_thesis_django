@@ -118,9 +118,9 @@ class Settings(models.Model):
     ml_train = models.IntegerField(default=10000)
     ml_train_interval = models.IntegerField(default=3, choices=TRAIN_INTERVAL_CHOICES)
     ml_train_interval_ctr = models.IntegerField(default=0)
-    ml_classify = models.IntegerField(default = 2000)
-    ml_classify_interval = models.IntegerField(default=3, choices=ACTION_INTERVAL_CHOICES)
-    ml_classify_interval_ctr = models.IntegerField(default=0)
+    ml_cluster = models.IntegerField(default = 2000)
+    ml_cluster_interval = models.IntegerField(default=3, choices=ACTION_INTERVAL_CHOICES)
+    ml_cluster_interval_ctr = models.IntegerField(default=0)
 
     # tracking info
     last_changed_at = models.DateField(auto_now=True)

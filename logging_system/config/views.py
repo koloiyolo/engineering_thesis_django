@@ -44,7 +44,9 @@ def reset_ml(request):
     settings.on_model_change_reset = False
     settings.ml_anomaly_cluster = 0
     settings.ml_train = 2000
-    settings.ml_classify = 10000
+    settings.ml_train_interval = 3
+    settings.ml_cluster = 10000
+    settings.ml_cluster_interval = 3
 
     settings.save()
     AuditLog.objects.create(user=request.user, message=f"User {request.user} restored default ml configuration.")

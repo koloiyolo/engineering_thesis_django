@@ -58,8 +58,8 @@ def train(cl=None, vec=None):
 
     return f"{clusterer} Training: Success."
 
-# sklearn ML classify function
-def classify():
+# sklearn ML cluster function
+def cluster():
     settings = Settings.load()
     cl = settings.s2_clusterer
     cl1_tag = settings.get_s2_clusterer_display()

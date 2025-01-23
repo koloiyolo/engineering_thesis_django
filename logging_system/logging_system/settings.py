@@ -148,8 +148,8 @@ CELERY_RESULT_SERIALIZER = 'json'
 from celery.schedules import crontab
 
 CELERY_BEAT_SCHEDULE = {
-    'classify-every-5-minutes': {
-        'task': 'logs.tasks.ml_classify_task',
+    'cluster-every-5-minutes': {
+        'task': 'logs.tasks.ml_cluster_task',
         'schedule': 300.0,
         'args': (),
     },

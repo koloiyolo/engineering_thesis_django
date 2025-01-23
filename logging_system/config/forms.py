@@ -32,8 +32,8 @@ class SettingsPage(forms.ModelForm):
             "ml_anomaly_cluster",
             "ml_train",
             "ml_train_interval",
-            "ml_classify",
-            "ml_classify_interval"
+            "ml_cluster",
+            "ml_cluster_interval"
         ]
         widgets = {
             "maintenance_mode": Select(attrs={
@@ -109,11 +109,11 @@ class SettingsPage(forms.ModelForm):
             "ml_train_interval": Select(attrs={
                 'class': "form-control"
             }),
-            "ml_classify": NumberInput(attrs={
+            "ml_cluster": NumberInput(attrs={
                 'class': "form-control",
                 'placeholder': '2000'
             }),
-            "ml_classify_interval": Select(attrs={
+            "ml_cluster_interval": Select(attrs={
                 'class': "form-control"
             }),
         }

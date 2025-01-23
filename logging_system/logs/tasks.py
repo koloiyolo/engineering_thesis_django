@@ -1,19 +1,19 @@
 from celery import shared_task
 
 from audit_log.models import AuditLog
-from .ml import classify, train
+from .ml import cluster, train
 from config.models import Settings
 
 
 @shared_task
-def ml_classify_task ():
+def ml_cluster_task ():
     settings = Settings.load()
-    settings.ml_classify_interval_ctr += 1
+    settings.ml_cluster_interval_ctr += 1
     settings.save()
-    if settings.ml_classify_interval_ctr == settings.ml_classify_interval:
-        settings.ml_classify_interval_ctr = 0
+    if settings.ml_cluster_interval_ctr == settings.ml_cluster_interval:
+        settings.ml_cluster_interval_ctr = 0
         settings.save()
-        output = classify()
+        output = cluster()
         AuditLog.objects.create(user=None, message=output)
         return output
 
