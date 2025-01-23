@@ -1,4 +1,5 @@
 import csv
+import socket
 from django.http import HttpResponse
 
 from django.core.mail import send_mass_mail
@@ -92,8 +93,16 @@ def discover_systems(ip_range, system_type=None, prefix=""):
             print(f"{ip}: host not found. Response: {response_time}")
         else:
             print(f"{ip}: host found")
+
+            try:
+                dns_name = socket.gethostbyaddr(ip)[0]
+            except (socket.herror, socket.gaierror):
+                dns_name = None
+            
+            system_name = dns_name if dns_name else f"{prefix}{ip}"
+
             system = System.objects.create(
-                name=f"{prefix}{ip}",
+                name=system_name,
                 ip=ip,
                 system_type=system_type)
             systems.append(system)
