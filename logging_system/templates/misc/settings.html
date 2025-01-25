@@ -4,9 +4,9 @@
         {% csrf_token %} {% if form.errors %}
         <div class="alert alert-danger alert-dismissible fade show" role="alert">
             <strong>Your form has Errors</strong>
-            {% for field in form %} 
-            {% if field.errors %} 
-            {{ field.errors }} 
+            {% for field in form %}
+            {% if field.errors %}
+            {{ field.errors }}
             {% endif %} {% endfor %}
         </div>
         {% endif %}
@@ -88,7 +88,8 @@
                             </div>
                         </div>
                         <br />
-                        <p>Step 2 log anomaly detection<p>
+                        <p>Step 2 log anomaly detection
+                        <p>
                         <div class="row">
                             <div class="col-4">
                                 Data preprocessor
@@ -126,11 +127,11 @@
                         </div>
                         <div class="row">
                             <div class="col">
-                                Classification dataset size
+                                Clustering dataset size
                                 {{ form.ml_cluster }}
                             </div>
                             <div class="col">
-                                Classification interval
+                                Clustering interval
                                 {{ form.ml_cluster_interval }}
                             </div>
                         </div>
@@ -144,7 +145,7 @@
                                 {{ form.ml_anomaly_cluster }}
                             </div>
                             <div class="col text-center">
-                                <br/>
+                                <br />
                                 <a class="btn btn-danger" href="{% url 'config:reset_ml' %}">Reset ML configuration</a>
                             </div>
                         </div>
