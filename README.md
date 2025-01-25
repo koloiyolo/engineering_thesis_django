@@ -11,7 +11,7 @@ Jakub Kołodziej's engineering thesis project.
 
 ## Features
 * Log collection(using Syslog-ng).
-* Log classification using unsupervised learning algorithms like:
+* 2 step log outlier detection using unsupervised learning algorithms like [#12](https://github.com/koloiyolo/engineering_thesis_django/pull/12):
   * K-Means,
   * AHC Clustering,
   * SOM (Self-organizing Map),
