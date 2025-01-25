@@ -57,11 +57,31 @@ class Settings(models.Model):
         (100,'100')
     ]
     INTERVAL_CHOICES = [
-        (1, '1'),
-        (3, '3'),
-        (6, '6'),
-        (12, '12'),
-        (24, '24')
+        (1, '1 hour'),
+        (3, '3 hours'),
+        (6, '6 hours'),
+        (12, '12 hours'),
+        (24, '24 hours')
+    ]
+
+    ACTION_INTERVAL_CHOICES = [
+        (1, '5 minutes'),
+        (2, '10 minutes'),
+        (3, '15 minutes'),
+        (6, '30 minutes'),
+        (12, '1 hour'),
+        (24, '2 hours')
+    ]
+
+    TRAIN_INTERVAL_CHOICES = [
+        (1, '1 hour'),
+        (3, '3 hour'),
+        (6, '6 hour'),
+        (12, '12 hour'),
+        (24, '1 day'),
+        (48, '2 days'),
+        (168, 'One week'),
+        (338, 'Two weeks')
     ]
 
     # Site settings
@@ -71,28 +91,36 @@ class Settings(models.Model):
     items_per_page = models.IntegerField(default=20, choices=PAGE_CHOICES)
     
     ping_retries = models.IntegerField(default=5)
+    ping_interval = models.IntegerField(default=3, choices=ACTION_INTERVAL_CHOICES)
+    ping_interval_ctr = models.IntegerField(default=0)
     graph_interval = models.IntegerField(default=6, choices=INTERVAL_CHOICES)
+    system_discovery_dns = models.BooleanField(default=True, choices=BOOL_CHOICES)
 
-    # Email settings
+    # Notifications settings
     notifications_mode = models.IntegerField(choices=NOTIFICATION_CHOICES, default=0)
-    # email_host = models.CharField(max_length=200, default='smtp.example.com')
-    # email_port = models.IntegerField(default=465)
-    # email_host_user = models.CharField(max_length=200, default='from@example.com')
-    # email_host_password = models.CharField(max_length=200, default='password')
-    # email_use_ssl = models.BooleanField(default=True, choices=BOOL_CHOICES)
-    # email_from_address = models.EmailField(default='noreply@example.com')
 
     # ML settings
-    ml_classifier = models.IntegerField(default=1, choices=ML_CLASSIFIER_CHOICES)
-    ml_classifier_parameters = models.TextField(blank=True, default=None)
-    ml_classifier_optional = models.IntegerField(null=True, blank=True, default=None, choices=ML_CLASSIFIER_CHOICES)
-    ml_classifier_parameters_optional = models.TextField(blank=True, default=None)
-    ml_vectorizer = models.IntegerField(default=0, choices=ML_VECTORIZER_CHOICES)
-    ml_vectorizer_parameters = models.TextField(blank=True, default=None)
+    '''
+    s1 - Step 1 Log Grouping
+
+    s2 - Step 2 Outlier/Anomaly Detection
+    '''
+    s1_vectorizer = models.IntegerField(null=True, blank=True, default=1, choices=ML_VECTORIZER_CHOICES)
+    s1_vectorizer_parameters = models.TextField(null=True, blank=True, default=None)
+    s1_clusterer = models.IntegerField(null=True, blank=True, default=1, choices=ML_CLASSIFIER_CHOICES)
+    s1_clusterer_parameters = models.TextField(null=True, blank=True, default=None)
+    s2_vectorizer = models.IntegerField(default=0, choices=ML_VECTORIZER_CHOICES)
+    s2_vectorizer_parameters = models.TextField(null=True, blank=True, default=None)
+    s2_clusterer = models.IntegerField(default=3, choices=ML_CLASSIFIER_CHOICES)
+    s2_clusterer_parameters = models.TextField(null=True, blank=True, default=None)
     on_model_change_reset = models.BooleanField(choices=BOOL_CHOICES, default=False)
     ml_anomaly_cluster = models.IntegerField(default=0, choices=ML_ANOMALY_CHOICES)
     ml_train = models.IntegerField(default=10000)
-    ml_classify = models.IntegerField(default = 2000)
+    ml_train_interval = models.IntegerField(default=3, choices=TRAIN_INTERVAL_CHOICES)
+    ml_train_interval_ctr = models.IntegerField(default=0)
+    ml_cluster = models.IntegerField(default = 2000)
+    ml_cluster_interval = models.IntegerField(default=3, choices=ACTION_INTERVAL_CHOICES)
+    ml_cluster_interval_ctr = models.IntegerField(default=0)
 
     # tracking info
     last_changed_at = models.DateField(auto_now=True)
@@ -108,19 +136,21 @@ class Settings(models.Model):
             
             if self.pk:
                 settings = Settings.load()
-                clf = settings.ml_classifier
-                clf_optional = settings.ml_classifier_optional
-                vec = settings.ml_vectorizer
+                cl1 = settings.s1_clusterer
+                cl2 = settings.s2_clusterer
+                vec1 = settings.s1_vectorizer
+                vec2 = settings.s2_vectorizer
 
                 if (self.on_model_change_reset 
-                    and (self.ml_classifier != clf
-                    or self.ml_classifier_optional != clf_optional
-                    or self.ml_vectorizer != vec)):
+                    and (self.s1_clusterer != cl1
+                    or self.s2_clusterer != cl2
+                    or self.s1_vectorizer != vec1
+                    or self.s2_vectorizer != vec2)):
 
                     Log.objects.update(label=None)
 
                     from logs.tasks import ml_train_task
-                    ml_train_task.delay(clf=self.ml_classifier)
+                    ml_train_task.delay(cl=self.s1_clusterer, vec=self.s1_vectorizer)
 
 
         

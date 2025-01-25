@@ -136,7 +136,7 @@
                     </div>
                     <div class="card-footer">
                         <div class="btn-group" role="group">
-                            <a href="{% url 'systems:incidents' system.id %}" class="btn btn-secondary">
+                            <a href="{% url 'systems:incidents' system.id %}" class="btn btn-primary">
                                 <i class="fas fa-exclamation-triangle"></i> Incidents
                             </a>
                             <a href="{% url 'systems:incidents' system.id %}" class="btn btn-secondary">
@@ -195,7 +195,7 @@
                     <div class="card-footer">
                         <div class="btn-group" role="group">
                             {% if system.last_log %}
-                            <a href="{% url 'systems:logs' system.id %}" class="btn btn-secondary">
+                            <a href="{% url 'systems:logs' system.id %}" class="btn btn-primary">
                                 <i class="fas fa-file-alt"></i> System's logs
                             </a>
                             {% endif %}
