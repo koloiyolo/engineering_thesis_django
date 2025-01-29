@@ -13,34 +13,34 @@
                                 <div class="row">
                                     <div class="col">
                                         <h5>Incidents Statistics</h5>
-                                        <p>Incidents count: <strong>{{statistics.incident_count}}</strong></p>
-                                        <p>Resolved incidents: <strong class="text-success">{{statistics.incident_resolved_count}}</strong></p>
+                                        <p>Incidents Count: <strong>{{statistics.incident_count}}</strong></p>
+                                        <p>Resolved Incidents: <strong class="text-success">{{statistics.incident_resolved_count}}</strong></p>
                                         {% if statistics.incident_resolved_ratio < 80 %}
-                                        <p>Resolved incidents ratio: <strong class="text-danger">{{statistics.incident_resolved_ratio}}&percnt;</strong></p>
+                                        <p>Resolved Incidents Ratio: <strong class="text-danger">{{statistics.incident_resolved_ratio}}&percnt;</strong></p>
                                         {% else %}
-                                        <p>Resolved incidents ratio: <strong class="text-success">{{statistics.incident_resolved_ratio}}&percnt;</strong></p>
+                                        <p>Resolved Incidents Ratio: <strong class="text-success">{{statistics.incident_resolved_ratio}}&percnt;</strong></p>
                                         {% endif %}
                                         <br/>
                                         <a href="{% url 'incidents:list' %}" class="btn btn-primary" style="width: auto;" > View Incidents </a>
                                     </div>
                                     <div class="col">
                                         <div class="row">
-                                            <h5>Per category: </h5>
+                                            <h5>Per Category: </h5>
                                         </div>
                                         <div class="row">
                                             <div class="col">
                                                 <p></p>
                                             </div>
                                             <div class="col">
-                                                <p>Log anomalies:</p>
+                                                <p>Log Anomalies:</p>
                                             </div>
                                             <div class="col">
-                                                <p>Offline systems:</p>
+                                                <p>Offline Systems:</p>
                                             </div>
                                         </div>
                                         <div class="row">
                                             <div class="col">
-                                                <p>Incident ount: </p>
+                                                <p>Incident Count: </p>
                                             </div>
                                             <div class="col">
                                                 <p>{{statistics.incident_tag1_count}}</p>
@@ -80,12 +80,12 @@
                                 <div class="row">
                                     <div class="col">
                                         <h5>Logs Statistics</h5>
-                                        <p>Logs count: <strong>{{statistics.log_count}}</strong></p>
-                                        <p>Anomaly logs count: <strong>{{statistics.log_anomaly_count}}</strong></p>
+                                        <p>Logs Count: <strong>{{statistics.log_count}}</strong></p>
+                                        <p>Anomaly logs Count: <strong>{{statistics.log_anomaly_count}}</strong></p>
                                         {% if statistics.log_anomaly_ratio > 10 %}
-                                        <p>Anomaly logs ratio: <strong class="text-danger">{{statistics.log_anomaly_ratio}}&percnt;</strong></p>
+                                        <p>Anomaly Logs Ratio: <strong class="text-danger">{{statistics.log_anomaly_ratio}}&percnt;</strong></p>
                                         {% else %}
-                                        <p>Anomaly logs ratio: <strong class="text-success">{{statistics.log_anomaly_ratio}}&percnt;</strong></p>
+                                        <p>Anomaly Logs Ratio: <strong class="text-success">{{statistics.log_anomaly_ratio}}&percnt;</strong></p>
                                         {% endif %}
                                         <br/>
                                         <a href="{% url 'logs:list' %}" class="btn btn-primary" style="width: auto;" > View Logs </a>
@@ -96,7 +96,7 @@
                                                 <p>System IP: </p>
                                             </div>
                                             <div class="col">
-                                                <p>Anomaly records: </p>
+                                                <p>Anomaly Records: </p>
                                             </div>
                                         </div>
                                         {% for obj in statistics.log_devices_anomaly %}
@@ -121,18 +121,18 @@
                                 <div class="row">
                                 <div class="col">
                                     <h5>System Statistics</h5>
-                                    <p>System count: <strong>{{statistics.system_count}}</strong></p>
-                                    <p>System down count: <strong class="text-danger">{{statistics.system_down_count}}</strong></p>
+                                    <p>System Count: <strong>{{statistics.system_count}}</strong></p>
+                                    <p>System Down Count: <strong class="text-danger">{{statistics.system_down_count}}</strong></p>
                                     {% if statistics.system_down_ratio > 10 %}
-                                    <p>System down ratio: <strong class="text-danger">{{statistics.system_down_ratio}}&percnt;</strong></p>
+                                    <p>System Down Ratio: <strong class="text-danger">{{statistics.system_down_ratio}}&percnt;</strong></p>
                                     {% else %}
-                                    <p>System down ratio: <strong class="text-success">{{statistics.system_down_ratio}}&percnt;</strong></p>
+                                    <p>System Down Ratio: <strong class="text-success">{{statistics.system_down_ratio}}&percnt;</strong></p>
                                     {% endif %}
                                     <br/>
                                     <a href="{% url 'systems:list' %}" class="btn btn-primary" style="width: auto;" > View Systems </a>
                                 </div>
                                 <div class="col">
-                                    <p>Recent offline systems: </p>
+                                    <p>Recent Offline Systems: </p>
                                     {% for obj in statistics.system_systems_down %}
                                     <p>{{ obj }} </p>
                                     {% endfor %}

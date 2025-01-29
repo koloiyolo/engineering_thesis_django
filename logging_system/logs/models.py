@@ -7,7 +7,7 @@ class Log(models.Model):
     host                = models.TextField(blank=True, null=True)
     program             = models.TextField(blank=True, null=True)
     message             = models.TextField(blank=True, null=True)
-    log_group               = models.IntegerField(blank=True, null=True)
+    log_group           = models.IntegerField(blank=True, null=True)
     label               = models.IntegerField(blank=True, null=True)
 
     class Meta:

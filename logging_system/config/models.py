@@ -131,7 +131,7 @@ class Settings(models.Model):
 
     def save(self, *args, **kwargs):
         if Settings.objects.exists():
-            if not self.pk and AppSettings.objects.exists():
+            if not self.pk and Settings.objects.exists():
                 raise ValidationError("There can be only one Settings instance.")
             
             if self.pk:
@@ -147,7 +147,7 @@ class Settings(models.Model):
                     or self.s1_vectorizer != vec1
                     or self.s2_vectorizer != vec2)):
 
-                    Log.objects.update(label=None)
+                    Log.objects.update(label=None, log_group=None)
 
                     from logs.tasks import ml_train_task
                     ml_train_task.delay(cl=self.s1_clusterer, vec=self.s1_vectorizer)

@@ -67,37 +67,43 @@ def cluster():
     vec = settings.s2_vectorizer
     cl_params = None if settings.s2_clusterer_parameters == "" else ast.literal_eval(settings.s2_clusterer_parameters)
     vec_params = None if settings.s2_vectorizer_parameters == "" else ast.literal_eval(settings.s2_vectorizer_parameters) 
+    labels = None
 
     file = 'step1.joblib'
 
     data = get_logs(train=False)
     if data is None:
-        return f"{cl_tag} Classification: Not enough log data."
+        return f"{cl2_tag} Classification: Not enough log data."
 
     df = pd.DataFrame()
-    df['host'] = data.values('host')
-    df['program'] = data.values('program')
     df['message'] = data.values('message')
-
-
-    if (os.path.exists(file)):
-        step1 = joblib.load(file)
-        df['group'] = grouping(data=df, pipeline=step1)
-
+    
     step2 = Pipeline([
         ('vectorizer', get_preprocessor(vec=vec, vec_params=vec_params)),
         ('clusterer', get_clusterer(cl=cl, cl_params=cl_params))
     ])
 
-    labels = outlier_detection(data=df, pipeline=step2)
-    
+    if (os.path.exists(file)) and settings.s1_clusterer and settings.s1_vectorizer:
+        step1 = joblib.load(file)
+        df['host'] = data.values('host')
+        df['program'] = data.values('program')
+
+        # Step 1
+        df['group'] = grouping(data=df, pipeline=step1)
+
+        # Step 2
+        labels = outlier_detection(data=df, pipeline=step2)
+
+    else:
+        labels = step2.fit_predict(df['message'].astype(str))
+
     # DBSCAN / HDBSCAN correction
-    if settings.s2_clusterer in [2, 3]:
+    if cl in [2, 3]:
         labels = labels + 1
 
     emails, message = zip_logs(
         logs=data,
-        groups=df['group'],
+        groups = df.get('group', None),
         labels=labels, 
         anomaly_label = Settings.load().ml_anomaly_cluster
         )

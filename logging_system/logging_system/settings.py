@@ -160,7 +160,7 @@ CELERY_BEAT_SCHEDULE = {
     },
     'ping-every-5-minutes': {
         'task': 'systems.tasks.ping_task',
-        'schedule': 300.0,
+        'schedule': 1600.0,
         'args':(),
     }
 
