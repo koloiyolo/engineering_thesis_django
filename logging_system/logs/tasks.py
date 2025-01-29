@@ -10,7 +10,7 @@ def ml_cluster_task ():
     settings = Settings.load()
     settings.ml_cluster_interval_ctr += 1
     settings.save()
-    if settings.ml_cluster_interval_ctr == settings.ml_cluster_interval:
+    if settings.ml_cluster_interval_ctr >= settings.ml_cluster_interval:
         settings.ml_cluster_interval_ctr = 0
         settings.save()
         output = cluster()
@@ -22,7 +22,7 @@ def ml_train_task (cl=None, vec=None):
     settings = Settings.load()
     settings.ml_train_interval_ctr += 1
     settings.save()
-    if settings.ml_train_interval_ctr == settings.ml_train_interval:
+    if settings.ml_train_interval_ctr >= settings.ml_train_interval:
         settings.ml_train_interval_ctr = 0
         settings.save()
         output = train(cl=cl, vec=vec)
