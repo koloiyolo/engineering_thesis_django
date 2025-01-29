@@ -9,7 +9,7 @@ def ping_task ():
     settings = Settings.load()
     settings.ping_interval_ctr += 1
     settings.save()
-    if settings.ping_interval_ctr == settings.ping_interval:
+    if settings.ping_interval_ctr >= settings.ping_interval:
         settings.ping_interval_ctr = 0
         settings.save()
         ping_systems(System.objects.filter(to_ping=True))
