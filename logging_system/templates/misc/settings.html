@@ -69,21 +69,21 @@
                         <p>Step 1 Log grouping (optional)</p>
                         <div class="row">
                             <div class="col-4">
-                                Data preprocessor
+                                Data preprocessor:
                                 {{ form.s1_vectorizer }}
                             </div>
                             <div class="col-8">
-                                Hyper parameters
+                                Hyper parameters:
                                 {{ form.s1_vectorizer_parameters }}
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-4">
-                                Clustering algorithm
+                                Clustering algorithm:
                                 {{ form.s1_clusterer }}
                             </div>
                             <div class="col-8">
-                                Hyper parameters
+                                Hyper parameters:
                                 {{ form.s1_clusterer_parameters }}
                             </div>
                         </div>
@@ -92,21 +92,21 @@
                         <p>
                         <div class="row">
                             <div class="col-4">
-                                Data preprocessor
+                                Data preprocessor:
                                 {{ form.s2_vectorizer }}
                             </div>
                             <div class="col-8">
-                                Hyper parameters
+                                Hyper parameters:
                                 {{ form.s2_vectorizer_parameters }}
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-4">
-                                Clustering algorithm
+                                Clustering algorithm:
                                 {{ form.s2_clusterer }}
                             </div>
                             <div class="col-8">
-                                Hyper parameters
+                                Hyper parameters:
                                 {{ form.s2_clusterer_parameters }}
                             </div>
                         </div>
@@ -117,21 +117,21 @@
                         </div>
                         <div class="row">
                             <div class="col">
-                                Training dataset size
+                                Training dataset size:
                                 {{ form.ml_train }}
                             </div>
                             <div class="col">
-                                Training interval
+                                Training interval:
                                 {{ form.ml_train_interval }}
                             </div>
                         </div>
                         <div class="row">
                             <div class="col">
-                                Clustering dataset size
+                                Clustering dataset size:
                                 {{ form.ml_cluster }}
                             </div>
                             <div class="col">
-                                Clustering interval
+                                Clustering interval:
                                 {{ form.ml_cluster_interval }}
                             </div>
                         </div>
@@ -146,7 +146,7 @@
                             </div>
                             <div class="col text-center">
                                 <br />
-                                <a class="btn btn-danger" href="{% url 'config:reset_ml' %}">Reset ML configuration</a>
+                                <a class="btn btn-danger" href="{% url 'config:reset_ml' %}">Reset ML Configuration</a>
                             </div>
                         </div>
                     </div>
