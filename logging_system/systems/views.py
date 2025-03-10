@@ -6,11 +6,10 @@ from django.utils import timezone
 from .functions import get_ping_graph, get_packet_loss, export_csv
 from logging_system.functions import pagination, logs_short_message
 
-from .models import System, Ping
+from .models import System
 from incidents.models import Incident
 from logs.models import Log
 from locations.models import Location
-from config.models import Settings
 from .forms import SystemForm, DiscoverSystemsForm
 from audit_log.models import AuditLog
 from .tasks import discover_systems_task
@@ -64,7 +63,7 @@ def systems(request, location=None, system_type=None):
             ).order_by("id")
         else:
             systems = System.objects.order_by("id")
-    # update system last_log
+
     for system in systems:
         last_log = Log.objects.filter(host= system.ip).last()
         if last_log is not None:

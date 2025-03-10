@@ -25,24 +25,23 @@ class SystemModelTest(TestCase):
             last_log="2024-12-01 12:00:00",
             d_count=10,
             email_notify=True,
-            location=self.location,  # ForeignKey to Location
+            location=self.location,
             service_type="Web Service",
             model="ABC123",
             notes="Test system note"
         )
 
     def test_system_creation(self):
-        # Test if the System instance is created correctly
         self.assertEqual(self.system.name, "Test Device")
         self.assertEqual(self.system.ip, "192.168.0.1")
-        self.assertEqual(self.system.system_type, 0)  # Device
+        self.assertEqual(self.system.system_type, 0)
         self.assertEqual(self.system.port, "8080")
         self.assertTrue(self.system.to_ping)
         self.assertEqual(self.system.last_ping, "2024-12-01")
         self.assertEqual(self.system.last_log, "2024-12-01 12:00:00")
         self.assertEqual(self.system.d_count, 10)
         self.assertTrue(self.system.email_notify)
-        self.assertEqual(self.system.location.name, "Main Office")  # Verify Location
+        self.assertEqual(self.system.location.name, "Main Office")
         self.assertEqual(self.system.service_type, "Web Service")
         self.assertEqual(self.system.model, "ABC123")
         self.assertEqual(self.system.notes, "Test system note")

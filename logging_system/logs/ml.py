@@ -14,7 +14,7 @@ import ast
 from .models import Log
 from .functions import zip_logs, get_logs
 from config.models import Settings
-from incidents.functions import create_incident
+
 
 
 # sklearn ML train function prototype
