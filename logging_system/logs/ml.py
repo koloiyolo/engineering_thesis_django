@@ -75,6 +75,7 @@ def cluster():
     if data is None:
         return f"{cl2_tag} Classification: Not enough log data."
 
+    
     df = pd.DataFrame()
     df['message'] = data.values('message')
     
@@ -83,8 +84,16 @@ def cluster():
         ('clusterer', get_clusterer(cl=cl, cl_params=cl_params))
     ])
 
-    if (os.path.exists(file)) and settings.s1_clusterer and settings.s1_vectorizer:
-        step1 = joblib.load(file)
+    if settings.s1_clusterer and settings.s1_vectorizer:
+        step1 = None
+        if (os.path.exists(file)):
+            step1 = joblib.load(file)
+        else: 
+            step1 = Pipeline([
+                ('vectorizer', get_preprocessor(vec=settings.s1_vectorizer, vec_params=settings.s1_vectorizer_parameters)),
+                ('clusterer', get_clusterer(cl=settings.s1_clusterer, cl_params=settings.s1_clusterer_parameters))
+            ])
+
         df['host'] = data.values('host')
         df['program'] = data.values('program')
 
@@ -93,7 +102,6 @@ def cluster():
 
         # Step 2
         labels = outlier_detection(data=df, pipeline=step2)
-
     else:
         labels = step2.fit_predict(df['message'].astype(str))
 
@@ -181,11 +189,15 @@ def grouping(data=None, pipeline = None):
     return y
 
 def outlier_detection(data=None, pipeline = None):
-    grouped_data = data.groupby('group')
+    try:
+        grouped_data = data.groupby('group')
 
-    for _, group_data in grouped_data:
-        X = group_data['message'].astype(str)
-        group_data['cluster'] = pipeline.fit_predict(X)
-        data.loc[group_data.index, 'cluster'] = group_data['cluster']
+        for _, group_data in grouped_data:
+            X = group_data['message'].astype(str)
+            group_data['cluster'] = pipeline.fit_predict(X)
+            data.loc[group_data.index, 'cluster'] = group_data['cluster']
+    except Exception as e:
+        print(f"Outlier Detection Exception: {e}")
+        return None
 
     return data['cluster']
