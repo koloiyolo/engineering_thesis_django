@@ -9,5 +9,4 @@ RUN pip install -r requirements.txt
 COPY . .
 RUN chmod 777 script.sh
 
-
 EXPOSE 80
