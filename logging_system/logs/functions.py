@@ -6,7 +6,6 @@ from config.models import Settings
 from incidents.functions import create_incident
 
 
-
 # get logs from database
 def get_logs(train=False):
     data = None
@@ -16,7 +15,7 @@ def get_logs(train=False):
         to_train = settings.ml_train
         if to_train > _count:
             offset = random.randint(0, (_count - to_train))
-            data = Log.objects.all()[offset:offset + to_train]
+            data = Log.objects.all()[offset : offset + to_train]
         else:
             data = Log.objects.all()
 
@@ -25,24 +24,22 @@ def get_logs(train=False):
 
         return data
     else:
-        data = Log.objects.all().filter(label=None)[:settings.ml_cluster]
+        data = Log.objects.all().filter(label=None)[: settings.ml_cluster]
         if data.count() == 0:
             return None
 
     return data
 
+
 # zips logs with labels and saves them to database
 # creates incidents
 # returns emails
 def zip_logs(logs=None, labels=None, groups=None, anomaly_label=0):
-
     if logs is None:
         return None, "Classification: Logs dont exist"
 
     if labels is None:
         return None, "Classification: Labels dont exist"
-
-
 
     emails = []
     if groups:
@@ -75,26 +72,25 @@ def zip_logs(logs=None, labels=None, groups=None, anomaly_label=0):
 
 
 def export_csv(logs, count=None, labels=True, file_name="logs"):
-
     if labels:
         logs = logs.filter(label__isnull=False)
-    
+
     if count is not None:
         logs = logs[:count]
-    else: 
+    else:
         logs = logs
 
-    response = HttpResponse(content_type='text/csv')
-    response['Content-Disposition'] = f"attachment; filename={file_name}.csv"
+    response = HttpResponse(content_type="text/csv")
+    response["Content-Disposition"] = f"attachment; filename={file_name}.csv"
 
     file = csv.writer(response)
     if labels:
-        file.writerow(['datetime', 'host', 'program', 'message', 'label'])
+        file.writerow(["datetime", "host", "program", "message", "label"])
         for log in logs:
             file.writerow([log.datetime, log.host, log.program, log.message, log.label])
 
-    else: 
-        file.writerow(['datetime', 'host', 'program', 'message'])
+    else:
+        file.writerow(["datetime", "host", "program", "message"])
         for log in logs:
             file.writerow([log.datetime, log.host, log.program, log.message])
 

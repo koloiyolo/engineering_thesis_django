@@ -6,7 +6,7 @@ from config.models import Settings
 
 
 @shared_task
-def ml_cluster_task ():
+def ml_cluster_task():
     settings = Settings.load()
     settings.ml_cluster_interval_ctr += 1
     settings.save()
@@ -17,8 +17,9 @@ def ml_cluster_task ():
         AuditLog.objects.create(user=None, message=output)
         return output
 
+
 @shared_task
-def ml_train_task (cl=None, vec=None):
+def ml_train_task(cl=None, vec=None):
     settings = Settings.load()
     settings.ml_train_interval_ctr += 1
     settings.save()
@@ -28,5 +29,3 @@ def ml_train_task (cl=None, vec=None):
         output = train(cl=cl, vec=vec)
         AuditLog.objects.create(user=None, message=output)
         return output
-    
-    

@@ -11,42 +11,42 @@ from .functions import export_csv
 from audit_log.models import AuditLog
 from systems.models import System
 
+
 @login_required
 def logs(request, label=None):
     logs = None
-    q = request.GET.get('search', '')
+    q = request.GET.get("search", "")
     if label is not None:
         if q:
             logs = Log.objects.filter(
-                Q(host__icontains=q) |
-                Q(program__icontains=q) |
-                Q(message__icontains=q),
-                label=label
-            ).order_by('-id')
+                Q(host__icontains=q)
+                | Q(program__icontains=q)
+                | Q(message__icontains=q),
+                label=label,
+            ).order_by("-id")
         else:
-            logs = Log.objects.filter(label=label).order_by('-id')
+            logs = Log.objects.filter(label=label).order_by("-id")
     else:
         if q:
             logs = Log.objects.filter(
-                Q(host__icontains=q) |
-                Q(program__icontains=q) |
-                Q(message__icontains=q)
-            ).order_by('-id')
+                Q(host__icontains=q) | Q(program__icontains=q) | Q(message__icontains=q)
+            ).order_by("-id")
         else:
-            logs = Log.objects.order_by('-id')
+            logs = Log.objects.order_by("-id")
     page = pagination(logs, request.GET.get("page"))
-    clusters = Log.objects.filter(label__isnull=False).values_list('label', flat=True).distinct()
-    
+    clusters = (
+        Log.objects.filter(label__isnull=False)
+        .values_list("label", flat=True)
+        .distinct()
+    )
+
     page = logs_short_message(page)
-    hosts = Log.objects.all().values_list('host', flat=True).distinct()
+    hosts = Log.objects.all().values_list("host", flat=True).distinct()
     systems = []
     for host in hosts:
         systems.append(System.objects.filter(ip=host).first())
-    data = {
-        'systems': systems,
-        'logs': page,
-        'clusters': clusters}
-    return render(request, 'log/list.html', data)
+    data = {"systems": systems, "logs": page, "clusters": clusters}
+    return render(request, "log/list.html", data)
 
 
 @login_required
@@ -56,10 +56,18 @@ def export(request, pk=None):
         system = System.objects.get(id=pk)
 
     form = ExportToCsvForm(request.POST or None)
-    if request.method == 'POST':
+    if request.method == "POST":
         if form.is_valid():
-            file_name = form.cleaned_data.get("file_name") if form.cleaned_data.get("file_name") else "" 
-            count = form.cleaned_data.get("count") if form.cleaned_data.get("count") else None
+            file_name = (
+                form.cleaned_data.get("file_name")
+                if form.cleaned_data.get("file_name")
+                else ""
+            )
+            count = (
+                form.cleaned_data.get("count")
+                if form.cleaned_data.get("count")
+                else None
+            )
             labels = form.cleaned_data.get("with_labels")
 
             logs = None
@@ -67,10 +75,21 @@ def export(request, pk=None):
                 logs = Log.objects.all().order_by("-id")
             else:
                 logs = Log.objects.filter(host=system.ip).order_by("-id")
-                
+
             response = export_csv(logs, count=count, file_name=file_name, labels=labels)
-            AuditLog.objects.create(user=request.user, message=f"User {request.user} exported logs data successfully.")
+            AuditLog.objects.create(
+                user=request.user,
+                message=f"User {request.user} exported logs data successfully.",
+            )
             return response
     else:
-        return render(request, 'log/export.html', {'form': form, 'system': system.id if system else None})
-    return render(request, 'log/export.html', {'form': form, 'system': system.id if system else None})
+        return render(
+            request,
+            "log/export.html",
+            {"form": form, "system": system.id if system else None},
+        )
+    return render(
+        request,
+        "log/export.html",
+        {"form": form, "system": system.id if system else None},
+    )

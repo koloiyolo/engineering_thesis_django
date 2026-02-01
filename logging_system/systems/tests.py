@@ -2,8 +2,8 @@ from django.test import TestCase
 from .models import System, Ping
 from locations.models import Location
 
-class SystemModelTest(TestCase):
 
+class SystemModelTest(TestCase):
     def setUp(self):
         # Create a test Location instance
         self.location = Location.objects.create(
@@ -11,7 +11,7 @@ class SystemModelTest(TestCase):
             town="New York",
             address="123 Main St",
             room="101",
-            notes="First-floor office"
+            notes="First-floor office",
         )
 
         # Create a test System instance
@@ -28,7 +28,7 @@ class SystemModelTest(TestCase):
             location=self.location,
             service_type="Web Service",
             model="ABC123",
-            notes="Test system note"
+            notes="Test system note",
         )
 
     def test_system_creation(self):
@@ -87,7 +87,7 @@ class SystemModelTest(TestCase):
             town=None,
             address=None,
             room=None,
-            notes=None
+            notes=None,
         )
         system_blank_location = System.objects.create(
             name="System with blank location",
@@ -101,9 +101,10 @@ class SystemModelTest(TestCase):
             email_notify=True,
             location=location_blank,  # Set blank location
         )
-        self.assertEqual(system_blank_location.location.name, "Location without details")
+        self.assertEqual(
+            system_blank_location.location.name, "Location without details"
+        )
         self.assertIsNone(system_blank_location.location.town)
         self.assertIsNone(system_blank_location.location.address)
         self.assertIsNone(system_blank_location.location.room)
         self.assertIsNone(system_blank_location.location.notes)
-

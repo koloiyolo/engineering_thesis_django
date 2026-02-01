@@ -16,23 +16,25 @@ from .forms import SignUpForm
 from .functions import get_labels_graph, get_uptime_graph
 from audit_log.models import AuditLog
 
+
 # docker compose health check
 def health_check(request):
-    return JsonResponse({'status': 'ok'})
+    return JsonResponse({"status": "ok"})
+
 
 # Create your views here.
 
+
 @login_required
 def home(request):
-    
     response = None
     ip = None
 
-    incidents = Incident.objects.all().order_by("-id")[:Settings.load().items_per_page]
+    incidents = Incident.objects.all().order_by("-id")[: Settings.load().items_per_page]
 
     try:
         response = f"{ping('8.8.8.8', unit='ms'):.3} ms"
-        ip = get('https://api.ipify.org').content.decode('utf8')
+        ip = get("https://api.ipify.org").content.decode("utf8")
     except:
         response = None
         ip = None
@@ -41,87 +43,117 @@ def home(request):
         pass
 
     statistics = Statistics()
-    
+
     # Incidents
     statistics.incident_count = Incident.objects.count()
-    statistics.incident_resolved_count = Incident.objects.filter(user__isnull=False).count()
-    
+    statistics.incident_resolved_count = Incident.objects.filter(
+        user__isnull=False
+    ).count()
+
     try:
-        statistics.incident_resolved_ratio = round(statistics.incident_resolved_count / statistics.incident_count * 100)
+        statistics.incident_resolved_ratio = round(
+            statistics.incident_resolved_count / statistics.incident_count * 100
+        )
     except ZeroDivisionError:
-         statistics.incident_resolved_ratio = 0
+        statistics.incident_resolved_ratio = 0
 
     statistics.incident_tag0_count = Incident.objects.filter(tag=0).count()
     statistics.incident_tag1_count = Incident.objects.filter(tag=1).count()
-    statistics.incident_tag0_unresolved_count = Incident.objects.filter(tag=0, user__isnull=True).count()
-    statistics.incident_tag1_unresolved_count = Incident.objects.filter(tag=1, user__isnull=True).count()
+    statistics.incident_tag0_unresolved_count = Incident.objects.filter(
+        tag=0, user__isnull=True
+    ).count()
+    statistics.incident_tag1_unresolved_count = Incident.objects.filter(
+        tag=1, user__isnull=True
+    ).count()
 
     try:
-        statistics.incident_tag0_ratio = round(statistics.incident_tag0_unresolved_count / statistics.incident_tag0_count * 100)
+        statistics.incident_tag0_ratio = round(
+            statistics.incident_tag0_unresolved_count
+            / statistics.incident_tag0_count
+            * 100
+        )
     except ZeroDivisionError:
-         statistics.incident_tag0_ratio = 0
+        statistics.incident_tag0_ratio = 0
 
     try:
-        statistics.incident_tag1_ratio = round(statistics.incident_tag1_unresolved_count / 
-                                           statistics.incident_tag1_count * 100)
+        statistics.incident_tag1_ratio = round(
+            statistics.incident_tag1_unresolved_count
+            / statistics.incident_tag1_count
+            * 100
+        )
     except ZeroDivisionError:
-         statistics.incident_tag1_ratio = 0
+        statistics.incident_tag1_ratio = 0
 
     # Log
     statistics.log_count = Log.objects.count()
     statistics.log_anomaly_count = Log.objects.filter(label=0).count()
 
     try:
-        statistics.log_anomaly_ratio = round(statistics.log_anomaly_count/statistics.log_count * 100)
+        statistics.log_anomaly_ratio = round(
+            statistics.log_anomaly_count / statistics.log_count * 100
+        )
     except ZeroDivisionError:
         statistics.log_anomaly_ratio = 0
 
-    statistics.log_devices_anomaly = Log.objects.filter(label=0).values('host').annotate(count=Count('host')).order_by('-count')
+    statistics.log_devices_anomaly = (
+        Log.objects.filter(label=0)
+        .values("host")
+        .annotate(count=Count("host"))
+        .order_by("-count")
+    )
 
     # Systems
     statistics.system_count = System.objects.count()
     statistics.system_down_count = System.objects.filter(d_count__gt=0).count()
 
     try:
-        statistics.system_down_ratio = round(statistics.system_down_count / statistics.system_count * 100)
+        statistics.system_down_ratio = round(
+            statistics.system_down_count / statistics.system_count * 100
+        )
     except ZeroDivisionError:
         statistics.system_down_ratio = 0
 
-    statistics.system_systems_down = System.objects.filter(d_count__gt=0).order_by('d_count')[:3]
-    
-    data = {'ip': ip,
-            'ping': response,
-            'incidents': incidents,
-            'statistics': statistics,
-            # 'logs': logs,
-            # 'labels_graph': labels_graph,
-            # 'uptime_graph': uptime_graph
-            }
+    statistics.system_systems_down = System.objects.filter(d_count__gt=0).order_by(
+        "d_count"
+    )[:3]
 
-    return render(request, 'misc/home.html', data)
+    data = {
+        "ip": ip,
+        "ping": response,
+        "incidents": incidents,
+        "statistics": statistics,
+        # 'logs': logs,
+        # 'labels_graph': labels_graph,
+        # 'uptime_graph': uptime_graph
+    }
+
+    return render(request, "misc/home.html", data)
 
 
 def logout_user(request):
     logout(request)
     messages.success(request, "You have been logged out")
-    return redirect('home')
+    return redirect("home")
+
 
 def register_user(request):
-    if request.method == 'POST':
+    if request.method == "POST":
         form = SignUpForm(request.POST)
         if form.is_valid():
             form.save()
 
-            username = form.cleaned_data['username']
-            password = form.cleaned_data['password1']
+            username = form.cleaned_data["username"]
+            password = form.cleaned_data["password1"]
             user = authenticate(request, username=username, password=password)
             login(request, user)
-            AuditLog.objects.create(user=user, message=f"{user} created account successfuly.")
+            AuditLog.objects.create(
+                user=user, message=f"{user} created account successfuly."
+            )
             messages.success(request, "You have successfuly created an account!")
-            return redirect('home')
+            return redirect("home")
         pass
     else:
         form = SignUpForm()
-        return render(request, 'registration/register.html', {'form': form})
-        
-    return render(request, 'registration/register.html', {'form': form})
+        return render(request, "registration/register.html", {"form": form})
+
+    return render(request, "registration/register.html", {"form": form})

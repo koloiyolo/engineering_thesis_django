@@ -1,18 +1,19 @@
-
 from django.test import TestCase
 from django.contrib.auth.models import User
 from systems.models import System
 from .models import Incident, Comment
 
+
 class IncidentModelTest(TestCase):
-    
     def setUp(self):
         # Create test user
-        self.user = User.objects.create_user(username='testuser', password='testpassword')
-        
+        self.user = User.objects.create_user(
+            username="testuser", password="testpassword"
+        )
+
         # Create a test system
         self.system = System.objects.create(name="Test System")
-        
+
         # Create an incident instance
         self.incident = Incident.objects.create(
             system=self.system,
@@ -55,15 +56,17 @@ class IncidentModelTest(TestCase):
         # Test if the user foreign key is set correctly
         self.assertEqual(self.incident.user, self.user)
 
+
 class CommentModelTest(TestCase):
-    
     def setUp(self):
         # Create test user
-        self.user = User.objects.create_user(username='testuser', password='testpassword')
-        
+        self.user = User.objects.create_user(
+            username="testuser", password="testpassword"
+        )
+
         # Create a test system
         self.system = System.objects.create(name="Test System")
-        
+
         # Create an incident instance
         self.incident = Incident.objects.create(
             system=self.system,
@@ -73,7 +76,7 @@ class CommentModelTest(TestCase):
             message="This is a test incident message",
             user=self.user,
         )
-        
+
         # Create a comment instance
         self.comment = Comment.objects.create(
             incident=self.incident,
@@ -107,5 +110,6 @@ class CommentModelTest(TestCase):
             user=self.user,
             message=long_message,
         )
-        self.assertEqual(comment.message, long_message[:255])  # Check that it's truncated
-
+        self.assertEqual(
+            comment.message, long_message[:255]
+        )  # Check that it's truncated
