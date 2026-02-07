@@ -11,11 +11,10 @@ COPY script.sh .
 COPY pyproject.toml .
 COPY uv.lock .
 COPY .python-version .
+RUN uv sync
 COPY script.sh .
 
 COPY logging_system/ logging_system/
-
-RUN uv sync
 
 RUN chmod 777 script.sh
 
