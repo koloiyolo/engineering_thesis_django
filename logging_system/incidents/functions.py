@@ -1,9 +1,9 @@
-from django.contrib.auth.models import User
-
 from datetime import datetime
 
-from config.models import Settings
-from systems.models import System
+from django.contrib.auth.models import User
+
+from logging_system.config.models import Settings
+from logging_system.systems.models import System
 
 from .models import Incident
 

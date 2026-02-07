@@ -1,9 +1,8 @@
-from django.db import models
-from logs.models import Log
-
 # Create your models here.
-
 from django.core.exceptions import ValidationError
+from django.db import models
+
+from logging_system.logs.models import Log
 
 
 class Settings(models.Model):

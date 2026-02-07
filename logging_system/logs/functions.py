@@ -1,9 +1,12 @@
-from django.http import HttpResponse
 import csv
 import random
+
+from django.http import HttpResponse
+
+from logging_system.config.models import Settings
+from logging_system.incidents.functions import create_incident
+
 from .models import Log
-from config.models import Settings
-from incidents.functions import create_incident
 
 
 # get logs from database

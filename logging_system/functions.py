@@ -1,6 +1,6 @@
 from django.core.paginator import Paginator
-from config.models import Settings
 
+from logging_system.config.models import Settings
 
 # reusable pagination function
 # takes objs as array of objects to paginate

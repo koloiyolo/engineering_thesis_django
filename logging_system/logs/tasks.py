@@ -1,8 +1,9 @@
 from celery import shared_task
 
-from audit_log.models import AuditLog
+from logging_system.audit_log.models import AuditLog
+from logging_system.config.models import Settings
+
 from .ml import cluster, train
-from config.models import Settings
 
 
 @shared_task

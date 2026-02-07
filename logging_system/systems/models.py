@@ -1,6 +1,6 @@
 from django.db import models
 
-from locations.models import Location
+from logging_system.locations.models import Location
 
 # Create your models here.
 BOOL_CHOICES = [(True, "Yes"), (False, "No")]

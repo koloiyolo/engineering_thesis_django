@@ -1,6 +1,7 @@
-from django.db import models
 from django.contrib.auth.models import User
-from systems.models import System
+from django.db import models
+
+from logging_system.systems.models import System
 
 # Create your models here.
 

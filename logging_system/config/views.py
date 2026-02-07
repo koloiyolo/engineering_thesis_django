@@ -1,10 +1,11 @@
-from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.contrib.admin.views.decorators import staff_member_required
+from django.shortcuts import redirect, render
+
+from logging_system.audit_log.models import AuditLog
 
 from .forms import SettingsPage
 from .models import Settings
-from audit_log.models import AuditLog
 
 
 # Create your views here.

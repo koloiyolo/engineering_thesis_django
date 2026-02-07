@@ -1,7 +1,9 @@
-from django.test import TestCase
 from django.contrib.auth.models import User
-from systems.models import System
-from .models import Incident, Comment
+from django.test import TestCase
+
+from logging_system.systems.models import System
+
+from .models import Comment, Incident
 
 
 class IncidentModelTest(TestCase):

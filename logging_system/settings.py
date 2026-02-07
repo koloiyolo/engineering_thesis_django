@@ -38,13 +38,13 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "home",
-    "logs",
-    "config",
-    "systems",
-    "incidents",
-    "locations",
-    "audit_log",
+    "logging_system.home",
+    "logging_system.logs",
+    "logging_system.config",
+    "logging_system.systems",
+    "logging_system.incidents",
+    "logging_system.locations",
+    "logging_system.audit_log",
 ]
 
 MIDDLEWARE = [

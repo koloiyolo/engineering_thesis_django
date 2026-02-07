@@ -1,8 +1,9 @@
 from django import forms
-from django.forms import TextInput, NumberInput, Select
+from django.forms import NumberInput, Select, TextInput
 
-from .models import System, SYSTEM_TYPE_CHOICES
-from locations.models import Location
+from logging_system.locations.models import Location
+
+from .models import SYSTEM_TYPE_CHOICES, System
 
 
 class SystemForm(forms.ModelForm):

@@ -1,14 +1,14 @@
-from django.shortcuts import render, redirect, reverse
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.shortcuts import redirect, render, reverse
 
-
+from logging_system.audit_log.models import AuditLog
+from logging_system.config.models import Settings
 from logging_system.functions import pagination
-from config.models import Settings
-from .models import Location
+from logging_system.systems.models import System
+
 from .forms import LocationForm
-from systems.models import System
-from audit_log.models import AuditLog
+from .models import Location
 
 # Create your views here.
 

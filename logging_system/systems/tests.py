@@ -1,6 +1,8 @@
 from django.test import TestCase
-from .models import System, Ping
-from locations.models import Location
+
+from logging_system.locations.models import Location
+
+from .models import Ping, System
 
 
 class SystemModelTest(TestCase):

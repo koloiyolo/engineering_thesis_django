@@ -1,19 +1,18 @@
-from django.shortcuts import render
-from django.core.mail import send_mass_mail
-from sklearn.pipeline import Pipeline
-from sklearn.cluster import KMeans, AgglomerativeClustering, DBSCAN, HDBSCAN
-from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
-from sklearn.utils import Bunch
-from sklearn_minisom import MiniSOM
-import pandas as pd
-import random
-import joblib
-import time
-import os
 import ast
+import os
+
+import joblib
+import pandas as pd
+from django.core.mail import send_mass_mail
+from sklearn.cluster import DBSCAN, HDBSCAN, AgglomerativeClustering, KMeans
+from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
+from sklearn.pipeline import Pipeline
+from sklearn_minisom import MiniSOM
+
+from logging_system.config.models import Settings
+
+from .functions import get_logs, zip_logs
 from .models import Log
-from .functions import zip_logs, get_logs
-from config.models import Settings
 
 
 # sklearn ML train function prototype

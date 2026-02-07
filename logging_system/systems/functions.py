@@ -1,17 +1,17 @@
 import csv
-import socket
-from django.http import HttpResponse
-
-from django.core.mail import send_mass_mail
 import re
-import csv
+import socket
+
+import plotly.graph_objs as go
+from django.core.mail import send_mass_mail
 from django.http import HttpResponse
 from ping3 import ping
-import plotly.graph_objs as go
-from incidents.functions import create_incident
-from .models import System, Ping
-from config.models import Settings
-from audit_log.models import AuditLog
+
+from logging_system.audit_log.models import AuditLog
+from logging_system.config.models import Settings
+from logging_system.incidents.functions import create_incident
+
+from .models import Ping, System
 
 
 # System ping task function

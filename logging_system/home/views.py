@@ -1,20 +1,21 @@
-from django.shortcuts import render, redirect
-from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
+from django.db.models import Count
 from django.http import JsonResponse
+from django.shortcuts import redirect, render
 from ping3 import ping
 from requests import get
-from django.contrib.auth.decorators import login_required
-from django.db.models import Count
 
-from config.models import Settings
-from systems.models import System
-from incidents.models import Incident
-from logs.models import Log
+from logging_system.audit_log.models import AuditLog
+from logging_system.config.models import Settings
+from logging_system.incidents.models import Incident
+from logging_system.logs.models import Log
+from logging_system.systems.models import System
+
 from .forms import SignUpForm
 from .functions import get_labels_graph, get_uptime_graph
-from audit_log.models import AuditLog
 
 
 # docker compose health check

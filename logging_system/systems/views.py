@@ -1,18 +1,20 @@
-from django.shortcuts import render, redirect, reverse
 from django.contrib import messages
-from django.db.models import Q
 from django.contrib.auth.decorators import login_required
+from django.db.models import Q
+from django.shortcuts import redirect, render, reverse
 from django.utils import timezone
-from .functions import get_ping_graph, get_packet_loss, export_csv
-from logging_system.functions import pagination, logs_short_message
 
+from logging_system.audit_log.models import AuditLog
+from logging_system.functions import logs_short_message, pagination
+from logging_system.incidents.models import Incident
+from logging_system.locations.models import Location
+from logging_system.logs.models import Log
+
+from .forms import DiscoverSystemsForm, SystemForm
+from .functions import export_csv, get_packet_loss, get_ping_graph
 from .models import System
-from incidents.models import Incident
-from logs.models import Log
-from locations.models import Location
-from .forms import SystemForm, DiscoverSystemsForm
-from audit_log.models import AuditLog
 from .tasks import discover_systems_task
+
 # Create your views here.
 
 

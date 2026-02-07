@@ -1,16 +1,18 @@
-from django.shortcuts import render, redirect
-from django.contrib import messages
-from django.db.models import Q
-from django.contrib.auth.decorators import login_required
-from django.utils import timezone
 from datetime import timedelta
 
+from django.contrib import messages
+from django.contrib.auth.decorators import login_required
+from django.db.models import Q
+from django.shortcuts import redirect, render
+from django.utils import timezone
+
+from logging_system.audit_log.models import AuditLog
+from logging_system.config.models import Settings
 from logging_system.functions import pagination
-from audit_log.models import AuditLog
-from systems.models import System
-from config.models import Settings
-from .models import Incident, Comment
+from logging_system.systems.models import System
+
 from .forms import CommentForm
+from .models import Comment, Incident
 
 # Create your views here.
 
