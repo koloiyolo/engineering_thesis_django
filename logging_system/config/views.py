@@ -1,35 +1,43 @@
-from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.contrib.admin.views.decorators import staff_member_required
+from django.shortcuts import redirect, render
+
+from logging_system.audit_log.models import AuditLog
 
 from .forms import SettingsPage
 from .models import Settings
-from audit_log.models import AuditLog
+
 
 # Create your views here.
-@staff_member_required(login_url='/accounts/login/')
+@staff_member_required(login_url="/accounts/login/")
 def settings(request):
     settings = Settings.load()
     form = SettingsPage(request.POST or None, instance=settings)
     if form.is_valid():
         form.save()
-        AuditLog.objects.create(user=request.user, message=f"User {request.user} updated settings.")
+        AuditLog.objects.create(
+            user=request.user, message=f"User {request.user} updated settings."
+        )
         messages.success(request, "Settings updated successfully")
-        return redirect('home')
+        return redirect("home")
     else:
-        return render(request, 'misc/settings.html', {'form': form})
+        return render(request, "misc/settings.html", {"form": form})
 
 
-@staff_member_required(login_url='/accounts/login/')
+@staff_member_required(login_url="/accounts/login/")
 def reset(request):
     settings = Settings.load()
     settings.delete()
 
-    AuditLog.objects.create(user=request.user, message=f"User {request.user} restored default configuration.")
+    AuditLog.objects.create(
+        user=request.user,
+        message=f"User {request.user} restored default configuration.",
+    )
     messages.success(request, "Configuration restored")
-    return redirect('config:settings')
+    return redirect("config:settings")
 
-@staff_member_required(login_url='/accounts/login/')
+
+@staff_member_required(login_url="/accounts/login/")
 def reset_ml(request):
     settings = Settings.load()
 
@@ -49,6 +57,9 @@ def reset_ml(request):
     settings.ml_cluster_interval = 3
 
     settings.save()
-    AuditLog.objects.create(user=request.user, message=f"User {request.user} restored default ml configuration.")
+    AuditLog.objects.create(
+        user=request.user,
+        message=f"User {request.user} restored default ml configuration.",
+    )
     messages.success(request, "ML configuration restored")
-    return redirect('config:settings')
+    return redirect("config:settings")

@@ -1,15 +1,13 @@
-
 services:
-
   db:
     container_name: db_logging
     restart: always
-    image: mysql:8.0
+    image: mysql:9.6
     ports:
       - 3306:3306
     env_file:
       - config.env
-    volumes: 
+    volumes:
       - ./db:/var/lib/mysql
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
@@ -39,12 +37,12 @@ services:
       - 6001:601
     env_file:
       - config.env
-    volumes:
-      - ./logs:/var/log
+    # volumes:
+    #   - ./logs:/var/log
 
   redis:
     container_name: redis_logging
-    image: redis:7.2.5
+    image: redis:8.4.0
     restart: always
     ports:
       - "6379:6379"
@@ -62,23 +60,24 @@ services:
     depends_on:
       db:
         condition: service_healthy
-    build: "./logging_system"
+    build: "."
     command: ./script.sh
     volumes:
-      - ./logging_system:/app
+      - ./logging_system:/app/logging_system
     ports:
       - "80:80"
     env_file:
       - config.env
     healthcheck:
-      test: ["CMD-SHELL", "curl --silent --fail http://localhost/health/ || exit 1"]
+      test:
+        ["CMD-SHELL", "curl --silent --fail http://localhost/health/ || exit 1"]
       interval: 30s
       timeout: 10s
       retries: 5
 
   celery:
-    build: "./logging_system"
-    command: celery -A logging_system worker -l info
+    build: "."
+    command: uv run celery -A logging_system worker -l info
     depends_on:
       db:
         condition: service_healthy
@@ -90,8 +89,8 @@ services:
       - config.env
 
   celery-beat:
-    build: "./logging_system"
-    command: celery -A logging_system beat -l info
+    build: "."
+    command: uv run celery -A logging_system beat -l info
     depends_on:
       db:
         condition: service_healthy
@@ -107,5 +106,5 @@ services:
     image: mailhog/mailhog
     restart: always
     ports:
-      - "1025:1025"  # SMTP
-      - "8025:8025"  # Web UI
+      - "1025:1025" # SMTP
+      - "8025:8025" # Web UI

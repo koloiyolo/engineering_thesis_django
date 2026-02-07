@@ -68,6 +68,7 @@ http://{{server_ip_address}}
 * Bootstrap
 ### Backend:
 * Docker
+* UV / Ruff (Astral stack)
 * Python
   * Django
   * scikit-learn

@@ -1,12 +1,13 @@
 from django.db import models
 
+
 # Create your models here.
 class Location(models.Model):
-    name                = models.CharField(max_length=50)
-    town                = models.CharField(max_length=100, null=True, blank=True)
-    address             = models.CharField(max_length=100, null=True, blank=True)
-    room                = models.CharField(max_length=5, null=True, blank=True)
-    notes               = models.CharField(max_length=255, null=True, blank=True)
+    name = models.CharField(max_length=50)
+    town = models.CharField(max_length=100, null=True, blank=True)
+    address = models.CharField(max_length=100, null=True, blank=True)
+    room = models.CharField(max_length=5, null=True, blank=True)
+    notes = models.CharField(max_length=255, null=True, blank=True)
 
     def save(self, *args, **kwargs):
         if self.name is not None:

@@ -1,8 +1,8 @@
 from django.test import TestCase
 from .models import Location
 
-class LocationModelTest(TestCase):
 
+class LocationModelTest(TestCase):
     def setUp(self):
         # Create a Location instance
         self.location = Location.objects.create(
@@ -10,7 +10,7 @@ class LocationModelTest(TestCase):
             town="New York",
             address="123 Main St",
             room="101",
-            notes="First-floor office"
+            notes="First-floor office",
         )
 
     def test_location_creation(self):
@@ -27,9 +27,7 @@ class LocationModelTest(TestCase):
 
     def test_location_with_optional_fields(self):
         # Test creation of Location with optional fields (town, address, room, notes)
-        location = Location.objects.create(
-            name="Warehouse"
-        )
+        location = Location.objects.create(name="Warehouse")
         self.assertEqual(location.name, "Warehouse")
         self.assertIsNone(location.town)
         self.assertIsNone(location.address)
@@ -38,11 +36,7 @@ class LocationModelTest(TestCase):
 
     def test_location_with_blank_fields(self):
         # Test creation of Location with blank fields
-        location = Location.objects.create(
-            name="Server Room",
-            room="B23",
-            notes=""
-        )
+        location = Location.objects.create(name="Server Room", room="B23", notes="")
         self.assertEqual(location.name, "Server Room")
         self.assertEqual(location.room, "B23")
         self.assertEqual(location.notes, "")
@@ -55,7 +49,10 @@ class LocationModelTest(TestCase):
 
     def test_max_length_address(self):
         # Test if address field exceeds the max_length
-        long_address = "x" * 101  # Address length is 101, which exceeds max_length of 100
-        location = Location.objects.create(name="Another Location", address=long_address)
+        long_address = (
+            "x" * 101
+        )  # Address length is 101, which exceeds max_length of 100
+        location = Location.objects.create(
+            name="Another Location", address=long_address
+        )
         self.assertEqual(location.address, "x" * 100)
-

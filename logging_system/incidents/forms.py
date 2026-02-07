@@ -1,22 +1,20 @@
 from django import forms
-from django.forms import TextInput, EmailInput, NumberInput, Select
-import json
-import numpy as np
-from django.contrib.auth.models import User
+from django.forms import TextInput
 
-from .models import Comment, Incident
+from .models import Comment
+
 
 class CommentForm(forms.ModelForm):
     class Meta:
         model = Comment
-        fields = [
-            "message"
-        ]
+        fields = ["message"]
 
         widgets = {
-            "message": TextInput(attrs={
-                'class': "form-control",
-                'label': "Comment",
-                'placeholder': "Your comment..."
-            })
+            "message": TextInput(
+                attrs={
+                    "class": "form-control",
+                    "label": "Comment",
+                    "placeholder": "Your comment...",
+                }
+            )
         }

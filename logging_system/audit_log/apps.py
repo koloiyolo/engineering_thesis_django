@@ -2,5 +2,5 @@ from django.apps import AppConfig
 
 
 class AuditLogConfig(AppConfig):
-    default_auto_field = 'django.db.models.BigAutoField'
-    name = 'audit_log'
+    default_auto_field = "django.db.models.BigAutoField"
+    name = "logging_system.audit_log"
