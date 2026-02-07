@@ -59,3 +59,4 @@ logging_system/audit_log/migrations/0001_initial.py
 logging_system/audit_log/migrations/
 selenium
 logging_system/__pycache__/
+logs/
