@@ -1,9 +1,5 @@
 from django import forms
-from django.forms import TextInput, EmailInput, NumberInput, Select
-import json
-import numpy as np
-from datetime import datetime
-from django.contrib.auth.models import User
+from django.forms import EmailInput, NumberInput, Select, TextInput
 
 from .models import Settings
 

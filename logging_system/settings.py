@@ -62,7 +62,7 @@ ROOT_URLCONF = "logging_system.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [os.path.join(BASE_DIR, "templates")],
+        "DIRS": [os.path.join(BASE_DIR, "logging_system.templates")],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -145,21 +145,20 @@ CELERY_ACCEPT_CONTENT = ["json"]
 CELERY_TASK_SERIALIZER = "json"
 CELERY_RESULT_SERIALIZER = "json"
 
-from celery.schedules import crontab
 
 CELERY_BEAT_SCHEDULE = {
     "cluster-every-5-minutes": {
-        "task": "logs.tasks.ml_cluster_task",
+        "task": "logging_system.logs.tasks.ml_cluster_task",
         "schedule": 300.0,
         "args": (),
     },
     "train-every-hour": {
-        "task": "logs.tasks.ml_train_task",
+        "task": "logging_system.logs.tasks.ml_train_task",
         "schedule": 3600.0,
         "args": (),
     },
     "ping-every-5-minutes": {
-        "task": "systems.tasks.ping_task",
+        "task": "logging_system.systems.tasks.ping_task",
         "schedule": 1600.0,
         "args": (),
     },

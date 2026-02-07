@@ -3,7 +3,6 @@ from django.db.models import Q
 from django.shortcuts import render
 
 from logging_system.audit_log.models import AuditLog
-from logging_system.config.models import Settings
 from logging_system.functions import logs_short_message, pagination
 from logging_system.systems.models import System
 

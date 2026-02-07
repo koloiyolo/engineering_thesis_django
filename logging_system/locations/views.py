@@ -1,9 +1,8 @@
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import redirect, render, reverse
+from django.shortcuts import redirect, render
 
 from logging_system.audit_log.models import AuditLog
-from logging_system.config.models import Settings
 from logging_system.functions import pagination
 from logging_system.systems.models import System
 

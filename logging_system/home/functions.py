@@ -1,13 +1,9 @@
-import random
-
 import numpy as np
 import plotly.graph_objs as go
-from django.contrib.auth.models import User
-from django.core.mail import send_mass_mail
 from ping3 import ping
 
 from logging_system.logs.models import Log
-from logging_system.systems.models import Ping, System
+from logging_system.systems.models import Ping
 
 
 # NumPy arrays and lists

@@ -7,7 +7,6 @@ from django.shortcuts import redirect, render
 from django.utils import timezone
 
 from logging_system.audit_log.models import AuditLog
-from logging_system.config.models import Settings
 from logging_system.functions import pagination
 from logging_system.systems.models import System
 

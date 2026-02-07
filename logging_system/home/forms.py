@@ -1,11 +1,6 @@
+from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
-from django import forms
-import json
-import numpy as np
-from datetime import datetime
-
-from .functions import numpy_array_to_list
 
 
 class SignUpForm(UserCreationForm):
@@ -18,14 +13,12 @@ class SignUpForm(UserCreationForm):
     )
     first_name = forms.CharField(
         label="",
-        max_length="32",
         widget=forms.TextInput(
             attrs={"class": "form-control", "placeholder": "First name"}
         ),
     )
     last_name = forms.CharField(
         label="",
-        max_length="32",
         widget=forms.TextInput(
             attrs={"class": "form-control", "placeholder": "Last name"}
         ),

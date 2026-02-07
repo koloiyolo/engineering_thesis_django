@@ -1,5 +1,4 @@
 from django import forms
-from django.forms import TextInput, NumberInput, Select
 
 BOOL_CHOICES = [
     (True, "Yes"),

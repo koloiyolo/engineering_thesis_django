@@ -1,7 +1,6 @@
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-from django.core.paginator import Paginator
 from django.db.models import Count
 from django.http import JsonResponse
 from django.shortcuts import redirect, render
@@ -15,7 +14,6 @@ from logging_system.logs.models import Log
 from logging_system.systems.models import System
 
 from .forms import SignUpForm
-from .functions import get_labels_graph, get_uptime_graph
 
 
 # docker compose health check
