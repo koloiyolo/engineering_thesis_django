@@ -15,5 +15,8 @@ class Log(models.Model):
         managed = False
         db_table = "log"
 
+    def __str__(self):
+        return f"{self.host} : {self.datetime} : {self.message}"
+
     def get_features(self):
         return f"{self.message} {self.program}"

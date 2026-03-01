@@ -12,7 +12,6 @@ from sklearn_minisom import MiniSOM
 from logging_system.config.models import Settings
 
 from .functions import get_logs, zip_logs
-from .models import Log
 
 
 # sklearn ML train function prototype
@@ -22,7 +21,7 @@ def train(cl=None, vec=None):
     vec = vec if vec is not None else settings.s1_vectorizer
 
     if cl is None or vec is None:
-        return f"Training: Skipping. No algorithm selected"
+        return "Training: Skipping. No algorithm selected"
 
     cl_tag = settings.get_s1_clusterer_display()
     cl_params = (

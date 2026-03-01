@@ -38,7 +38,7 @@ def ping_systems(systems, debug=True):
     if len(emails) != 0:
         send_mass_mail(emails)
 
-    AuditLog.objects.create(user=None, message=f"All systems pinged.")
+    AuditLog.objects.create(user=None, message="All systems pinged.")
     return True
 
 
@@ -115,7 +115,7 @@ def discover_systems(ip_range, system_type=None, prefix=""):
             )
             systems.append(system)
 
-    print(f"Added new systems: ")
+    print("Added new systems: ")
     for system in systems:
         print(f"{system}")
 
@@ -129,8 +129,8 @@ def get_packet_loss(system):
     pings = Ping.objects.filter(system=system).order_by("-id")[:range_]
     count = pings.count()
     none_count = 0
-    for ping in pings:
-        if ping.ping == None:
+    for p in pings:
+        if p.ping is None:
             none_count += 1
     try:
         return round(none_count / count * 100, 2)
@@ -148,7 +148,7 @@ def export_csv(system_type=None):
     )
 
     response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = f"attachment; filename=systems.csv"
+    response["Content-Disposition"] = "attachment; filename=systems.csv"
 
     file = csv.writer(response)
 

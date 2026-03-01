@@ -147,7 +147,7 @@ class Settings(models.Model):
                 ):
                     Log.objects.update(label=None, log_group=None)
 
-                    from logs.tasks import ml_train_task
+                    from logging_system.logs.tasks import ml_train_task
 
                     ml_train_task.delay(cl=self.s1_clusterer, vec=self.s1_vectorizer)
 

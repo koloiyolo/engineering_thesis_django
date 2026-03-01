@@ -23,7 +23,7 @@ def systems(request, location=None, system_type=None):
     systems = None
     q = request.GET.get("search", "")
     if location is not None:
-        if q:
+        if q is not None:
             systems = System.objects.filter(
                 Q(name__icontains=q)
                 | Q(ip__icontains=q)
@@ -120,11 +120,10 @@ def system(request, pk):
 @login_required
 def logs(request, pk, label=None):
     system = System.objects.get(id=pk)
-    logs = None
     q = request.GET.get("search", "")
     if label is not None:
         if q:
-            logs = logs.objects.filter(
+            logs = Log.objects.filter(
                 Q(host__icontains=q)
                 | Q(program__icontains=q)
                 | Q(message__icontains=q),
@@ -135,7 +134,7 @@ def logs(request, pk, label=None):
             logs = Log.objects.filter(host=system.ip, label=label).order_by("-id")
     else:
         if q:
-            logs = logs.objects.filter(
+            logs = Log.objects.filter(
                 Q(host__icontains=q)
                 | Q(program__icontains=q)
                 | Q(message__icontains=q),
@@ -165,10 +164,9 @@ def logs(request, pk, label=None):
 @login_required
 def incidents(request, pk):
     system = System.objects.get(id=pk)
-    incidents = None
     q = request.GET.get("search", "")
     if q:
-        incidents = incidents.filter(
+        incidents = Incident.objects.filter(
             Q(message__icontains=q)
             | Q(ip__icontains=q)
             | Q(title__icontains=q)
@@ -196,6 +194,7 @@ def incidents(request, pk):
 def tag_incidents(request, pk, tag):
     system = System.objects.get(id=pk)
     incidents = Incident.objects.filter(system=system, tag=tag).order_by("-id")
+    q = request.GET.get("search", "")
     if q:
         incidents = incidents.filter(
             Q(message__icontains=q) | Q(ip__icontains=q) | Q(title__icontains=q)

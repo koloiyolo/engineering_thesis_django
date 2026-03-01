@@ -1,7 +1,6 @@
 from django import forms
 from django.forms import NumberInput, Select, TextInput
 
-from logging_system.locations.models import Location
 
 from .models import SYSTEM_TYPE_CHOICES, System
 

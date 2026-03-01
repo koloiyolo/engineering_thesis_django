@@ -1,7 +1,7 @@
 services:
   db:
     container_name: db_logging
-    restart: always
+    # restart: always
     image: mysql:9.6
     ports:
       - 3306:3306
@@ -17,7 +17,7 @@ services:
 
   phpmyadmin:
     container_name: phpmyadmin_logging
-    restart: always
+    # restart: always
     image: phpmyadmin:latest
     depends_on:
       db:
@@ -27,7 +27,7 @@ services:
 
   syslog-ng:
     container_name: syslog-ng
-    restart: always
+    # restart: always
     depends_on:
       db:
         condition: service_healthy
@@ -43,7 +43,7 @@ services:
   redis:
     container_name: redis_logging
     image: redis:8.4.0
-    restart: always
+    # restart: always
     ports:
       - "6379:6379"
     env_file:
@@ -56,7 +56,7 @@ services:
 
   django:
     container_name: logging_system
-    restart: always
+    # restart: always
     depends_on:
       db:
         condition: service_healthy
