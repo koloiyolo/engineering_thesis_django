@@ -15,12 +15,22 @@ from .models import Ping, System
 
 
 # System ping task function
-def ping_systems(systems, debug=True):
+def ping_systems(systems: list[System], debug: bool = True) -> bool:
+    """Ping all systems and log responses.
+
+    Args:
+        systems: List of System objects to ping.
+        debug: Whether to print debug information (default is True).
+
+    Returns:
+        True upon completion.
+    """
     emails = []
     for system in systems:
         ip = system.ip
         response_time = ping(ip, unit="ms")
-        print(f"{ip}, {response_time}")
+        if debug:
+            print(f"{ip}, {response_time}")
         if response_time not in (False, None):
             system.last_ping = f"{int(response_time)} ms"
             system.d_count = 0
@@ -42,8 +52,7 @@ def ping_systems(systems, debug=True):
     return True
 
 
-# Ping graph function
-def get_ping_graph(system, height=320, width=1240):
+def get_ping_graph(system: System, height: int = 320, width: int = 1240):
     range_ = Settings.load().graph_interval * 12
     pings = Ping.objects.filter(system=system).order_by("-id")[:range_]
     n = 0
@@ -69,8 +78,25 @@ def get_ping_graph(system, height=320, width=1240):
     return plot_div
 
 
-# System discovery task function
-def discover_systems(ip_range, system_type=None, prefix=""):
+def discover_systems(
+    ip_range: str, system_type: int | None = None, prefix: str = ""
+) -> bool:
+    """Discover systems by scanning an IP range.
+
+    Parses the provided IP range string to extract a prefix and a start/end pair of
+    numbers, iterates over them, pings each host, optionally resolves the hostname via
+    DNS, and creates System model instances for responsive hosts.
+
+    Args:
+        ip_range: A string in the format "prefix.first-last" (e.g., "192.168.1.0-5").
+                  The prefix part is expected to contain three dot-separated parts.
+        system_type: Optional system type ID to assign to discovered systems.
+        prefix: Optional custom prefix to use for naming systems if DNS resolution fails.
+
+    Returns:
+        True if the function completed successfully (even if no systems were created),
+        False if the IP range format or values were invalid.
+    """
     systems = []
     match = re.search(
         r"^(([^.\\-]+)\.([^.\\-]+)\.([^.\\-]+)).*?([^.\\-]+)[-]([^.\\-]+)$", ip_range
@@ -96,6 +122,7 @@ def discover_systems(ip_range, system_type=None, prefix=""):
     for i in range(first, last + 1):
         dns_discovery = Settings.load().system_discovery_dns
         ip = f"{ip_prefix}.{i}"
+        dns_name: str | None = None
         response_time = ping(ip, unit="ms")
         if response_time in (None, False):
             print(f"{ip}: host not found. Response: {response_time}")
@@ -108,7 +135,7 @@ def discover_systems(ip_range, system_type=None, prefix=""):
                 except (socket.herror, socket.gaierror):
                     dns_name = None
 
-            system_name = dns_name if dns_name else f"{prefix}{ip}"
+            system_name = dns_name if dns_name is not None else f"{prefix}{ip}"
 
             system = System.objects.create(
                 name=system_name, ip=ip, system_type=system_type
@@ -124,7 +151,7 @@ def discover_systems(ip_range, system_type=None, prefix=""):
 
 
 # System packet loss function
-def get_packet_loss(system):
+def get_packet_loss(system: System):
     range_ = Settings.load().graph_interval * 12
     pings = Ping.objects.filter(system=system).order_by("-id")[:range_]
     count = pings.count()

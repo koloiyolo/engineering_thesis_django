@@ -239,12 +239,12 @@ def discover(request):
             ip_range = form.cleaned_data.get("ip_range")
             system_type = form.cleaned_data.get("system_type")
             prefix = (
-                form.cleaned_data.get("prefix")
-                if form.cleaned_data.get("prefix")
+                form.cleaned_data.get("system_prefix")
+                if form.cleaned_data.get("system_prefix") is not None
                 else ""
             )
             discover_systems_task.delay(
-                ip_range, system_type=system_type, prefix=prefix
+                ip_range, system_type=system_type, prefix
             )
             AuditLog.objects.create(
                 user=request.user,

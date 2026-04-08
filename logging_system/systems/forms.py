@@ -1,7 +1,6 @@
 from django import forms
 from django.forms import NumberInput, Select, TextInput
 
-
 from .models import SYSTEM_TYPE_CHOICES, System
 
 
@@ -93,7 +92,7 @@ class DiscoverSystemsForm(forms.Form):
             attrs={"label": "Type of found systems", "class": "form-control"}
         ),
     )
-    prefix = forms.CharField(
+    system_prefix = forms.CharField(
         max_length=50,
         required=False,
         widget=forms.TextInput(
@@ -127,7 +126,7 @@ class ReportSystemsForm(forms.Form):
             attrs={"label": "Type of found systems", "class": "form-control"}
         ),
     )
-    prefix = forms.CharField(
+    system_prefix = forms.CharField(
         max_length=50,
         required=False,
         widget=forms.TextInput(
