@@ -244,7 +244,7 @@ def discover(request):
                 else ""
             )
             discover_systems_task.delay(
-                ip_range, system_type=system_type, prefix
+                ip_range=ip_range, system_type=system_type, prefix=prefix
             )
             AuditLog.objects.create(
                 user=request.user,
