@@ -52,7 +52,6 @@ def get_ping_graph(system, height=300, width=900, range=144):
 
 def get_uptime_graph(height=300, width=300):
     pings = Ping.objects.all().order_by("-id")[:144]
-    n = 0
     positive_pings = sum(1 for ping.ping in pings if ping is not None)
     negative_pings = sum(1 for ping.ping in pings if ping is None)
 
@@ -70,7 +69,6 @@ def get_uptime_graph(height=300, width=300):
 
 def get_labels_graph():
     labels = Log.objects.values_list("label", flat=True).distinct()
-    n = 0
     labels = [i for i in range(len(labels))]
     values = [Log.objects.filter(label=i).count() for i in range(len(labels))]
 

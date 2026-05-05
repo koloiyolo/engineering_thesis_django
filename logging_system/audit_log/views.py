@@ -1,13 +1,11 @@
 from datetime import timedelta
 
 from django.contrib.admin.views.decorators import staff_member_required
-from django.contrib.auth import authenticate
 from django.contrib.auth.models import User
 from django.db.models import Q
-from django.shortcuts import redirect, render
+from django.shortcuts import render
 from django.utils import timezone
 
-from logging_system.config.models import Settings
 from logging_system.functions import pagination
 
 from .models import AuditLog

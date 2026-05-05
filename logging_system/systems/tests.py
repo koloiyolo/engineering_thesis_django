@@ -2,7 +2,7 @@ from django.test import TestCase
 
 from logging_system.locations.models import Location
 
-from .models import Ping, System
+from .models import System
 
 
 class SystemModelTest(TestCase):
